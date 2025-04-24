@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Wiki do Servidor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+    }
+
+    .container{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+    }
+    aside {
+      width: 250px;
+      background-color: #1e1e1e;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      border-right: 1px solid #333;
+    }
+
+    aside h2 {
+      color: #ffc107;
+      margin-bottom: 20px;
+    }
+
+    aside nav a {
+      display: block;
+      color: #bbb;
+      text-decoration: none;
+      margin-bottom: 10px;
+      padding: 5px;
+      border-radius: 4px;
+    }
+
+    aside nav a:hover {
+      background-color: #292929;
+      color: #fff;
+    }
+
+    main {
+      margin-left: 270px;
+      padding: 30px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #ffc107;
+    }
+
+    .section {
+      margin-bottom: 50px;
+      display: flex;
+      gap: 1rem;
+    }
+    .conteudoImg{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: -100px;
+    }
+
+    .conteudoImg img{
+      margin-left: -120px;
+    }
+    .card {
+      background-color: #1e1e2f;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      width: 30%;
+      height: auto;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #444;
+    }
+
+    th {
+      background-color: #333;
+    }
+
+    tr:nth-child(even) {
+      background-color: #1c1c2c;
+    }
+
+  .build-tag {
+  background-color: #3a3a5a;
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 3px 5px 3px 0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #f1f1f1;
+  transition: background-color 0.2s ease;
+}
+
+.build-tag:hover {
+  background-color: #4b4b7a;
+}
+
+.build-tag.suporte {
+  background-color: #4a7aa9	; 
+}
+
+.build-tag.dano {
+  background-color: #a94a4a; 
+}
+.dano::before {
+  content: "⚔️ ";
+}
+.suporte::before {
+  content: "💚 ";
+}
+
+.build-tag.controle {
+  background-color: #1e90ff; 
+}
+.loader-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+    }
+    .spinner {
+        border: 6px solid #ccc;
+        border-top: 6px solid #4b4b7a;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      aside {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+      }
+
+    main {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body onload=esconderLoader()>
+
+  <aside>
+    <h2>Seções</h2>
+    <nav>
+      <a href="{{ url_for('info_page') }}">📌 Info Essenciais</a>
+      <a href="{{ url_for('classes_page') }}">🧙 Classes & Builds</a>
+      <a href="{{ url_for('rank_page') }}">🏆 Rank de Classes</a>
+      <a href="{{ url_for('rotas_page') }}">⚔️ Rotas de UP + Dicas</a>
+      <a href="{{ url_for('items_page') }}">🧈 Items Importantes</a>
+
+    </nav>
+  </aside>
+
+  <main>
+    <h1>📖 Wiki do Servidor</h1>
+    <section>
+      <div id="loader" class="loader-container">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+      </div>
+      <div  id="conteudo" class="container" style="display: none;">
+        <div class="card" >
+          <h2>📌 Informações Essenciais</h2>
+          <br>
+          <ul>
+            {% for item in info %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>🔗 Links Úteis</h2>
+          <br>
+          <ul>
+            {% for link in links %}
+              <li>{{ link }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>🎁 Recompensas de Login</h2>
+          <br>
+          <ul>
+            {% for reward in login %}
+              <li>{{ reward }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+    </div>
+  </section>   
+  <section class="conteudoImg">
+    <img src="{{ url_for('static', filename='assets/pngwing.com.png') }}" alt="Logo do Rag" />
+  </section>
+  </main>
+  <script>
+    function esconderLoader() {
+        setTimeout(() => {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("conteudo").style.display = "flex";
+        }, 1000); // 1000 milissegundos = 1 segundo
+    }
+  </script>
+</body>
+</html>

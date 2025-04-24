@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Wiki do Servidor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+    }
+
+    aside {
+      width: 250px;
+      background-color: #1e1e1e;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      border-right: 1px solid #333;
+    }
+
+    aside h2 {
+      color: #ffc107;
+      margin-bottom: 20px;
+    }
+
+    aside nav a {
+      display: block;
+      color: #bbb;
+      text-decoration: none;
+      margin-bottom: 10px;
+      padding: 5px;
+      border-radius: 4px;
+    }
+
+    aside nav a:hover {
+      background-color: #292929;
+      color: #fff;
+    }
+
+    main {
+      margin-left: 270px;
+      padding: 30px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #ffc107;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #444;
+    }
+
+    th {
+      background-color: #202020;
+    }
+
+    tr:nth-child(even) {
+      background-color: #333	;
+    }
+
+.build-tag {
+  background-color: #3a3a5a;
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 3px 5px 3px 0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #f1f1f1;
+  transition: background-color 0.2s ease;
+}
+
+
+.loader-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+    }
+.spinner {
+        border: 6px solid #ccc;
+        border-top: 6px solid #4b4b7a;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+}
+.container-accordion{
+  width: 40vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.container-accordion img{
+  width: 30%;
+}
+
+.accordion {
+    cursor: pointer;
+    padding: 1rem;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    color: #E0E0E0;
+    font-size: 16px;
+    position: relative;
+    background-color: #212121;
+    border-radius: .5rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.accordion:hover{
+  opacity: .8;
+}
+
+.accordion::after {
+    content: '+';
+    font-size: 18px;
+    position: absolute;
+    right: 20px;
+    color: #FFC107;
+}
+
+.accordion.active::after {
+    content: '−';
+}
+
+.panel {
+    padding: 20px 10px;
+    display: none;
+    background-color: #3C3C3C;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.panel.show {
+    display: block;
+}  
+
+.panel p{
+  border-bottom: 1px solid #555;
+  padding: .5rem;
+  color: white;
+}
+.melee{
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.ranged{
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+@keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+@media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      aside {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+      }
+
+    main {
+        margin-left: 0;
+        padding: 20px;
+    }
+    .container-accordion{
+      width: 90vw;
+    }
+    }
+  </style>
+</head>
+<body onload=esconderLoader()>
+
+  <aside>
+    <h2>Seções</h2>
+    <nav>
+      <a href="{{ url_for('info_page') }}">📌 Info Essenciais</a>
+      <a href="{{ url_for('classes_page') }}">🧙 Classes & Builds</a>
+      <a href="{{ url_for('rank_page') }}">🏆 Rank de Classes</a>
+      <a href="{{ url_for('rotas_page') }}">⚔️ Rotas de UP + Dicas</a>
+      <a href="{{ url_for('items_page') }}">🧈 Items Importantes</a>
+
+    </nav>
+  </aside>
+
+  <main>
+    <div id="loader" class="loader-container">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+    </div>
+    <section class="section">
+        <div class="card">
+            <div id="conteudo" style="display: none;">
+              <div class="container-accordion">
+                <div class="melee">
+                  <h2>Melee</h2>
+                  <img src="{{ url_for('static', filename='assets/FQtZgXE.png') }}" alt="Logo do Rag" />
+                  <div>
+                    <button class="accordion">⚔️ Rotas Melee + Dicas</button>
+                    <div class="panel">
+                      <table>
+                        <thead>
+                        <tr>
+                            <th>Nível</th>
+                            <th>Localização</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for nivel,local in rotas_melee %}
+                        <tr>
+                            <td>{{ nivel }}</td>
+                            <td>{{ local }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                      </div>
+                  </div>
+                  <div>
+                    <button class="accordion">📜 Quest melee</button>
+                    <div class="panel">
+                      {% for quest in array_quest_melee %}
+                        {% if "Quests Extras" in quest or "Equipamentos  Éden:" in quest %}
+                          <h4 style="margin-top: 10px; color:#FFC107	">{{ quest }}</h4>
+                          <br>
+                        {% else %}
+                          <p>{{ quest }}</p>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>  
+                  <div> 
+                    <button class="accordion">🛠️ Builds Melee Para Up 1-99 ( Não necessariamente repetir para transclasse )</button>
+                    <div class="panel">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Classe</th>
+                            <th>Build Sugerida</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for classe, build in array_builds_formatado %}
+                            <tr>
+                              <td>{{ classe }}</td>
+                              <td>{{ build }}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div> 
+                </div>
+                <div class="ranged">
+                  <img src="{{ url_for('static', filename='assets/ranged.png') }}" alt="Logo do Rag" />
+                  <h2>ranged</h2>
+                  <div>
+                    <button class="accordion">🏹 Rotas Ranged + Dicas</button>
+                    <div class="panel">
+                      <table>
+                        <thead>
+                        <tr>
+                            <th>Nível</th>
+                            <th>Localização</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for nivel,local in rotas_ranged %}
+                        <tr>
+                            <td>{{ nivel }}</td>
+                            <td>{{ local }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                   </div>
+                  </div>
+                  <div>
+                    <button class="accordion">📜 Quest Ranged</button>
+                    <div class="panel">
+                      {% for quest in array_quest_ranged %}
+                        {% if "Quests Extras" in quest or "Equipamentos Éden:" in quest %}
+                          <h4 style="margin-top: 10px; color:#FFC107	">{{ quest }}</h4>
+                          <br>
+                        {% else %}
+                          <p>{{ quest }}</p>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>  
+                  <div> 
+                    <button class="accordion">🛠️ Builds Ranged Para Up 1-99 ( Não necessariamente repetir para transclasse )</button>
+                    <div class="panel">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Classe</th>
+                            <th>Build Sugerida</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for classe, build in array_builds_ranged_formatado %}
+                            <tr>
+                              <td>{{ classe }}</td>
+                              <td>{{ build }}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div> 
+                </div>
+              </div>
+            </div>
+        </div>
+    </section>
+  </main>
+  <script>
+    function esconderLoader() {
+        setTimeout(() => {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("conteudo").style.display = "block";
+        }, 1000); // 1000 milissegundos = 1 segundo
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+    const accordions = document.querySelectorAll(".accordion");
+
+    accordions.forEach((btn) => {
+        btn.addEventListener("click", function () {
+          this.classList.toggle("active");
+          const panel = this.nextElementSibling;
+          panel.classList.toggle("show");
+        });
+      });
+    });  
+  </script>
+</body>
+</html>
