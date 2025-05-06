@@ -93,7 +93,7 @@
     tr:nth-child(even) {
       background-color: #333	;
     }
-
+    
 .build-tag {
   background-color: #3a3a5a;
   display: inline-block;
@@ -195,7 +195,19 @@
 }
 @keyframes spin {
       to { transform: rotate(360deg); }
-    }
+}
+.item-list {
+    display: flex;
+    gap: 40px;
+  }
+.item-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+.item-col.right {
+    text-align: right;
+}
 
 @media (max-width: 768px) {
       body {
@@ -273,12 +285,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for item,utilizar,imagem in tabela_items_importantes %}
-                    <tr>
+                      {% for item,local,imagem in tabela_items_importantes %}
+                      <tr>
                         <td>{{ item }} <img src="{{imagem}}" style="height: 25px; width: 25px; vertical-align: middle;" alt="imagem_item"></td>
-                        <td>{{ utilizar }}</td>
-                    </tr>
-                    {% endfor %}
+                        <td>{{ local }}</td>
+                       </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
             </div>    
@@ -307,6 +319,52 @@
                 </tbody>
               </table>
       </div>
+    </div>
+
+    <div>
+      <button class="accordion">🎒 Items por classes !</button>
+      <div class="panel">
+        <table>
+          <table>
+            <thead>
+              <tr>
+                <th>Classe</th>
+                <th>Item</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for entry in array_items_n_vender %}
+              {% set num_subgrupos = entry["items"]|length %}
+                <tr>
+                  <td class="classes" rowspan="{{ num_subgrupos if num_subgrupos > 0 else 1 }}">
+                    <div style="text-align: center;">
+                      <img src="{{ url_for('static', filename=entry.imagem) }}" alt="{{ entry.classe }}" style="display: block; margin: 0 auto; width: 100px; height: auto;">
+                      <div style="margin-top: 8px;">{{ entry.classe }}</div>
+                    </div>
+                  </td>
+                  {% if num_subgrupos > 0 %}
+                    <td>
+                      {% for item in entry["items"][0] %}
+                        {{ item }}<br>
+                      {% endfor %}
+                    </td>
+                  {% else %}
+                    <td>(sem itens)</td>
+                  {% endif %}
+                </tr>
+                {% for grupo in entry["items"][1:] %}
+                <tr>
+                  <td>
+                    {% for item in grupo %}
+                      {{ item }}<br>
+                    {% endfor %}
+                  </td>
+                </tr>
+                {% endfor %}
+              {% endfor %}
+            </tbody>
+          </table>
+  </div>
     </section>
   </main>
   <script>

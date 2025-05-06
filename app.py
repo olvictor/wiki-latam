@@ -2,10 +2,10 @@ from collections import defaultdict
 from flask import Flask
 import pandas as pd
 import re
-import yaml
 import unicodedata
 from flask_cors import CORS
 from flask import Flask, render_template
+
 app = Flask(__name__)
 CORS(app)
 
@@ -252,10 +252,49 @@ def rotas_page():
 def items_page():
     file_path = 'rola.xlsx'
     df = pd.read_excel(file_path, sheet_name='TABELA ITENS', header=None)
+    df_items = pd.read_excel(file_path, sheet_name='ITENS NÃO VENDER', header=None)
+
     items = df.iloc[3:,1]
     utilizar = df.iloc[3:,2]
     arquivo = ["item_db_usable.yml","item_db_equip.yml","item_db_etc.yml"]
-    
+    items_n_vender_raw_3 = df_items.iloc[3:,6].dropna().tolist()
+    items_n_vender_raw_3_2 = df_items.iloc[3:,7].dropna().tolist()
+    items_n_vender_raw_3_2_3 = df_items.iloc[3:,8].dropna().tolist()
+
+    items_n_vender_raw_4 = df_items.iloc[3:,12].dropna().tolist()
+    items_n_vender_raw_4_2 = df_items.iloc[3:,14].dropna().tolist()
+
+
+
+    items_n_vender_raw_5 = df_items.iloc[3:,20].dropna().tolist()
+    items_n_vender_raw_6 = df_items.iloc[3:,24].dropna().tolist()
+    items_n_vender_raw_6_2 = df_items.iloc[3:,26].dropna().tolist()
+    items_n_vender_raw_6_3 = df_items.iloc[3:,28].dropna().tolist()
+    items_n_vender_raw_6_4 = df_items.iloc[3:,30].dropna().tolist()
+    items_n_vender_raw_6_5 = df_items.iloc[3:,32].dropna().tolist()
+
+
+
+    items_n_vender_raw_7 = df_items.iloc[3:,36].dropna().tolist()
+    items_n_vender_raw_7_2 = df_items.iloc[3:,37].dropna().tolist()
+    items_n_vender_raw_7_3 = df_items.iloc[3:,38].dropna().tolist()
+    items_n_vender_raw_7_4 = df_items.iloc[3:,39].dropna().tolist()
+
+
+
+    items_n_vender_raw_8 = df_items.iloc[3:,43].dropna().tolist()
+    items_n_vender_raw_8_2 = df_items.iloc[3:,44].dropna().tolist()
+    items_n_vender_raw_8_3 = df_items.iloc[3:,45].dropna().tolist()
+    items_n_vender_raw_8_4 = df_items.iloc[3:,46].dropna().tolist()
+
+
+
+    items_n_vender_raw_9 = df_items.iloc[12:,45].dropna().tolist()
+
+
+
+
+
     def normalizar(texto):
         if texto is None:
             return ""
@@ -326,9 +365,11 @@ def items_page():
         else:
             imagens_items_importantes.append("imagem_nao_encontrada")
 
-    print(imagens_items_importantes)
     tabela_items_importantes = list(zip(items_importantes,items_importantes_local,imagens_items_importantes))
-    ###### items para o futuro #######
+
+
+
+    ################  items para o futuro ###############################
 
     item_guardar_intancia = df.iloc[23:,4].dropna().tolist()
     item_guardar = df.iloc[23:,5].dropna().tolist()
@@ -372,24 +413,321 @@ def items_page():
                 instancia_anterior = instancia
             else:
                 tabela_formatada.append(("", item, moeda))
+ 
 
 
-    # # Exemplo de uso:
-    # nome = "Poção de Guyak"
 
-    # item_encontrado = buscar_ids_por_nome_em_arquivos(nome, arquivo)
 
-    # if item_encontrado:
-    #     print(item_encontrado)
-    # else:
-    #     print("Item não encontrado.")
 
+        ###################  items n vender ###############
+
+
+    array_items_n_vender = [
+    {"classe": items_n_vender_raw_3[0].replace(" Nada", "").strip(), "items": [], "imagem": "assets/classes/espadachin.png"}, #Espadachin
+    {"classe": items_n_vender_raw_3[1], "items": [
+        [
+            items_n_vender_raw_3[2],
+            items_n_vender_raw_3[3],
+            items_n_vender_raw_3[4],
+            items_n_vender_raw_3[5],
+            items_n_vender_raw_3[6],
+            items_n_vender_raw_3[7]
+        ],
+        [
+            items_n_vender_raw_3_2_3[0],
+            items_n_vender_raw_3_2_3[1],
+            items_n_vender_raw_3_2_3[2],
+            items_n_vender_raw_3_2_3[3],
+            items_n_vender_raw_3_2_3[4],
+            items_n_vender_raw_3_2_3[5]
+        ]
+    ],
+    "imagem": "assets/classes/cavaleiro.png"
+    }, #Cavaleiro
+    {"classe": items_n_vender_raw_3[8], "items": [
+        [
+            items_n_vender_raw_3[9],
+            items_n_vender_raw_3[10]
+        ],
+        [
+            items_n_vender_raw_3_2_3[6],
+            items_n_vender_raw_3_2_3[7]
+        ]
+    ],
+    "imagem": "assets/classes/templario.png"
+    }, #Templario
+    {"classe": items_n_vender_raw_3[11].replace(" Nada", "").strip(), "items": [], "imagem": "assets/classes/cavaleiro_runico.png"}, #Cavaleiro Runico
+    {"classe": items_n_vender_raw_3[12], "items": [
+        [items_n_vender_raw_3[13]]
+    ],
+    "imagem": "assets/classes/guardioes_reais.png"
+    },#Guardiao Real
+    {"classe": items_n_vender_raw_4[0].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/mago.png"}, #Mago
+    {"classe": items_n_vender_raw_4[1].replace(" Nada", "").strip(), "items": [
+        [
+            items_n_vender_raw_4[2],
+            items_n_vender_raw_4[3],
+            items_n_vender_raw_4[4]
+        ],
+        [
+            items_n_vender_raw_4_2[0],
+            items_n_vender_raw_4_2[1],
+            items_n_vender_raw_4_2[2],
+            items_n_vender_raw_4_2[3]
+        ]
+    ],
+    "imagem": "assets/classes/bruxo.png"
+    }, #Bruxo
+    {"classe": items_n_vender_raw_4[5].replace(" Nada", "").strip(), "items": [
+        [
+            items_n_vender_raw_4[6],
+            items_n_vender_raw_4[7]
+        ],
+        [
+            items_n_vender_raw_4_2[4],
+            items_n_vender_raw_4_2[5],
+            items_n_vender_raw_4_2[6]
+        ]
+    ],
+    "imagem": "assets/classes/sabio.png"
+    }, #Sabio
+    {"classe": items_n_vender_raw_4[20].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/arcano.png"}, #Arcano
+    {"classe": items_n_vender_raw_4[21].replace(" Nada", "").strip(), "items": [
+        [
+            items_n_vender_raw_4[22],
+            items_n_vender_raw_4[23],
+            items_n_vender_raw_4[24],
+            items_n_vender_raw_4[25]
+        ]
+    ],
+    "imagem": "assets/classes/feiticeiro.png"
+    },#Feiticeiro
+    {"classe": items_n_vender_raw_5[0].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/gatuno.png"}, #Gatuno
+    {"classe": items_n_vender_raw_5[1].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/mercenario.png"},#Mercenario
+    {"classe": items_n_vender_raw_5[2].replace(" Nada", "").strip(), "items": [
+        [
+            items_n_vender_raw_5[3],
+            items_n_vender_raw_5[4],
+            items_n_vender_raw_5[5],
+            items_n_vender_raw_5[6]
+        ]
+    ],
+    "imagem": "assets/classes/arruaceiro.png"
+    },#Arruaceiro
+    {"classe": items_n_vender_raw_5[7].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/sicario.png"},#Sicario
+    {"classe": items_n_vender_raw_5[8].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/renegado.png"},#Renegado
+    {"classe": items_n_vender_raw_6[0].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/mercador.png"},#Mercador
+    {"classe": items_n_vender_raw_6[1].replace(" Nada", "").strip(), "items": [
+        [
+            items_n_vender_raw_6[2],
+            items_n_vender_raw_6[3],
+            items_n_vender_raw_6[4],
+            items_n_vender_raw_6[5]
+        ],
+        [
+            items_n_vender_raw_6_2[0],
+            items_n_vender_raw_6_2[1],
+            items_n_vender_raw_6_2[2],
+            items_n_vender_raw_6_2[3]
+        ],
+        [
+            items_n_vender_raw_6_3[0],
+            items_n_vender_raw_6_3[1],
+            items_n_vender_raw_6_3[2],
+            items_n_vender_raw_6_3[3]
+        ],
+        [
+            items_n_vender_raw_6_4[0],
+            items_n_vender_raw_6_4[1],
+            items_n_vender_raw_6_4[2],
+            items_n_vender_raw_6_4[3]
+        ],
+        [
+            items_n_vender_raw_6_5[0],
+            items_n_vender_raw_6_5[1],
+            items_n_vender_raw_6_5[2],
+            items_n_vender_raw_6_5[3]
+        ]
+    ],
+    "imagem": "assets/classes/ferreiro.png"},#Ferreiro
+    {"classe": items_n_vender_raw_6[6].replace(" Nada", "").strip(), "items": [
+        [
+            items_n_vender_raw_6[7],
+            items_n_vender_raw_6[8],
+            items_n_vender_raw_6[9],
+            items_n_vender_raw_6[10],
+            items_n_vender_raw_6[11],
+            items_n_vender_raw_6[12],
+            items_n_vender_raw_6[13],
+            items_n_vender_raw_6[14],
+            items_n_vender_raw_6[15],
+            items_n_vender_raw_6[16]
+        ],
+        [
+            items_n_vender_raw_6_2[4],
+            items_n_vender_raw_6_2[5]
+        ],
+        [
+            items_n_vender_raw_6_2[6]
+        ]
+    ],
+    "imagem": "assets/classes/alquimista.png"
+    },#Alquimista
+    {"classe": items_n_vender_raw_6[17].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/mecanico.png"},#Mecanico
+    {"classe": items_n_vender_raw_6[18].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/genetico.png"},#Genetico
+    {"classe": items_n_vender_raw_7[0].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/novico.png"},#Novico
+    {"classe": items_n_vender_raw_7[1].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/sacerdote.png"},#Sacerdote
+    {"classe": items_n_vender_raw_7[2].replace(" Nada", "").strip(), "items": [
+        [
+            "Possibilidade 1",
+            items_n_vender_raw_7_2[1],
+            items_n_vender_raw_7_2[2],
+            items_n_vender_raw_7_2[3],
+            items_n_vender_raw_7_2[4],
+            items_n_vender_raw_7_2[5],
+            items_n_vender_raw_7_2[6],
+            items_n_vender_raw_7_2[7],
+
+        ], 
+        [
+            "Possibilidade 2",
+            items_n_vender_raw_7_3[1],
+            items_n_vender_raw_7_3[2],
+            items_n_vender_raw_7_3[3],
+            items_n_vender_raw_7_3[4],
+            items_n_vender_raw_7_3[5],
+            items_n_vender_raw_7_3[6],
+        ],
+        [
+            "Possibilidade 3",
+            items_n_vender_raw_7_4[1],
+            items_n_vender_raw_7_4[2],
+            items_n_vender_raw_7_4[3],
+            items_n_vender_raw_7_4[4],
+            items_n_vender_raw_7_4[5],
+            items_n_vender_raw_7_4[6],
+        ]
+    ],
+    "imagem": "assets/classes/monge.png"
+    },#Monge
+    {"classe": items_n_vender_raw_7[11].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/arcebispo.png"},#Arcebispo
+    {"classe": items_n_vender_raw_7[12].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/sura.png"},#Sura
+    {"classe": items_n_vender_raw_8[0].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/arqueiro.png"},#arqueiro
+    {"classe": items_n_vender_raw_8[1].replace(" Nada", "").strip(), "items": [
+        [
+            items_n_vender_raw_8[2],
+            items_n_vender_raw_8[3],
+        ],[    
+            items_n_vender_raw_8_2[0],
+            items_n_vender_raw_8_2[1],
+        ],
+        [
+            items_n_vender_raw_8_3[0],
+            items_n_vender_raw_8_3[1],
+        ],[
+              items_n_vender_raw_8_4[0],
+            items_n_vender_raw_8_4[1],
+        ],
+        [
+            items_n_vender_raw_8[4],
+            items_n_vender_raw_8[5],
+        ],
+        [
+            items_n_vender_raw_8_2[2],
+            items_n_vender_raw_8_2[3],
+        ],
+        [
+            items_n_vender_raw_8_3[2],
+            items_n_vender_raw_8_3[3],
+        ],
+        # [
+        #     items_n_vender_raw_8_2[2],
+        #     items_n_vender_raw_8_2[3],
+        #     items_n_vender_raw_8_2[4],
+        # ]
+
+    ],"imagem": "assets/classes/caçador.png"},#Caçador
+    {"classe": items_n_vender_raw_8[6].replace(" Nada", "").strip(), "items": [
+        [
+            items_n_vender_raw_8[7],
+            items_n_vender_raw_8[8],
+            items_n_vender_raw_8[9],
+            items_n_vender_raw_8[10],
+            items_n_vender_raw_8[11],
+            items_n_vender_raw_8[12],
+            items_n_vender_raw_8[13],
+            items_n_vender_raw_8[14],
+            items_n_vender_raw_8[15]
+        ]],
+     "imagem": "assets/classes/bardo.png"},#Bardo
+    {"classe": items_n_vender_raw_8[16].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/sentinela.png"},#Sentinela
+    {"classe": items_n_vender_raw_8[17].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/trovador.png"},#Trovador
+    {"classe": items_n_vender_raw_9[0], "items": [
+        [
+            items_n_vender_raw_9[1],
+            items_n_vender_raw_9[2],
+            items_n_vender_raw_9[3],
+            items_n_vender_raw_9[4],
+            items_n_vender_raw_9[5],
+        ],
+        [  
+            items_n_vender_raw_9[6],
+            items_n_vender_raw_9[7],
+            items_n_vender_raw_9[8],
+        ],
+        [
+            items_n_vender_raw_9[9],
+            items_n_vender_raw_9[10],
+            items_n_vender_raw_9[11],
+            items_n_vender_raw_9[12],
+            items_n_vender_raw_9[13],
+            items_n_vender_raw_9[14]
+        ]
+    ],
+    "imagem": "assets/classes/odalisca.png"
+    },#Odalistica
+    {"classe": items_n_vender_raw_9[15].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/musa.png"}#Musa
+]
     return render_template('items.html', 
                            tabela_items=tabela_items,
                            tabela_items_importantes=tabela_items_importantes,
-                           array_items_guardar=tabela_formatada
+                           array_items_guardar=tabela_formatada,
+                           array_items_n_vender=array_items_n_vender
                            )
 
+@app.route('/monstros')
+def monstros_page():
+    file_path = 'rola.xlsx'
+    df = pd.read_excel(file_path, sheet_name='Monstros + Drop + XP', header=None)
+    df_xp_segunda_classe = pd.read_excel(file_path, sheet_name='Tabela de XP Segunda Classe', header=None)
 
+    monstro_id = df.iloc[1:,0]
+    monstro_nome = df.iloc[1:,1]
+    monstro_level = df.iloc[1:,2]
+    monstro_hp = df.iloc[1:,3]
+    monstro_exp = df.iloc[1:,4]
+    monstro_exp_job = df.iloc[1:,5]
+    monstro_exp_items = df.iloc[1:,7]
+
+   
+
+    data = list(zip(monstro_id,monstro_nome,monstro_level,monstro_hp,monstro_exp,monstro_exp_job,monstro_exp_items))
+
+    bloco1 = df_xp_segunda_classe.iloc[2:, 1:4]
+    bloco2 = df_xp_segunda_classe.iloc[2:, 5:8]
+    bloco3 = df_xp_segunda_classe.iloc[2:, 9:12]
+
+    for bloco in [bloco1, bloco2, bloco3]:
+        bloco.columns = ['Level', 'Total EXP', 'EXP Proximo Level']
+
+    tabela_unificada = pd.concat([bloco1, bloco2, bloco3], ignore_index=True)
+
+    tabela_unificada = tabela_unificada.dropna(how='all')
+
+    tabela_unificada['Level'] = pd.to_numeric(tabela_unificada['Level'], errors='coerce')
+    tabela_unificada = tabela_unificada.dropna(subset=['Level'])
+    tabela_unificada['Level'] = tabela_unificada['Level'].astype(int)
+
+    return render_template('monstros.html', data=data, tabela_unificada_segunda_classe = tabela_unificada.to_dict(orient='records'))
 if __name__ == '__main__':
     app.run(debug=True)
