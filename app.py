@@ -13,89 +13,25 @@ CORS(app)
 
 @app.route('/')
 def info_page():
-     # Lê o arquivo Excel
     file_path = 'rola.xlsx'
     df = pd.read_excel(file_path, header=None)
-    xls = pd.ExcelFile(file_path)
 
-    # Extrair as seções manualmente
     info_essenciais = df.iloc[2:7, 1].dropna().tolist()
     links = df.iloc[10:14, 1].dropna().tolist()
-    login_rewards = df.iloc[18:, 1].dropna().tolist()
 
-    classes = df.iloc[1:, 2].dropna().tolist()
-    builds = df.iloc[1:, 3].dropna().tolist()
-    amigos = df.iloc[1:18, 4].dropna().tolist()
-
-    rank_tiers = df.iloc[3:, 6].dropna().tolist()
-    rank_classes = df.iloc[3:, 7].dropna().tolist()
-    # rotas_melee = df.iloc[2:20, 4].dropna().tolist()    
-    # print(rotas_melee)
-    class_builds = [
-        (classes[1], [builds[1],builds[2]]), # Feiticeiro
-        (classes[2], [builds[3]]), # Sentinela
-        (classes[3], [builds[4]]), # Sicario
-        (classes[4], [builds[5]]), # Arcano
-        (classes[5], [builds[6],builds[7]]), # Arcebispo
-        (classes[6], [builds[9],builds[8]]), # Renegado
-        (classes[7], [builds[11], builds[10]]), # Shura
-        (classes[8], [builds[12]]), # Cavaleiros Rúnicos
-        (classes[9], [builds[14],builds[13]]), # Guardião Real
-        (classes[10], [builds[15]]), # Mecânico
-        (classes[11], [builds[16]]),# Bioquímicos	
-        (classes[12], [builds[17],builds[18]]), # Trovadores
-        (classes[13], [builds[19],builds[20]]), # Musa
-    ]
-
-    # Combinar os dados do rank com zip e enviar como lista
-    rank_data = list(zip(rank_tiers, rank_classes))
-    # class_builds = list(zip(classes, builds))
-  
-    # Extrair dados da planilha 'ROTAS MELEE + DICAS'
-
-    df_melee = pd.read_excel(file_path, sheet_name='ROTAS MELEE + DICAS', header=None)
-    melee_raw = df_melee.iloc[2:,1].dropna().tolist()
-
-    rotas_melee = []
-    for linha in melee_raw:
-        linha = str(linha).strip()
-
-        match = re.match(r"^(\d+~\d+|\d+\+?)\s*(.*)", linha)
-
-        if match:
-            nivel = match.group(1).strip()
-            local = match.group(2).strip()
-        else:
-            nivel = ""
-            local = linha
-
-        rotas_melee.append((nivel, local))
-    xls = pd.ExcelFile(file_path)
-
-    links = df.iloc[10:14, 1].dropna().tolist()
-    
-    links_com_indices = list(enumerate(xls.sheet_names))
 
     return render_template(
     'index.html',
     info=info_essenciais,
     links=links,
-    login=login_rewards,
-    class_builds=class_builds,
-    amigos=amigos,
-    rank_data=rank_data,
-    rotas_melee=rotas_melee,
-    menus=links_com_indices
     )
 
 
 @app.route('/classes')
 def classes_page():
     df = pd.read_excel('rola.xlsx', header=None)
-    classes = df.iloc[1:, 2].dropna().tolist()
-    builds = df.iloc[1:, 3].dropna().tolist()
-  
-
+    classes = df.iloc[1:27, 3].dropna().tolist()
+    builds = df.iloc[1:29, 4].dropna().tolist()
     class_builds = [
         (classes[1], [builds[1],builds[2]]), # Feiticeiro
         (classes[2], [builds[3]]), # Sentinela
@@ -111,13 +47,18 @@ def classes_page():
         (classes[12], [builds[17],builds[18]]), # Trovadores
         (classes[13], [builds[19],builds[20]]), # Musa
     ]
-    return render_template('classes.html', class_builds=class_builds)
+
+    return render_template('classes.html', 
+                           class_builds=class_builds
+                           )
 
 @app.route('/rank')
 def rank_page():
     df = pd.read_excel('rola.xlsx', header=None)
-    rank_tiers = df.iloc[3:, 6].dropna().tolist()
-    rank_classes = df.iloc[3:, 7].dropna().tolist()
+    rank_tiers = df.iloc[3:, 8].dropna().tolist()
+    rank_classes = df.iloc[3:, 9].dropna().tolist()
+
+    print(rank_tiers)
 
     rank_data = list(zip(rank_tiers, rank_classes))
     return render_template('rank.html', rank_data=rank_data)
