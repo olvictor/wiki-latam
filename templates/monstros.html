@@ -328,6 +328,11 @@
 button{
   cursor: pointer;
 }
+
+button:disabled{
+  cursor: wait;
+  background-color: gray;
+}
 .mensagem-container-calculo{
   display: flex;
   flex-direction: column;
@@ -374,8 +379,11 @@ button{
       <a href="{{ url_for('rank_page') }}">🏆 Rank de Classes</a>
       <a href="{{ url_for('rotas_page') }}">⚔️ Rotas de UP + Dicas</a>
       <a href="{{ url_for('items_page') }}">🧈 Items Importantes</a>
+      <a href="{{ url_for('monstros_page') }}">🐺 Monstros/calc de EXP</a>
+      <a href="{{ url_for('streamers_page') }}">🎥 Streamers</a>
     </nav>
   </aside>
+
     <main>
         <section id="rank" class="section">
               <h2>🐺 Monstros ragnarok</h2>
@@ -410,7 +418,11 @@ button{
                  </div>
 
                  <div class="container-calculo">
-                  <h2>⏰</h2>
+                  <div style="display: flex; width: 100%; justify-content: space-between; position: relative;">
+                    <h2 style="margin: 15px auto;">⏰</h2>
+                    <span style="position: absolute; right: 0; cursor: pointer;" class="close-container-calculo">❌</span>
+                  </div>
+                  
                   <h3>O Tempo chegou ao fim, Qual a % de XP final ?</h3>
                   <input class="porcentagem-final" type="number" disabled="true" placeholder="%">
                   <div class="mensagem-container-calculo"></div>
@@ -425,6 +437,18 @@ button{
                 </div>
                
                 <div class="container-porcentagem">
+
+                  <div class="inputBox">
+                    <label for="levelInicial">Qual a sua <span>classe</span>: </label>
+                    <select name="classe" id="selecao_classe">
+                      <option value="null">Opção...</option>
+                      <option value="0">Segunda Classe</option>
+                      <option value="1">Transclasse</option>
+                      <option value="2">Terceira Classe</option>
+                    </select>
+                  
+                  </div>
+
                   <div class="inputBox">
                     <label for="levelInicial">Digite o seu <span>level</span>: </label>
                     <input class="level-inicial" type="number" placeholder="Lvl" id="levelInicial">
@@ -445,7 +469,12 @@ button{
     <script >
       const dados = {{ data | tojson | safe }};
       const tabelaXP = {{ tabela_unificada_segunda_classe | tojson | safe }};
-      console.log(tabelaXP)
+      const tabelaXP_transclasse = {{ tabela_unificada_transclasse | tojson | safe }};
+      const tabelaXP_terceira = {{ tabela_unificada_terceira| tojson | safe }};
+
+      const tabelas = [tabelaXP,tabelaXP_transclasse,tabelaXP_terceira]
+
+
       const alarme = new Audio("{{ url_for('static', filename='/assets/sound/alarme.wav') }}");
       function esconderLoader() {
             setTimeout(() => {
@@ -468,10 +497,22 @@ button{
         let buttonCalcular = document.querySelector('.button-calcular');
         let containerCalculo = document.querySelector('.container-calculo');
         let mensagemCalculo = document.querySelector('.mensagem-container-calculo');
+        let closeCalculo = document.querySelector(".close-container-calculo");
+        const selecao_classe = document.getElementById("selecao_classe")
 
 
         buttonMensagem.addEventListener("click",()=>{
           containerMensagem.style.display = 'none'
+        })
+
+        closeCalculo.addEventListener("click",()=>{
+          containerCalculo.style.display = 'none'
+          porcentagemInicial.disabled = false;
+          porcentagemInicial.value = ""
+          levelInicial.disabled = false;
+          levelInicial.value ="";
+          minutos.innerText = "10"
+          segundos.innerText = "00"
         })
 
         porcentagemFinal.addEventListener("input",()=>{
@@ -488,19 +529,26 @@ button{
             containerMensagem.style.display = 'flex'
             return
           }
+
+          if(porcentagemFinal.value >= 100){
+            mensagemErro.innerText = "❌ A % Final tem que ser menor que 100 ."
+            containerMensagem.style.display = 'flex'
+            return
+          }
           const tempoMinutos = 10;
           const ganhoPercentual = parseInt(porcentagemFinal.value) - parseInt(porcentagemInicial.value)
-          const xpNivelAtual = tabelaXP.find(l => l.Level === parseInt(levelInicial.value))?.["EXP Proximo Level"] || 0;
+          const xpNivelAtual = tabelas[selecao_classe.value].find(l => l.Level === parseInt(levelInicial.value))?.["EXP Proximo Level"] || 0;
           
+
+
           const xpGanho = (ganhoPercentual / 100) * xpNivelAtual;
 
           const xpPorMinuto = xpGanho / tempoMinutos;
 
-          const xpRestante = tabelaXP
-          .filter(l => l.Level >= parseInt(levelInicial.value) && l.Level < 99)
+          const xpRestante = tabelas[selecao_classe.value]
+          .filter(l => l.Level >= parseInt(levelInicial.value) && l.Level < parseInt(tabelas[selecao_classe.value][tabelas[selecao_classe.value].length - 1].Level))
           .reduce((soma, obj) => soma + obj["EXP Proximo Level"], 0);
 
-          
           const minutosRestantes = xpRestante / xpPorMinuto;
           const horas = Math.floor(minutosRestantes / 60);
           const minutos = Math.round(minutosRestantes % 60);
@@ -515,26 +563,23 @@ button{
           if (horasRestantes > 0 || dias > 0) tempoFormatado += `${horasRestantes}h `;
           tempoFormatado += `${minutos}min`;
 
-          // mensagemCalculo.innerHTML = `Você ganhou ${parseInt(porcentagemFinal.value) - parseInt(porcentagemInicial.value)}% em 10 minutos 
-          // o correspondente a ${xpGanho} de XP e restam ${xpRestante} XP para o nivel 99 , oque levaria ${tempoFormatado}, para alcançar o nível maximo.
-          // `
-
           mensagemCalculo.innerHTML = `
           <div>  
             <p>Você ganhou ${parseInt(porcentagemFinal.value) - parseInt(porcentagemInicial.value)}% em ⏱️ 10 minutos </p>  
           </div>
           <div>
-            <p>O correspondente a ${xpGanho} 📶 de XP e restam ${xpRestante} 📶 XP para o nivel 99. </p>
+            <p>O correspondente a ${xpGanho} 📶 de XP e restam ${xpRestante} 📶 XP para o nivel máximo. </p>
           </div>
 
           <div>
-            <p>Oque levaria ⌛ ${tempoFormatado} , para alcançar o nível maximo. </p>
+            <p>Oque levaria ⌛ ${tempoFormatado} , para alcançar o nível ${parseInt(tabelas[selecao_classe.value][tabelas[selecao_classe.value].length - 1].Level) + 1}. </p>
           <div>
 
           `
 
         })
         const calcularTempo = () =>{
+          console.log((tabelas[selecao_classe.value][tabelas[selecao_classe.value].length-1].Level))
           if(isNaN(parseInt(porcentagemInicial.value)) || isNaN(parseInt(levelInicial.value)) ){
             mensagemErro.innerText = "❌ Preencha o campo da % inicial e o nível."
             containerMensagem.style.display = 'flex'
@@ -542,8 +587,8 @@ button{
           }
 
           if(parseInt(porcentagemInicial.value) < 0 ||  parseInt(levelInicial.value) < 0 || 
-          parseInt(porcentagemInicial.value) > 100 ||  parseInt(levelInicial.value) > 100){ 
-            mensagemErro.innerText = "❌ O valor deve estar entre 0 e 99."
+          parseInt(porcentagemInicial.value) > 100 ||  parseInt(levelInicial.value) > tabelas[selecao_classe.value][tabelas[selecao_classe.value].length-1].Level){ 
+            mensagemErro.innerText = "❌ O valor deve estar entre 0 e " + tabelas[selecao_classe.value][tabelas[selecao_classe.value].length-1].Level +"."
             containerMensagem.style.display = 'flex'
             return
           }

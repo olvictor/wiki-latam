@@ -5,6 +5,7 @@ import re
 import unicodedata
 from flask_cors import CORS
 from flask import Flask, render_template
+from openpyxl import load_workbook
 
 app = Flask(__name__)
 CORS(app)
@@ -125,13 +126,13 @@ def rank_page():
 def rotas_page():
     df_melee = pd.read_excel('rola.xlsx', sheet_name='ROTAS MELEE + DICAS', header=None)
     melee_raw = df_melee.iloc[2:,1].dropna().tolist()
-    quest_melee =  df_melee.iloc[:,2].dropna().tolist() 
-    builds_melee = df_melee.iloc[:,3].dropna().tolist() 
+    quest_melee =  df_melee.iloc[1:,3].dropna().tolist() 
+    builds_melee = df_melee.iloc[:,4].dropna().tolist() 
 
     df_ranged = pd.read_excel('rola.xlsx', sheet_name='ROTAS RANGED + DICAS', header=None)
     ranged_raw = df_ranged.iloc[2:,1].dropna().tolist()
-    quest_ranged =  df_ranged.iloc[1:,2].dropna().tolist() 
-    builds_ranged = df_ranged.iloc[:,3].dropna().tolist() 
+    quest_ranged =  df_ranged.iloc[1:,3].dropna().tolist() 
+    builds_ranged = df_ranged.iloc[:,4].dropna().tolist() 
 
     #ROTAS MELEE
     rotas_melee = []
@@ -148,9 +149,10 @@ def rotas_page():
             local = linha
 
         rotas_melee.append((nivel, local))
-  
+
+
     array_quest_melee = [
-        ("Equipamentos  " + quest_melee[1]),
+        (quest_melee[1]),
         (quest_melee[2]),
         (quest_melee[3]),
         (quest_melee[4]),
@@ -171,6 +173,7 @@ def rotas_page():
          (quest_melee[19], builds_melee[10]),
     ]
 
+    print(array_builds_melee)
     array_builds_formatado =[]
    
     for quest, build in array_builds_melee:
@@ -186,7 +189,7 @@ def rotas_page():
         array_builds_formatado.append((quest, build))
     
 
-    #ROTAS RANGED
+    ########### ROTAS RANGED
     rotas_ranged = []
     for linha in ranged_raw:
         linha = str(linha).strip()
@@ -700,6 +703,8 @@ def monstros_page():
     file_path = 'rola.xlsx'
     df = pd.read_excel(file_path, sheet_name='Monstros + Drop + XP', header=None)
     df_xp_segunda_classe = pd.read_excel(file_path, sheet_name='Tabela de XP Segunda Classe', header=None)
+    df_xp_terceira_classe = pd.read_excel(file_path, sheet_name='Tabela de XP Terceira Classe', header=None)
+
 
     monstro_id = df.iloc[1:,0]
     monstro_nome = df.iloc[1:,1]
@@ -728,6 +733,82 @@ def monstros_page():
     tabela_unificada = tabela_unificada.dropna(subset=['Level'])
     tabela_unificada['Level'] = tabela_unificada['Level'].astype(int)
 
-    return render_template('monstros.html', data=data, tabela_unificada_segunda_classe = tabela_unificada.to_dict(orient='records'))
+
+    df_xp_tranclasse = pd.read_excel(file_path, sheet_name='Tabela de XP Transclasse', header=None)
+    
+    bloco1_tranclasse = df_xp_tranclasse.iloc[2:, 1:4]
+    bloco2_tranclasse = df_xp_tranclasse.iloc[2:, 5:8]
+    bloco3_tranclasse = df_xp_tranclasse.iloc[2:, 9:12]
+
+
+    for bloco in [bloco1_tranclasse, bloco2_tranclasse, bloco3_tranclasse]:
+        bloco.columns = ['Level', 'Total EXP', 'EXP Proximo Level']
+
+    tabela_unificada_tranclasse = pd.concat([bloco1_tranclasse, bloco2_tranclasse, bloco3_tranclasse], ignore_index=True)
+
+    tabela_unificada_tranclasse = tabela_unificada_tranclasse.dropna(how='all')
+
+    tabela_unificada_tranclasse['Level'] = pd.to_numeric( tabela_unificada_tranclasse['Level'], errors='coerce')
+    tabela_unificada_tranclasse =  tabela_unificada_tranclasse.dropna(subset=['Level'])
+    tabela_unificada_tranclasse['Level'] =  tabela_unificada_tranclasse['Level'].astype(int)
+
+
+
+
+    bloco1_terceira = df_xp_terceira_classe.iloc[2:, 1:4]
+    bloco2_terceira = df_xp_terceira_classe.iloc[2:, 5:8]
+    bloco3_terceira = df_xp_terceira_classe.iloc[2:, 9:12]
+
+    for bloco in [bloco1_terceira, bloco2_terceira, bloco3_terceira]:
+        bloco.columns = ['Level', 'Total EXP', 'EXP Proximo Level']
+
+
+    tabela_unificada_terceira = pd.concat([bloco1_terceira, bloco2_terceira, bloco3_terceira], ignore_index=True)
+
+    tabela_unificada_terceira = tabela_unificada_terceira.dropna(how='all')
+
+    tabela_unificada_terceira['Level'] = pd.to_numeric( tabela_unificada_terceira['Level'], errors='coerce')
+    tabela_unificada_terceira =  tabela_unificada_terceira.dropna(subset=['Level'])
+    tabela_unificada_terceira['Level'] =  tabela_unificada_terceira['Level'].astype(int)
+
+    print(tabela_unificada_terceira)
+
+
+    return render_template('monstros.html', data=data,
+                            tabela_unificada_segunda_classe = tabela_unificada.to_dict(orient='records'),
+                            tabela_unificada_transclasse = tabela_unificada_tranclasse.to_dict(orient='records'),
+                            tabela_unificada_terceira = tabela_unificada_terceira.to_dict(orient='records')
+                            )
+
+@app.route('/streamers')
+def streamers_page():
+    file_path = 'rola.xlsx'
+
+    df = pd.read_excel(file_path, sheet_name='INFORMAÇÕES', header=None)
+
+    dados = df.iloc[19:,1].dropna().tolist()
+    
+    wb = load_workbook(file_path)
+    ws = wb["INFORMAÇÕES"]
+    
+    links = []
+    for row in ws.iter_rows(min_row=20, min_col=2, max_col=2):
+        cell = row[0]
+        if cell.hyperlink:
+            links.append(cell.hyperlink.target)
+        elif cell.value:
+            links.append(cell.value)
+
+
+    dados_com_links = [
+    {"nome": nome, "link": link}
+    for nome, link in zip(dados, links)
+    if nome != "Guias"
+    ]
+        
+    print(dados_com_links)  
+    return render_template('streamers.html', data=dados_com_links,
+                        
+                            )
 if __name__ == '__main__':
     app.run(debug=True)

@@ -210,49 +210,26 @@
   </aside>
 
   <main>
-    <h1>📖 Wiki do Servidor</h1>
+    <h1>🎥Streamers</h1>
     <section>
       <div id="loader" class="loader-container">
         <div class="spinner"></div>
         <p>Carregando...</p>
       </div>
       <div  id="conteudo" class="container" style="display: none;">
-        <div class="card" >
-          <h2>📌 Informações Essenciais</h2>
-          <br>
-          <ul>
-            {% for item in info %}
-              <li>{{ item }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-
-        <div class="card">
-          <h2>🔗 Links Úteis</h2>
-          <br>
-          <ul>
-            {% for link in links %}
-              <li>{{ link }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-
-        <div class="card">
-          <h2>🎁 Recompensas de Login</h2>
-          <br>
-          <ul>
-            {% for reward in login %}
-              <li>{{ reward }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-    </div>
+        <ul>
+          {% for item in data %}
+            <li>📺 <a href="{{ item.link }}" target="_blank">{{ item.nome }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
   </section>   
-  <section class="conteudoImg">
-    <img src="{{ url_for('static', filename='assets/pngwing.com.png') }}" alt="Logo do Rag" />
-  </section>
   </main>
   <script>
+
+    const dados = {{ data | tojson | safe }};
+    console.log(dados)
+
     function esconderLoader() {
         setTimeout(() => {
         document.getElementById("loader").style.display = "none";
