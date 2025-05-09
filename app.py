@@ -655,8 +655,7 @@ def items_page():
 def monstros_page():
     file_path = 'rola.xlsx'
     df = pd.read_excel(file_path, sheet_name='Monstros + Drop + XP', header=None)
-    df_xp_segunda_classe = pd.read_excel(file_path, sheet_name='Tabela de XP Segunda Classe', header=None)
-    df_xp_terceira_classe = pd.read_excel(file_path, sheet_name='Tabela de XP Terceira Classe', header=None)
+
 
 
     monstro_id = df.iloc[1:,0]
@@ -666,10 +665,24 @@ def monstros_page():
     monstro_exp = df.iloc[1:,4]
     monstro_exp_job = df.iloc[1:,5]
     monstro_exp_items = df.iloc[1:,7]
+    monstro_mapa = df.iloc[1:,9]
 
    
 
-    data = list(zip(monstro_id,monstro_nome,monstro_level,monstro_hp,monstro_exp,monstro_exp_job,monstro_exp_items))
+    data = list(zip(monstro_id,monstro_nome,monstro_level,monstro_hp,monstro_exp,monstro_exp_job,monstro_exp_items,monstro_mapa))
+
+
+    return render_template('monstros.html', data=data,
+                            )
+
+@app.route("/timer")
+def timer_page():
+
+    file_path = 'rola.xlsx'
+
+    df_xp_segunda_classe = pd.read_excel(file_path, sheet_name='Tabela de XP Segunda Classe', header=None)
+    df_xp_terceira_classe = pd.read_excel(file_path, sheet_name='Tabela de XP Terceira Classe', header=None)
+    data =""
 
     bloco1 = df_xp_segunda_classe.iloc[2:, 1:4]
     bloco2 = df_xp_segunda_classe.iloc[2:, 5:8]
@@ -727,12 +740,11 @@ def monstros_page():
     print(tabela_unificada_terceira)
 
 
-    return render_template('monstros.html', data=data,
+    return render_template('timer.html', data=data,
                             tabela_unificada_segunda_classe = tabela_unificada.to_dict(orient='records'),
                             tabela_unificada_transclasse = tabela_unificada_tranclasse.to_dict(orient='records'),
                             tabela_unificada_terceira = tabela_unificada_terceira.to_dict(orient='records')
                             )
-
 @app.route('/streamers')
 def streamers_page():
     file_path = 'rola.xlsx'

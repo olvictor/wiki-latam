@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Wiki do Servidor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+    }
+
+    aside {
+      width: 250px;
+      background-color: #1e1e1e;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      border-right: 1px solid #333;
+    }
+
+    aside h2 {
+      color: #ffc107;
+      margin-bottom: 20px;
+    }
+
+    aside nav a {
+      display: block;
+      color: #bbb;
+      text-decoration: none;
+      margin-bottom: 10px;
+      padding: 5px;
+      border-radius: 4px;
+    }
+
+    aside nav a:hover {
+      background-color: #292929;
+      color: #fff;
+    }
+
+    main {
+      margin-left: 270px;
+      padding: 30px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #ffc107;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .card {
+      background-color: #1e1e2f;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #444;
+    }
+
+    th {
+      background-color: #333;
+    }
+
+    tr:nth-child(even) {
+      background-color: #1c1c2c;
+    }
+
+.build-tag {
+  background-color: #3a3a5a;
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 3px 5px 3px 0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #f1f1f1;
+  transition: background-color 0.2s ease;
+}
+
+.build-tag:hover {
+  background-color: #4b4b7a;
+}
+
+
+.build-tag.suporte {
+  background-color: #4a7aa9	; 
+}
+
+.build-tag.dano {
+  background-color: #a94a4a; 
+}
+.dano::before {
+  content: "⚔️ ";
+}
+.suporte::before {
+  content: "💚 ";
+}
+
+.build-tag.controle {
+  background-color: #1e90ff; 
+}
+
+.loader-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+    }
+    .spinner {
+        border: 6px solid #ccc;
+        border-top: 6px solid #4b4b7a;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+    }
+  .accordion {
+  background-color: red;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+}
+
+.active, .accordion:hover {
+  background-color: #ccc;
+}
+
+.panel {
+  padding: 0 18px;
+  background-color: white;
+  display: none;
+  overflow: hidden;
+}
+#rank{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.box_monstro{
+  width: 40vw;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+}
+#infoMonstro{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#infoMonstro img{
+  filter: drop-shadow(0px 15px 5px orange);
+}
+
+.info{
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: .4rem;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+.box_monstro input{
+    height: 3rem;
+    outline: none;
+    
+}
+.timer-container{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4rem;
+}
+.timer-container h2{
+  font-size: 3rem;
+}
+.timer{
+  display: flex;
+}
+.timer p{
+  font-size: 10rem;
+}
+.mensagem{
+  position: absolute;
+  z-index: 150;
+  background-color: rgba(0,0,0,0.9);
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.mensagem-box{
+  background-color: white;
+  width: 30%;
+  height: auto;
+  min-height: 30%;
+  border-radius: .5rem;
+  color: #121212;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+.timer-container input{
+  height: 2rem;
+  padding: .3rem;
+  width: 4rem;
+  border: none;
+  border-radius: 8px;
+  filter: saturate(70%);
+  color: black;
+  outline: none;
+}
+
+.timer-container input:focus{
+  filter: drop-shadow(0px 0px 5px orange);
+}
+.container-porcentagem{
+  display: flex;
+  gap: 3rem;
+}
+
+.start-timer{
+  background-color: orange;
+  padding: .5rem;
+  width: 8rem;
+  outline: none;
+  border: none;
+  border-radius: 1rem;
+  font-weight: bolder;
+  text-transform: uppercase;
+  margin-top: 2rem;
+  color: white;
+}
+.start-timer:hover{
+  opacity: .4;
+}
+
+.container-calculo{
+  position: absolute;
+  z-index: 100;
+  background-color: rgba(0,0,0,1);
+  width: 100%;
+  min-height: 100%;
+  height: auto;
+  display: none;
+  border-radius: 1rem;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  margin-top: 1rem;
+}
+
+.container-calculo button{
+  background-color: orange;
+  padding: .5rem;
+  width: 8rem;
+  outline: none;
+  border: none;
+  border-radius: 1rem;
+  font-weight: bolder;
+  text-transform: uppercase;
+  color: white;
+
+}
+.inputBox{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+button{
+  cursor: pointer;
+}
+
+button:disabled{
+  cursor: wait;
+  background-color: gray;
+}
+.mensagem-container-calculo{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 1rem;
+}
+.mensagem-container-calculo div{
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 1rem;
+}
+.button-calcular{
+  display: none;
+}
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      aside {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+      }
+
+      main {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body onload=esconderLoader()>
+
+    <aside>
+        <h2>Seções</h2>
+        <nav>
+          <a href="{{ url_for('info_page') }}">📌 Info Essenciais</a>
+          <a href="{{ url_for('classes_page') }}">🧙 Classes & Builds</a>
+          <a href="{{ url_for('rank_page') }}">🏆 Rank de Classes</a>
+          <a href="{{ url_for('rotas_page') }}">⚔️ Rotas de UP + Dicas</a>
+          <a href="{{ url_for('items_page') }}">🧈 Items Importantes</a>
+          <a href="{{ url_for('monstros_page') }}">🐺 Monstros/calc de EXP</a>
+          <a href="{{ url_for('timer_page') }}">⏱️ calc de EXP</a>
+          <a href="{{ url_for('streamers_page') }}">🎥 Streamers</a>
+        </nav>
+      </aside>
+
+    <main>
+        <section id="rank" class="section">
+              <h2>⏱️ Calcule sua quantidade de XP</h2>
+              <br>
+              <div id="loader" class="loader-container">
+                <div class="spinner"></div>
+                <p>Carregando...</p>
+              </div>
+              <div id="conteudo" class="container">
+                <div class="timer-container">
+                  <div class="mensagem">
+                    <div class="mensagem-box">
+                     <p class="mensagem-text"></p>
+   
+                     <button class="button-mensagem">OK</button>
+                    </div>
+                   </div>
+  
+                   <div class="container-calculo">
+                    <div style="display: flex; width: 100%; justify-content: space-between; position: relative;">
+                      <h2 style="margin: 15px auto;">⏰</h2>
+                      <span style="position: absolute; right: 0; cursor: pointer;" class="close-container-calculo">❌</span>
+                    </div>
+                    
+                    <h3>O Tempo chegou ao fim, Qual a % de XP final ?</h3>
+                    <input class="porcentagem-final" type="number" disabled="true" placeholder="%">
+                    <div class="mensagem-container-calculo"></div>
+                    
+                    <button class="button-calcular">CALCULAR</button>
+                   </div>
+                  <h2>Calcule a xp</h2>
+                  <div class="timer">
+                    <p class="minutos">10</p>
+                    <p>:</p>
+                    <p class="segundos">00</p>
+                  </div>
+                 
+                  <div class="container-porcentagem">
+  
+                    <div class="inputBox">
+                      <label for="levelInicial">Qual a sua <span>classe</span>: </label>
+                      <select name="classe" id="selecao_classe">
+                        <option value="null">Opção...</option>
+                        <option value="0">Segunda Classe</option>
+                        <option value="1">Transclasse</option>
+                        <option value="2">Terceira Classe</option>
+                      </select>
+                    
+                    </div>
+  
+                    <div class="inputBox">
+                      <label for="levelInicial">Digite o seu <span>level</span>: </label>
+                      <input class="level-inicial" type="number" placeholder="Lvl" id="levelInicial">
+                    </div>
+                    <div class="inputBox">
+                      <label for="porcentagemIncial">Digite a % inicial: </label>
+                      <input class="porcentagem-inicial" type="number" placeholder="%" id="porcentagemIncial">
+                    </div>
+                  </div>
+                  <button class="start-timer">Iniciar</button>
+  
+                </div>
+              </div>
+              
+          </section>
+    </main>
+
+    
+
+    <script >
+      const tabelaXP = {{ tabela_unificada_segunda_classe | tojson | safe }};
+      const tabelaXP_transclasse = {{ tabela_unificada_transclasse | tojson | safe }};
+      const tabelaXP_terceira = {{ tabela_unificada_terceira| tojson | safe }};
+
+      const tabelas = [tabelaXP,tabelaXP_transclasse,tabelaXP_terceira]
+
+
+      const alarme = new Audio("{{ url_for('static', filename='/assets/sound/alarme.wav') }}");
+      function esconderLoader() {
+            setTimeout(() => {
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("conteudo").style.display = "flex";
+            }, 1000); // 1000 milissegundos = 1 segundo
+        }
+    
+        const select = document.getElementById("monstroSelect");
+        const infoDiv = document.getElementById("infoMonstro");
+        const iniciar =  document.querySelector(".start-timer");
+        let minutos = document.querySelector(".minutos")
+        let segundos = document.querySelector(".segundos")
+        let porcentagemInicial = document.querySelector(".porcentagem-inicial");
+        let levelInicial = document.querySelector('.level-inicial');
+        let porcentagemFinal = document.querySelector(".porcentagem-final");
+        let containerMensagem = document.querySelector('.mensagem');
+        let buttonMensagem = document.querySelector('.button-mensagem');
+        let mensagemErro = document.querySelector('.mensagem-text');
+        let buttonCalcular = document.querySelector('.button-calcular');
+        let containerCalculo = document.querySelector('.container-calculo');
+        let mensagemCalculo = document.querySelector('.mensagem-container-calculo');
+        let closeCalculo = document.querySelector(".close-container-calculo");
+        const selecao_classe = document.getElementById("selecao_classe")
+
+
+        buttonMensagem.addEventListener("click",()=>{
+          containerMensagem.style.display = 'none'
+        })
+
+        closeCalculo.addEventListener("click",()=>{
+          containerCalculo.style.display = 'none'
+          porcentagemInicial.disabled = false;
+          porcentagemInicial.value = ""
+          levelInicial.disabled = false;
+          levelInicial.value ="";
+          minutos.innerText = "10"
+          segundos.innerText = "00"
+        })
+
+        porcentagemFinal.addEventListener("input",()=>{
+          if(porcentagemFinal.value < porcentagemInicial.value || porcentagemFinal > 99){
+            buttonCalcular.disabled = true;
+          }else{
+            buttonCalcular.disabled = false;
+          }
+        })
+
+        buttonCalcular.addEventListener("click",()=>{
+          if(porcentagemFinal.value < porcentagemInicial.value){
+            mensagemErro.innerText = "❌ A % Final tem que ser maior que a inicial ."
+            containerMensagem.style.display = 'flex'
+            return
+          }
+
+          if(porcentagemFinal.value >= 100){
+            mensagemErro.innerText = "❌ A % Final tem que ser menor que 100 ."
+            containerMensagem.style.display = 'flex'
+            return
+          }
+          const tempoMinutos = 10;
+          const ganhoPercentual = parseInt(porcentagemFinal.value) - parseInt(porcentagemInicial.value)
+          const xpNivelAtual = tabelas[selecao_classe.value].find(l => l.Level === parseInt(levelInicial.value))?.["EXP Proximo Level"] || 0;
+          
+
+
+          const xpGanho = (ganhoPercentual / 100) * xpNivelAtual;
+
+          const xpPorMinuto = xpGanho / tempoMinutos;
+
+          const xpRestante = tabelas[selecao_classe.value]
+          .filter(l => l.Level >= parseInt(levelInicial.value) && l.Level < parseInt(tabelas[selecao_classe.value][tabelas[selecao_classe.value].length - 1].Level))
+          .reduce((soma, obj) => soma + obj["EXP Proximo Level"], 0);
+
+          const minutosRestantes = xpRestante / xpPorMinuto;
+          const horas = Math.floor(minutosRestantes / 60);
+          const minutos = Math.round(minutosRestantes % 60);
+
+
+          const dias = Math.floor(horas / 24);
+          const horasRestantes = horas % 24;
+
+
+          let tempoFormatado = '';
+          if (dias > 0) tempoFormatado += `${dias}d `;
+          if (horasRestantes > 0 || dias > 0) tempoFormatado += `${horasRestantes}h `;
+          tempoFormatado += `${minutos}min`;
+
+          mensagemCalculo.innerHTML = `
+          <div>  
+            <p>Você ganhou ${parseInt(porcentagemFinal.value) - parseInt(porcentagemInicial.value)}% em ⏱️ 10 minutos </p>  
+          </div>
+          <div>
+            <p>O correspondente a ${xpGanho} 📶 de XP e restam ${xpRestante} 📶 XP para o nivel máximo. </p>
+          </div>
+
+          <div>
+            <p>Oque levaria ⌛ ${tempoFormatado} , para alcançar o nível ${parseInt(tabelas[selecao_classe.value][tabelas[selecao_classe.value].length - 1].Level) + 1}. </p>
+          <div>
+
+          `
+
+        })
+        const calcularTempo = () =>{
+          console.log((tabelas[selecao_classe.value][tabelas[selecao_classe.value].length-1].Level))
+          if(isNaN(parseInt(porcentagemInicial.value)) || isNaN(parseInt(levelInicial.value)) ){
+            mensagemErro.innerText = "❌ Preencha o campo da % inicial e o nível."
+            containerMensagem.style.display = 'flex'
+            return
+          }
+
+          if(parseInt(porcentagemInicial.value) < 0 ||  parseInt(levelInicial.value) < 0 || 
+          parseInt(porcentagemInicial.value) > 100 ||  parseInt(levelInicial.value) > tabelas[selecao_classe.value][tabelas[selecao_classe.value].length-1].Level){ 
+            mensagemErro.innerText = "❌ O valor deve estar entre 0 e " + tabelas[selecao_classe.value][tabelas[selecao_classe.value].length-1].Level +"."
+            containerMensagem.style.display = 'flex'
+            return
+          }
+          iniciar.disabled = true;
+          porcentagemInicial.disabled = true;
+          levelInicial.disabled = true;
+
+          const timer = setInterval(() => {
+            let min = parseInt(minutos.innerText);
+            let seg = parseInt(segundos.innerText);
+
+          if (min === 0 && seg === 0) {
+              clearInterval(timer);
+              mensagemErro.innerText = "⏰ Tempo esgotado! Preencha o campo da %final"
+              containerCalculo.style.display = 'flex'
+              iniciar.disabled = false;
+              porcentagemFinal.disabled = false;
+              buttonCalcular.style.display = 'block'
+              alarme.play();
+              return;
+          }
+
+          if (seg === 0) {
+              seg = 59;
+              min -= 1;
+          } else {
+              seg -= 1;
+          }
+
+            minutos.innerText = min.toString().padStart(2, '0');
+            segundos.innerText = seg.toString().padStart(2, '0');
+          }, 10);
+        }
+
+
+        iniciar.addEventListener("click",()=>calcularTempo());
+
+
+
+
+        select.addEventListener("change", function () {
+          const index = this.value;
+          const monstro = dados[index];
+
+          if (monstro) {
+            infoDiv.innerHTML = `
+              <img src=${`https://static.divine-pride.net/images/mobs/png/${monstro[0]}.png`} alt=${monstro[0]}>
+              <br>
+              <strong>ID:</strong> ${monstro[0]}<br>
+              <strong>${monstro[1].trim()}</strong><br>
+              <div class="info">
+              <strong>📶 Nível:</strong> ${monstro[2]}<br>
+              <strong>❤️ HP:</strong> ${monstro[3]}<br>
+              </div>
+              <div class="info">
+              <strong>📈 EXP Base:</strong> ${monstro[4]}<br>
+              <strong>📈 EXP Job:</strong> ${monstro[5]}<br>
+              </div>
+              <p>📦 Itens:</p> ${monstro[6]}
+            `;
+          }
+        });
+    </script>
+</body>
+</html>
