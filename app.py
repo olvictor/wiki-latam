@@ -32,22 +32,34 @@ def classes_page():
     df = pd.read_excel('rola.xlsx', header=None)
     classes = df.iloc[1:27, 3].dropna().tolist()
     builds = df.iloc[1:29, 4].dropna().tolist()
-    class_builds = [
-        (classes[1], [builds[1],builds[2]]), # Feiticeiro
-        (classes[2], [builds[3]]), # Sentinela
-        (classes[3], [builds[4]]), # Sicario
-        (classes[4], [builds[5]]), # Arcano
-        (classes[5], [builds[6],builds[7]]), # Arcebispo
-        (classes[6], [builds[9],builds[8]]), # Renegado
-        (classes[7], [builds[11], builds[10]]), # Shura
-        (classes[8], [builds[12]]), # Cavaleiros Rúnicos
-        (classes[9], [builds[14],builds[13]]), # Guardião Real
-        (classes[10], [builds[15]]), # Mecânico
-        (classes[11], [builds[16]]),# Bioquímicos	
-        (classes[12], [builds[17],builds[18]]), # Trovadores
-        (classes[13], [builds[19],builds[20]]), # Musa
-    ]
 
+    wb = load_workbook('rola.xlsx')
+    ws = wb["INFORMAÇÕES"]
+        
+    links = []
+    for row in ws.iter_rows(min_row=33, min_col=2, max_col=2):
+            cell = row[0]
+            if cell.hyperlink:
+                links.append(cell.hyperlink.target)
+            elif cell.value:
+                links.append(cell.value)
+
+
+    class_builds = [
+        {"classe": classes[1], "builds": [builds[1], builds[2]], "link": ""}, #Feiticeiro
+        {"classe": classes[2], "builds": [builds[3]], "link": links[4]},# Sentinela
+        {"classe": classes[3], "builds": [builds[4]], "link": links[5]},# Sicario
+        {"classe": classes[4], "builds": [builds[5]], "link": links[6]},# Arcano
+        {"classe": classes[5], "builds": [builds[6], builds[7]], "link": ""},# Arcebispo
+        {"classe": classes[6], "builds": [builds[9], builds[8]], "link": links[3]},# Renegado
+        {"classe": classes[7], "builds": [builds[11], builds[10]], "link": ""},# Shura
+        {"classe": classes[8], "builds": [builds[12]], "link": links[1]}, # Cavaleiros Rúnicos
+        {"classe": classes[9], "builds": [builds[14], builds[13]], "link": links[2]},# Guardião Real
+        {"classe": classes[10], "builds": [builds[15]], "link": ""},# Mecânico
+        {"classe": classes[11], "builds": [builds[16]], "link": ""},# Bioquímicos
+        {"classe": classes[12], "builds": [builds[17], builds[18]], "link": links[7]},# Trovadores
+        {"classe": classes[13], "builds": [builds[19], builds[20]], "link": links[7]}, # Musa
+    ]
     return render_template('classes.html', 
                            class_builds=class_builds
                            )

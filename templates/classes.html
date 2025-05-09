@@ -152,6 +152,16 @@
         animation: spin 1s linear infinite;
     }
 
+    tr:hover{
+      opacity: .5;
+      cursor: pointer;
+    }
+
+    td a{
+      text-decoration: underline;
+      color:#1e90ff
+    }
+
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
@@ -205,12 +215,21 @@
               <th>Build</th>
             </tr>
           </thead>
+
           <tbody>
-            {% for classe, builds in class_builds %}
-            <tr>
-              <td><strong>{{ classe }}</strong></td>
+            {% for item in class_builds %}
+            <tr class="clickable-row" {% if item.link %}data-link="{{ item.link }}"{% endif %}>
               <td>
-                {% for build in builds %}
+                <strong>
+                  {% if item.link %}
+                    <a href="{{ item.link }}" target="_blank">{{ item.classe }} 📺</a>
+                  {% else %}
+                    {{ item.classe }}
+                  {% endif %}
+                </strong>
+              </td>
+              <td>
+                {% for build in item.builds %}
                 <div class="build-tag {% if 'Suporte:' in build %} suporte {% elif 'Dano:' in build %} dano {% elif 'Suporte de Controle: ' in build %} suporte {% endif %}">
                   {{ build }}
                 </div>
@@ -232,6 +251,16 @@
         document.getElementById("conteudo").style.display = "flex";
         }, 1000); // 1000 milissegundos = 1 segundo
     }
+
+    document.querySelectorAll(".clickable-row").forEach(row => {
+    const link = row.dataset.link;
+    if (link) {
+      row.style.cursor = "pointer";
+      row.addEventListener("click", () => {
+        window.open(link, "_blank");
+      });
+    }
+    });
   </script>
 </body>
 </html>
