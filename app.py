@@ -658,13 +658,11 @@ def monstros_page():
 
     arquivos = ["item_db_usable.yml", "item_db_equip.yml", "item_db_etc.yml"]
 
-# Função para normalizar nomes
     def normalizar(texto):
         if texto is None:
             return ""
         return unicodedata.normalize('NFKD', texto).encode('ASCII', 'ignore').decode('ASCII').strip().lower()
 
-    # Carrega todos os nomes e IDs dos arquivos em um dicionário
     def carregar_ids_em_memoria(arquivos):
         dicionario = {}
 
@@ -692,7 +690,6 @@ def monstros_page():
 
         return dicionario
 
-    # Extrai nome e ID de um bloco de YAML
     def extrair_nome_id(bloco):
         nome = None
         id_item = None
@@ -704,7 +701,7 @@ def monstros_page():
         return nome, id_item
     def limpar_item(item):
         item = item.strip()
-        item = re.sub(r'\[\d+\]', '', item)  # Remove sufixos como [1], [2]
+        item = re.sub(r'\[\d+\]', '', item) 
         return item.strip()
 
     def buscar_ids_itens_para_monstro(itens_str, dict_ids):
@@ -727,9 +724,6 @@ def monstros_page():
 
         return resultado
 
-    # ------------ Leitura e processamento do DataFrame original ------------
-
-    # Supondo que 'df' já esteja carregado com os dados da planilha
     df_monstros = pd.DataFrame({
         "id": df.iloc[1:, 0],
         "nome": df.iloc[1:, 1],
@@ -741,7 +735,6 @@ def monstros_page():
         "mapa": df.iloc[1:, 9]
     })
 
-    # Agrupa monstros com o mesmo nome e junta os mapas
     df_agrupado = df_monstros.groupby("nome", as_index=False).agg({
         "id": "first",
         "level": "first",
@@ -752,15 +745,12 @@ def monstros_page():
         "mapa": lambda x: ', '.join(sorted(set(str(i).strip() for i in x if pd.notna(i))))
     })
 
-    # Carrega os IDs de itens em memória
     dicionario_ids = carregar_ids_em_memoria(arquivos)
 
-    # Adiciona a coluna com os nomes de itens e seus respectivos IDs
     df_agrupado["itens_com_id"] = df_agrupado["itens"].apply(
         lambda x: buscar_ids_itens_para_monstro(x, dicionario_ids)
     )
 
-    # Transforma em lista de tuplas para enviar ao Jinja
     data = df_agrupado.to_dict(orient='records')
 
 
