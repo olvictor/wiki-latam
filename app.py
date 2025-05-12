@@ -14,16 +14,40 @@ CORS(app)
 @app.route('/')
 def info_page():
     file_path = 'rola.xlsx'
-    df = pd.read_excel(file_path, header=None)
+    df_link = pd.read_excel(file_path, header=None)
+    info_essenciais = df_link.iloc[2:7, 1].dropna().tolist()
 
-    info_essenciais = df.iloc[2:7, 1].dropna().tolist()
-    links = df.iloc[10:14, 1].dropna().tolist()
+    links = df_link.iloc[10:14, 1].dropna().tolist()
+
+
+    icones = {
+    'Discord': 'fa-brands fa-discord',
+    'Site': 'fa-solid fa-globe',
+    'Calculadora': 'fa-solid fa-calculator',
+    'Skill Simulator': 'fa-solid fa-wand-magic-sparkles'
+    }
+
+
+    links_formatados = []
+    for item in links:
+     if ':' in item:
+            nome, link = item.split(':', 1)
+            nome = nome.strip()
+            link = link.strip()
+            icone = icones.get(nome, 'fa-solid fa-link')  # ícone padrão
+            links_formatados.append({
+                'nome': nome,
+                'link': link,
+                'icone': icone
+            })
+
+    print(links_formatados)
 
 
     return render_template(
     'index.html',
     info=info_essenciais,
-    links=links,
+    links=links_formatados,
     )
 
 
@@ -70,10 +94,42 @@ def rank_page():
     rank_tiers = df.iloc[3:, 8].dropna().tolist()
     rank_classes = df.iloc[3:, 9].dropna().tolist()
 
-    print(rank_tiers)
+    df_link = pd.read_excel('rola.xlsx', header=None)
+
+    links = df_link.iloc[10:14, 1].dropna().tolist()
+
+
+    icones = {
+    'Discord': 'fa-brands fa-discord',
+    'Site': 'fa-solid fa-globe',
+    'Calculadora': 'fa-solid fa-calculator',
+    'Skill Simulator': 'fa-solid fa-wand-magic-sparkles'
+    }
+
+
+    links_formatados = []
+    for item in links:
+     if ':' in item:
+            nome, link = item.split(':', 1)
+            nome = nome.strip()
+            link = link.strip()
+            icone = icones.get(nome, 'fa-solid fa-link')  # ícone padrão
+            links_formatados.append({
+                'nome': nome,
+                'link': link,
+                'icone': icone
+            })
+
+
+
+
+    print(links_formatados)
 
     rank_data = list(zip(rank_tiers, rank_classes))
-    return render_template('rank.html', rank_data=rank_data)
+    return render_template('rank.html', 
+                           rank_data=rank_data,
+                           links=links_formatados
+                           )
 
 @app.route('/rotas')
 def rotas_page():
@@ -864,3 +920,38 @@ def streamers_page():
                             )
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+@app.route('/links')
+def links_page():
+    file_path = 'rola.xlsx'
+    df = pd.read_excel(file_path, header=None)
+
+    links = df.iloc[10:14, 1].dropna().tolist()
+
+    icones = {
+    'Discord': 'fa-brands fa-discord',
+    'Site': 'fa-solid fa-globe',
+    'Calculadora': 'fa-solid fa-calculator',
+    'Skill Simulator': 'fa-solid fa-wand-magic-sparkles'
+    }
+
+
+    links_formatados = []
+    for item in links:
+     if ':' in item:
+            nome, link = item.split(':', 1)
+            nome = nome.strip()
+            link = link.strip()
+            icone = icones.get(nome, 'fa-solid fa-link')  # ícone padrão
+            links_formatados.append({
+                'nome': nome,
+                'link': link,
+                'icone': icone
+            })
+
+    return render_template(
+    'links.html',
+    links=links_formatados,
+)

@@ -27,21 +27,27 @@
       gap: 2rem;
     }
     .classe-container{
-      width: 30%;
+      width: 20%;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
+      cursor: pointer;
+      gap: .7rem;
     }
-
+    
+    .classe-container h3{
+      font-size: 1rem;
+    }
 
     .classe-container a{
       color: #1e90ff;
     }
 
     .classe-container:hover{
-      opacity: .7;
+      /* opacity: .7; */
+      scale: 1.1;
     }
 
     aside {
@@ -193,11 +199,26 @@
   filter: drop-shadow(0px 0px 5px white);
 }
 
-.classe-container h4{
-  color:rgb(12, 209, 12);
-
+.online-section{
+  display: flex;
+  height: auto;
+  width: 100%;
+  min-height: 35vh;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding-top: 3rem;
 }
 
+.offline-section{
+  display: flex;
+  height: auto;
+  width: 100%;
+  min-height: 35vh;
+  gap: 2rem;
+  flex-wrap: wrap;
+  padding-top: 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
 .pulsando {
   animation: pulse-glow 1.5s infinite ease-in-out;
   filter: drop-shadow(0 0 5px rgb(12, 209, 12));
@@ -243,27 +264,30 @@
   }
 }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
 
-    @media (max-width: 768px) {
+
+ @keyframes spin {
+      to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
       body {
         flex-direction: column;
-      }
+}
 
-      aside {
+aside {
         width: 100%;
         height: auto;
         position: static;
         border-right: none;
-      }
+}
 
-    main {
+main{
         margin-left: 0;
         padding: 20px;
-      }
-    }
+}
+
+}
   </style>
 </head>
 <body onload=esconderLoader()>
@@ -280,6 +304,11 @@
       <a href="{{ url_for('timer_page') }}">⏱️ Calc de EXP</a>
       <a href="{{ url_for('streamers_page') }}">🎥 Streamers</a>
     </nav>
+    <div class="lista-links">
+      {% for item in links %}
+        {% include 'components/links.html' %}
+      {% endfor %}
+    </div>
   </aside>
 
   <main>
@@ -290,23 +319,34 @@
         <p>Carregando...</p>
       </div>
       <div  id="conteudo" class="container" style="display: none;">
-      {% for item in data %}
-        <div class="classe-container">
-          {% if item.status == "on" %}
-            <img class="pulsando" src="{{ url_for('static', filename=item.imagem_gif) }}" alt="classe" style="width: 100px; height: 125px;">
-          {% else %}
-            <img class="off" src="{{ url_for('static', filename=item.imagem) }}" alt="classe" style="width: 100px;">
-          {% endif %}         
-          <div>
-            <h3>  {{ item.dados }}</h3>
+        <div class="online-section">
+          {% for item in data %}
             {% if item.status == "on" %}
-            <p><a href="{{ item.links }}" target="_blank"><span class="live-indicator">Live</span></a></p>
-            {% else %}
-            <p><a href="{{ item.links }}" target="_blank">Confira o canal</a></p>
-            {% endif %}  
-          </div>
+              <div class="classe-container">
+                <img class="pulsando" src="{{ url_for('static', filename=item.imagem_gif) }}" alt="classe" style="width: 100px; height: 125px;">
+                <div>
+                  <h3>{{ item.dados }}</h3>
+                  <p><a href="{{ item.links }}" target="_blank"><span class="live-indicator">Live</span></a></p>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
-      {% endfor %}
+        
+        <!-- Seção: Itens com status diferente de "on" -->
+        <div class="offline-section">
+          {% for item in data %}
+            {% if item.status != "on" %}
+              <div class="classe-container">
+                <img class="off" src="{{ url_for('static', filename=item.imagem) }}" alt="classe" style="width: 100px;">
+                <div>
+                  <h3>{{ item.dados }}</h3>
+                  <p><a href="{{ item.links }}" target="_blank">Confira o canal</a></p>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
   </section>   
   </main>
   <script>
@@ -318,8 +358,18 @@
         setTimeout(() => {
         document.getElementById("loader").style.display = "none";
         document.getElementById("conteudo").style.display = "flex";
-        }, 1000); // 1000 milissegundos = 1 segundo
+        }, 1000); 
     }
+
+
+    document.querySelectorAll('.classe-container').forEach(container => {
+    container.addEventListener('click', () => {
+      const link = container.querySelector('a');
+      if (link) {
+        window.open(link.href, '_blank');
+      }
+      });
+    });
   </script>
 </body>
 </html>
