@@ -355,7 +355,18 @@ button:disabled{
   display: flex;
   flex-direction: column;
 }
+.info-items{
+  display: flex;
+}
 
+.info-items a{
+  color: #1e90ff;
+}
+
+.info-items img{
+  filter: drop-shadow(0px 0px 5px white);
+
+}
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
@@ -405,10 +416,10 @@ button:disabled{
             <div class="box_monstro">
                 <label for="monstroSelect">Selecione um Monstro:</label>
                 <select id="monstroSelect">
-                <option disabled selected>Escolha...</option>
-                {% for id, nome, level, hp, exp, job_exp,items,mapa in data %}
-                    <option value="{{ loop.index0 }}">{{ nome }}</option>
-                {% endfor %}
+                  <option disabled selected>Escolha...</option>
+                  {% for monstro in data %}
+                    <option value="{{ loop.index0 }}">{{ monstro.nome }}</option>
+                  {% endfor %}
                 </select>
 
                 <div id="infoMonstro" style="margin-top: 20px;">
@@ -433,7 +444,7 @@ button:disabled{
 
     <script >
       const dados = {{ data | tojson | safe }};
- 
+
       function esconderLoader() {
             setTimeout(() => {
             document.getElementById("loader").style.display = "none";
@@ -452,7 +463,8 @@ button:disabled{
    
         
         if (monstro) {
-          const locais = monstro[7]
+        console.log(monstro)  
+        const locais = monstro.mapa
           .split(',')
           .map(item => {
             const nome = item.trim();
@@ -463,21 +475,43 @@ button:disabled{
               </div>
             `;
           })
-          .join('');
+         .join('');
+
+         const itens = monstro.itens_com_id
+         .map(item =>{
+            const id = Number(item);
+            if(item.id == null){
+              return `<img src="https://www3.worldrag.com/database/media/item/${item.id}.gif" alt="${item.nome}" style="width: 30px;">`
+            }
+
+            return `
+            <div style="display: inline-block; text-align: center; margin: 4px;">
+              <a href="https://ratemyserver.net/item_db.php?item_id=${item.id}&small=1&back=1">
+                <img src="https://www3.worldrag.com/database/media/item/${item.id}.gif" alt="${item.nome}" style="width: 30px;">
+                <p>${item.nome}</p>
+              <a/>
+            </div>
+            `
+
+         })
+
         infoDiv.innerHTML = `
-              <img class="imagen-monstro" src=${`https://static.divine-pride.net/images/mobs/png/${monstro[0]}.png`} alt=${monstro[0]}>
+              <img class="imagen-monstro" src=${`https://static.divine-pride.net/images/mobs/png/${monstro.id}.png`} alt=${monstro.id}>
               <br>
-              <strong>ID:</strong> ${monstro[0]}<br>
-              <strong>${monstro[1].trim()}</strong><br>
+              <strong>ID:</strong> ${monstro.id}<br>
+              <strong>${monstro.nome.trim()}</strong><br>
               <div class="info">
-              <strong>📶 Nível:</strong> ${monstro[2]}<br>
-              <strong>❤️ HP:</strong> ${monstro[3]}<br>
+              <strong>📶 Nível:</strong> ${monstro.level}<br>
+              <strong>❤️ HP:</strong> ${monstro.hp}<br>
               </div>
               <div class="info">
-              <strong>📈 EXP Base:</strong> ${monstro[4]}<br>
-              <strong>📈 EXP Job:</strong> ${monstro[5]}<br>
+              <strong>📈 EXP Base:</strong> ${monstro.exp_base}<br>
+              <strong>📈 EXP Job:</strong> ${monstro.exp_job}<br>
               </div>
-              <p>📦 Itens:</p> ${monstro[6]}
+              <p>📦 Itens:</p>
+              <div class="info-items">
+                ${itens}  
+              </div>
               <p>📍 Localização:</p>
               <div class="container-mapas-monstro">
                 ${locais}

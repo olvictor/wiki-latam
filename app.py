@@ -46,19 +46,19 @@ def classes_page():
 
 
     class_builds = [
-        {"classe": classes[1], "builds": [builds[1], builds[2]], "link": ""}, #Feiticeiro
-        {"classe": classes[2], "builds": [builds[3]], "link": links[4]},# Sentinela
-        {"classe": classes[3], "builds": [builds[4]], "link": links[5]},# Sicario
-        {"classe": classes[4], "builds": [builds[5]], "link": links[6]},# Arcano
-        {"classe": classes[5], "builds": [builds[6], builds[7]], "link": ""},# Arcebispo
-        {"classe": classes[6], "builds": [builds[9], builds[8]], "link": links[3]},# Renegado
-        {"classe": classes[7], "builds": [builds[11], builds[10]], "link": ""},# Shura
-        {"classe": classes[8], "builds": [builds[12]], "link": links[1]}, # Cavaleiros Rúnicos
-        {"classe": classes[9], "builds": [builds[14], builds[13]], "link": links[2]},# Guardião Real
-        {"classe": classes[10], "builds": [builds[15]], "link": ""},# Mecânico
-        {"classe": classes[11], "builds": [builds[16]], "link": ""},# Bioquímicos
-        {"classe": classes[12], "builds": [builds[17], builds[18]], "link": links[7]},# Trovadores
-        {"classe": classes[13], "builds": [builds[19], builds[20]], "link": links[7]}, # Musa
+        {"classe": classes[1], "builds": [builds[1], builds[2]], "link": "","imagem": "assets/classes/feiticeiro.png"}, #Feiticeiro
+        {"classe": classes[2], "builds": [builds[3]], "link": links[4],"imagem": "assets/classes/sentinela.png"},# Sentinela
+        {"classe": classes[3], "builds": [builds[4]], "link": links[5],"imagem": "assets/classes/sicario.png"},# Sicario
+        {"classe": classes[4], "builds": [builds[5]], "link": links[6],"imagem": "assets/classes/arcano.png"},# Arcano
+        {"classe": classes[5], "builds": [builds[6], builds[7]], "link": "","imagem": "assets/classes/arcebispo.png"},# Arcebispo
+        {"classe": classes[6], "builds": [builds[9], builds[8]], "link": links[3],"imagem": "assets/classes/renegado.png"},# Renegado
+        {"classe": classes[7], "builds": [builds[11], builds[10]], "link": "","imagem": "assets/classes/sura.png"},# Shura
+        {"classe": classes[8], "builds": [builds[12]], "link": links[1],"imagem": "assets/classes/cavaleiro_runico.png"}, # Cavaleiros Rúnicos
+        {"classe": classes[9], "builds": [builds[14], builds[13]], "link": links[2],"imagem": "assets/classes/guardioes_reais.png"},# Guardião Real
+        {"classe": classes[10], "builds": [builds[15]], "link": "","imagem": "assets/classes/mecanico.png"},# Mecânico
+        {"classe": classes[11], "builds": [builds[16]], "link": "","imagem": "assets/classes/genetico.png"},# Bioquímicos
+        {"classe": classes[12], "builds": [builds[17], builds[18]], "link": links[7],"imagem": "assets/classes/trovador.png"},# Trovadores
+        {"classe": classes[13], "builds": [builds[19], builds[20]], "link": links[7],"imagem": "assets/classes/musa.png"}, # Musa
     ]
     return render_template('classes.html', 
                            class_builds=class_builds
@@ -656,24 +656,115 @@ def monstros_page():
     file_path = 'rola.xlsx'
     df = pd.read_excel(file_path, sheet_name='Monstros + Drop + XP', header=None)
 
+    arquivos = ["item_db_usable.yml", "item_db_equip.yml", "item_db_etc.yml"]
+
+# Função para normalizar nomes
+    def normalizar(texto):
+        if texto is None:
+            return ""
+        return unicodedata.normalize('NFKD', texto).encode('ASCII', 'ignore').decode('ASCII').strip().lower()
+
+    # Carrega todos os nomes e IDs dos arquivos em um dicionário
+    def carregar_ids_em_memoria(arquivos):
+        dicionario = {}
+
+        for caminho_arquivo in arquivos:
+            try:
+                with open(caminho_arquivo, 'r', encoding='latin-1') as file:
+                    bloco = []
+                    for linha in file:
+                        if linha.strip().startswith('- Id:'):
+                            if bloco:
+                                nome, id_item = extrair_nome_id(bloco)
+                                if nome and id_item:
+                                    dicionario[nome] = id_item
+                            bloco = [linha]
+                        else:
+                            bloco.append(linha)
+
+                    # Processa o último bloco
+                    nome, id_item = extrair_nome_id(bloco)
+                    if nome and id_item:
+                        dicionario[nome] = id_item
+
+            except Exception as e:
+                print(f"Erro ao processar {caminho_arquivo}: {e}")
+
+        return dicionario
+
+    # Extrai nome e ID de um bloco de YAML
+    def extrair_nome_id(bloco):
+        nome = None
+        id_item = None
+        for linha in bloco:
+            if "AegisName:" in linha:
+                nome = normalizar(linha.split(":", 1)[1].strip())
+            if "Id:" in linha:
+                id_item = linha.split(":", 1)[1].strip()
+        return nome, id_item
+    def limpar_item(item):
+        item = item.strip()
+        item = re.sub(r'\[\d+\]', '', item)  # Remove sufixos como [1], [2]
+        return item.strip()
+
+    def buscar_ids_itens_para_monstro(itens_str, dict_ids):
+        nomes_itens = [limpar_item(item) for item in itens_str.split(',') if item.strip()]
+        resultado = []
+
+        for nome in nomes_itens:
+            nome_norm = normalizar(nome).replace(' ', '_')
+            id_encontrado = None
+
+            for chave, id_item in dict_ids.items():
+                if nome_norm in chave:
+                    id_encontrado = id_item
+                    break
+
+            resultado.append({
+                "nome": nome,
+                "id": id_encontrado
+            })
+
+        return resultado
+
+    # ------------ Leitura e processamento do DataFrame original ------------
+
+    # Supondo que 'df' já esteja carregado com os dados da planilha
+    df_monstros = pd.DataFrame({
+        "id": df.iloc[1:, 0],
+        "nome": df.iloc[1:, 1],
+        "level": df.iloc[1:, 2],
+        "hp": df.iloc[1:, 3],
+        "exp_base": df.iloc[1:, 4],
+        "exp_job": df.iloc[1:, 5],
+        "itens": df.iloc[1:, 7],
+        "mapa": df.iloc[1:, 9]
+    })
+
+    # Agrupa monstros com o mesmo nome e junta os mapas
+    df_agrupado = df_monstros.groupby("nome", as_index=False).agg({
+        "id": "first",
+        "level": "first",
+        "hp": "first",
+        "exp_base": "first",
+        "exp_job": "first",
+        "itens": "first",
+        "mapa": lambda x: ', '.join(sorted(set(str(i).strip() for i in x if pd.notna(i))))
+    })
+
+    # Carrega os IDs de itens em memória
+    dicionario_ids = carregar_ids_em_memoria(arquivos)
+
+    # Adiciona a coluna com os nomes de itens e seus respectivos IDs
+    df_agrupado["itens_com_id"] = df_agrupado["itens"].apply(
+        lambda x: buscar_ids_itens_para_monstro(x, dicionario_ids)
+    )
+
+    # Transforma em lista de tuplas para enviar ao Jinja
+    data = df_agrupado.to_dict(orient='records')
 
 
-    monstro_id = df.iloc[1:,0]
-    monstro_nome = df.iloc[1:,1]
-    monstro_level = df.iloc[1:,2]
-    monstro_hp = df.iloc[1:,3]
-    monstro_exp = df.iloc[1:,4]
-    monstro_exp_job = df.iloc[1:,5]
-    monstro_exp_items = df.iloc[1:,7]
-    monstro_mapa = df.iloc[1:,9]
-
-   
-
-    data = list(zip(monstro_id,monstro_nome,monstro_level,monstro_hp,monstro_exp,monstro_exp_job,monstro_exp_items,monstro_mapa))
-
-
-    return render_template('monstros.html', data=data,
-                            )
+    return render_template('monstros.html', data=data)
 
 @app.route("/timer")
 def timer_page():
@@ -757,22 +848,29 @@ def streamers_page():
     ws = wb["INFORMAÇÕES"]
     
     links = []
-    for row in ws.iter_rows(min_row=20, min_col=2, max_col=2):
+    for row in ws.iter_rows(min_row=20,max_row=31, min_col=2, max_col=2):
         cell = row[0]
         if cell.hyperlink:
             links.append(cell.hyperlink.target)
         elif cell.value:
             links.append(cell.value)
 
+    dados_links_imagens = [
+         {"dados": dados[0], "links": links[0],"imagem": "assets/classes/cavaleiro_runico.png"},
+         {"dados": dados[1], "links": links[1],"imagem": "assets/classes/arcano.png"},
+         {"dados": dados[2], "links": links[2],"imagem": "assets/classes/arcano.png"},
+         {"dados": dados[3], "links": links[3],"imagem": "assets/classes/sicario.png"},   
+         {"dados": dados[4], "links": links[4],"imagem": "assets/classes/arcebispo.png"},   
+         {"dados": dados[5], "links": links[5],"imagem": "assets/classes/arcano.png"},   
+         {"dados": dados[6], "links": links[6],"imagem": "assets/classes/arcano.png"}, 
+         {"dados": dados[7], "links": links[7],"imagem": "assets/classes/arcano.png"},   
+         {"dados": dados[8], "links": links[8],"imagem": "assets/classes/arcano.png"},   
+         {"dados": dados[9], "links": links[9],"imagem": "assets/classes/arcano.png"},
+         {"dados": dados[10], "links": links[10],"imagem": "assets/classes/arcano.png"},   
 
-    dados_com_links = [
-    {"nome": nome, "link": link}
-    for nome, link in zip(dados, links)
-    if nome != "Guias"
     ]
-        
-    print(dados_com_links)  
-    return render_template('streamers.html', data=dados_com_links,
+
+    return render_template('streamers.html', data=dados_links_imagens,
                         
                             )
 if __name__ == '__main__':
