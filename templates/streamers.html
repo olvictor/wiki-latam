@@ -203,6 +203,34 @@
   filter: drop-shadow(0 0 5px rgb(12, 209, 12));
 }
 
+
+.live-indicator {
+  color: rgb(12, 209, 12); 
+  font-weight: 500;
+  font-family: sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px; 
+  width: 6rem;
+  text-align: center;
+  box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0px;
+  border-radius: 1rem;
+  margin-top: 1rem;
+}
+
+.live-indicator::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background-color: rgb(12, 209, 12);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse-glow 1s infinite ease-in-out;
+}
+
 @keyframes pulse-glow {
   0% {
     filter: drop-shadow(0 0 5px rgb(12, 209, 12));
@@ -265,15 +293,17 @@
       {% for item in data %}
         <div class="classe-container">
           {% if item.status == "on" %}
-          <h4>ONLINE !</h4>
             <img class="pulsando" src="{{ url_for('static', filename=item.imagem_gif) }}" alt="classe" style="width: 100px; height: 125px;">
           {% else %}
             <img class="off" src="{{ url_for('static', filename=item.imagem) }}" alt="classe" style="width: 100px;">
-          {% endif %}
-          
+          {% endif %}         
           <div>
-            <h3>{{ item.dados }}</h3>
-            <p><a href="{{ item.links }}" target="_blank">Ver mais</a></p>
+            <h3>  {{ item.dados }}</h3>
+            {% if item.status == "on" %}
+            <p><a href="{{ item.links }}" target="_blank"><span class="live-indicator">Live</span></a></p>
+            {% else %}
+            <p><a href="{{ item.links }}" target="_blank">Confira o canal</a></p>
+            {% endif %}  
           </div>
         </div>
       {% endfor %}
