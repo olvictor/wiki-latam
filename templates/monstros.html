@@ -351,10 +351,13 @@ button:disabled{
   gap: .5rem;
   flex-wrap: wrap;
 }
-.mapas-monstro{
+
+/* .mapas-monstro{
   display: flex;
   flex-direction: column;
-}
+  position: relative;
+} */
+
 .info-items{
   display: flex;
 }
@@ -387,7 +390,27 @@ button:disabled{
         margin-left: 0;
         padding: 20px;
       }
-    }
+  .tooltip-copiado {
+  position: absolute;
+  bottom: 100%; /* aparece acima do elemento */
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background-color: #222;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 10;
+  }
+.mostrar {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-16px);
+}
+  }
   </style>
 </head>
 <body onload=esconderLoader()>
@@ -456,7 +479,8 @@ button:disabled{
             document.getElementById("conteudo").style.display = "flex";
             }, 1000); // 1000 milissegundos = 1 segundo
       }
-    
+
+
       const select = document.getElementById("monstroSelect");
       const infoDiv = document.getElementById("infoMonstro");
 
@@ -468,18 +492,18 @@ button:disabled{
    
         
         if (monstro) {
-        console.log(monstro)  
+
         const locais = monstro.mapa
-          .split(',')
-          .map(item => {
-            const nome = item.trim();
-            return `
-              <div class="mapas-monstro" style="display: inline-block; text-align: center; margin: 4px;">
-                <img src="https://www.divine-pride.net/img/map/original/${nome}" alt="${nome}" style="width: 80px;">
-                <p>${nome}</p>
-              </div>
-            `;
-          })
+        .split(',')
+        .map(item => {
+          const nome = item.trim();
+          return `
+            <div class="mapas-monstro" data-clipboard="${nome}" style="display: inline-block; text-align: center; margin: 4px; cursor: pointer; position: relative;">
+              <img src="https://www.divine-pride.net/img/map/original/${nome}" alt="${nome}" style="width: 80px;">
+              <p>${nome}</p>
+            </div>
+          `;
+        })
          .join('');
 
          const itens = monstro.itens_com_id
@@ -524,6 +548,50 @@ button:disabled{
             `;
           }
         });
+      //   document.addEventListener('click', function (e) {
+      //   const el = e.target.closest('.mapas-monstro');
+      //   if (el) {
+      //     const nomeMapa = el.getAttribute('data-clipboard');
+      //     navigator.clipboard.writeText(nomeMapa)
+      //       .then(() => {
+      //         console.log(`📋 Copiado: ${nomeMapa}`);
+      //         el.style.boxShadow = '0 0 6px 2px limegreen';
+      //         setTimeout(() => el.style.boxShadow = '', 1000);
+      //       })
+      //       .catch(err => {
+      //         console.error('Erro ao copiar:', err);
+      //       });
+      //   }
+      // });
+      document.addEventListener('click', function (e) {
+      const el = e.target.closest('.mapas-monstro');
+      if (el) {
+        const nomeMapa = el.getAttribute('data-clipboard');
+        navigator.clipboard.writeText(nomeMapa)
+          .then(() => {
+            // Feedback visual (box shadow)
+            el.style.boxShadow = '0 0 6px 2px limegreen';
+            setTimeout(() => el.style.boxShadow = '', 1000);
+
+            // Balão "copiado!"
+            let tooltip = document.createElement('div');
+            tooltip.className = 'tooltip-copiado';
+            tooltip.innerText = 'Copiado!';
+            el.appendChild(tooltip);
+            // força reflow para ativar transição
+            requestAnimationFrame(() => tooltip.classList.add('mostrar'));
+
+            // remover depois de 1s
+            setTimeout(() => {
+              tooltip.classList.remove('mostrar');
+              setTimeout(() => tooltip.remove(), 300); // espera a transição
+            }, 1000);
+          })
+          .catch(err => {
+            console.error('Erro ao copiar:', err);
+          });
+      }
+    });
     </script>
 </body>
 </html>

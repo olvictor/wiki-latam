@@ -902,17 +902,17 @@ def streamers_page():
             links.append(cell.value)
 
     dados_links_imagens = [
-         {"dados": dados[0], "links": links[0],"imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "on"},
-         {"dados": dados[1], "links": links[1],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
+         {"dados": dados[0], "links": links[0],"imagem": "assets/classes/feiticeiro.png","imagem_gif": "assets/classes/gifs/feiticeiro.gif","status": "on"},
+         {"dados": dados[1], "links": links[1],"imagem": "assets/classes/sura.png","imagem_gif": "assets/classes/gifs/sura.gif","status": "on"},
          {"dados": dados[2], "links": links[2],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
          {"dados": dados[3], "links": links[3],"imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
          {"dados": dados[4], "links": links[4],"imagem": "assets/classes/arcebispo.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
-         {"dados": dados[5], "links": links[5],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
-         {"dados": dados[6], "links": links[6],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"}, 
-         {"dados": dados[7], "links": links[7],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
-         {"dados": dados[8], "links": links[8],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
-         {"dados": dados[9], "links": links[9],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "on"},
-         {"dados": dados[10], "links": links[10],"imagem": "assets/classes/hunter.gif","imagem_gif": "assets/classes/gifs/trovador.gif","status": "on"},   
+         {"dados": dados[5], "links": links[5],"imagem": "assets/classes/trovador.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "off"},    # lyelz
+         {"dados": dados[6], "links": links[6],"imagem": "assets/classes/guardioes_reais.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"}, 
+         {"dados": dados[7], "links": links[7],"imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},  #Asbrun 
+         {"dados": dados[8], "links": links[8],"imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
+         {"dados": dados[9], "links": links[9],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
+         {"dados": dados[10], "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "on"},   
     ]
 
     return render_template('streamers.html', data=dados_links_imagens,
