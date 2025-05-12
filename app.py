@@ -866,7 +866,7 @@ def streamers_page():
          {"dados": dados[7], "links": links[7],"imagem": "assets/classes/arcano.png"},   
          {"dados": dados[8], "links": links[8],"imagem": "assets/classes/arcano.png"},   
          {"dados": dados[9], "links": links[9],"imagem": "assets/classes/arcano.png"},
-         {"dados": dados[10], "links": links[10],"imagem": "assets/classes/arcano.png"},   
+         {"dados": dados[10], "links": links[10],"imagem": "assets/classes/hunter.gif"},   
 
     ]
 
