@@ -11,6 +11,36 @@ app = Flask(__name__)
 CORS(app)
 
 
+
+def carregar_links():
+    file_path = 'rola.xlsx'
+    df = pd.read_excel(file_path, header=None)
+
+    links = df.iloc[10:14, 1].dropna().tolist()
+
+    icones = {
+    'Discord': 'fa-brands fa-discord',
+    'Site': 'fa-solid fa-globe',
+    'Calculadora': 'fa-solid fa-calculator',
+    'Skill Simulator': 'fa-solid fa-wand-magic-sparkles'
+    }
+
+
+    links_formatados = []
+    for item in links:
+     if ':' in item:
+            nome, link = item.split(':', 1)
+            nome = nome.strip()
+            link = link.strip()
+            icone = icones.get(nome, 'fa-solid fa-link') 
+            links_formatados.append({
+                'nome': nome,
+                'link': link,
+                'icone': icone
+            })
+
+    return links_formatados
+
 @app.route('/')
 def info_page():
     file_path = 'rola.xlsx'
@@ -41,13 +71,19 @@ def info_page():
                 'icone': icone
             })
 
-    print(links_formatados)
+    rank_tiers = df_link.iloc[3:, 8].dropna().tolist()
+    rank_classes = df_link.iloc[3:, 9].dropna().tolist()
 
+    links = carregar_links()
 
+    rank_data = list(zip(rank_tiers, rank_classes))
+
+    print(rank_data)    
     return render_template(
     'index.html',
     info=info_essenciais,
     links=links_formatados,
+    rank_data = rank_data
     )
 
 
@@ -60,32 +96,34 @@ def classes_page():
     wb = load_workbook('rola.xlsx')
     ws = wb["INFORMAÇÕES"]
         
-    links = []
+    links_classes = []
     for row in ws.iter_rows(min_row=33, min_col=2, max_col=2):
             cell = row[0]
             if cell.hyperlink:
-                links.append(cell.hyperlink.target)
+                links_classes.append(cell.hyperlink.target)
             elif cell.value:
-                links.append(cell.value)
+                links_classes.append(cell.value)
 
 
     class_builds = [
         {"classe": classes[1], "builds": [builds[1], builds[2]], "link": "","imagem": "assets/classes/feiticeiro.png"}, #Feiticeiro
-        {"classe": classes[2], "builds": [builds[3]], "link": links[4],"imagem": "assets/classes/sentinela.png"},# Sentinela
-        {"classe": classes[3], "builds": [builds[4]], "link": links[5],"imagem": "assets/classes/sicario.png"},# Sicario
-        {"classe": classes[4], "builds": [builds[5]], "link": links[6],"imagem": "assets/classes/arcano.png"},# Arcano
+        {"classe": classes[2], "builds": [builds[3]], "link": links_classes[4],"imagem": "assets/classes/sentinela.png"},# Sentinela
+        {"classe": classes[3], "builds": [builds[4]], "link": links_classes[5],"imagem": "assets/classes/sicario.png"},# Sicario
+        {"classe": classes[4], "builds": [builds[5]], "link": links_classes[6],"imagem": "assets/classes/arcano.png"},# Arcano
         {"classe": classes[5], "builds": [builds[6], builds[7]], "link": "","imagem": "assets/classes/arcebispo.png"},# Arcebispo
-        {"classe": classes[6], "builds": [builds[9], builds[8]], "link": links[3],"imagem": "assets/classes/renegado.png"},# Renegado
+        {"classe": classes[6], "builds": [builds[9], builds[8]], "link": links_classes[3],"imagem": "assets/classes/renegado.png"},# Renegado
         {"classe": classes[7], "builds": [builds[11], builds[10]], "link": "","imagem": "assets/classes/sura.png"},# Shura
-        {"classe": classes[8], "builds": [builds[12]], "link": links[1],"imagem": "assets/classes/cavaleiro_runico.png"}, # Cavaleiros Rúnicos
-        {"classe": classes[9], "builds": [builds[14], builds[13]], "link": links[2],"imagem": "assets/classes/guardioes_reais.png"},# Guardião Real
+        {"classe": classes[8], "builds": [builds[12]], "link": links_classes[1],"imagem": "assets/classes/cavaleiro_runico.png"}, # Cavaleiros Rúnicos
+        {"classe": classes[9], "builds": [builds[14], builds[13]], "link": links_classes[2],"imagem": "assets/classes/guardioes_reais.png"},# Guardião Real
         {"classe": classes[10], "builds": [builds[15]], "link": "","imagem": "assets/classes/mecanico.png"},# Mecânico
         {"classe": classes[11], "builds": [builds[16]], "link": "","imagem": "assets/classes/genetico.png"},# Bioquímicos
-        {"classe": classes[12], "builds": [builds[17], builds[18]], "link": links[7],"imagem": "assets/classes/trovador.png"},# Trovadores
-        {"classe": classes[13], "builds": [builds[19], builds[20]], "link": links[7],"imagem": "assets/classes/musa.png"}, # Musa
+        {"classe": classes[12], "builds": [builds[17], builds[18]], "link": links_classes[7],"imagem": "assets/classes/trovador.png"},# Trovadores
+        {"classe": classes[13], "builds": [builds[19], builds[20]], "link": links_classes[7],"imagem": "assets/classes/musa.png"}, # Musa
     ]
+    links = carregar_links()
     return render_template('classes.html', 
-                           class_builds=class_builds
+                           class_builds=class_builds,
+                           links = links
                            )
 
 @app.route('/rank')
@@ -94,41 +132,12 @@ def rank_page():
     rank_tiers = df.iloc[3:, 8].dropna().tolist()
     rank_classes = df.iloc[3:, 9].dropna().tolist()
 
-    df_link = pd.read_excel('rola.xlsx', header=None)
-
-    links = df_link.iloc[10:14, 1].dropna().tolist()
-
-
-    icones = {
-    'Discord': 'fa-brands fa-discord',
-    'Site': 'fa-solid fa-globe',
-    'Calculadora': 'fa-solid fa-calculator',
-    'Skill Simulator': 'fa-solid fa-wand-magic-sparkles'
-    }
-
-
-    links_formatados = []
-    for item in links:
-     if ':' in item:
-            nome, link = item.split(':', 1)
-            nome = nome.strip()
-            link = link.strip()
-            icone = icones.get(nome, 'fa-solid fa-link')  # ícone padrão
-            links_formatados.append({
-                'nome': nome,
-                'link': link,
-                'icone': icone
-            })
-
-
-
-
-    print(links_formatados)
+    links = carregar_links()
 
     rank_data = list(zip(rank_tiers, rank_classes))
     return render_template('rank.html', 
                            rank_data=rank_data,
-                           links=links_formatados
+                           links= links
                            )
 
 @app.route('/rotas')
@@ -248,7 +257,7 @@ def rotas_page():
     # Adiciona como tupla limpa
         array_builds_ranged_formatado.append((quest, build))
    
-
+    links = carregar_links()
 
     return render_template(
         'rotas.html',
@@ -257,7 +266,8 @@ def rotas_page():
         array_builds_formatado = array_builds_formatado,
         rotas_ranged=rotas_ranged,
         array_quest_ranged=array_quest_ranged,
-        array_builds_ranged_formatado = array_builds_ranged_formatado
+        array_builds_ranged_formatado = array_builds_ranged_formatado,
+        links=links
     )
 
 @app.route('/items')
@@ -268,6 +278,9 @@ def items_page():
 
     items = df.iloc[3:,1]
     utilizar = df.iloc[3:,2]
+
+
+    
     arquivo = ["item_db_usable.yml","item_db_equip.yml","item_db_etc.yml"]
     items_n_vender_raw_3 = df_items.iloc[3:,6].dropna().tolist()
     items_n_vender_raw_3_2 = df_items.iloc[3:,7].dropna().tolist()
@@ -404,6 +417,16 @@ def items_page():
     ]
     array_items_guardar_tabela = []
 
+
+    array_link_instancias = [
+        "https://browiki.org/wiki/Altar_do_Selo",
+        "https://browiki.org/wiki/Invas%C3%A3o_ao_Aeroplano",
+        "https://browiki.org/wiki/Maldi%C3%A7%C3%A3o_de_Glast_Heim",
+        "https://browiki.org/wiki/Torre_do_Dem%C3%B4nio",
+        "https://browiki.org/wiki/Sala_Final",
+        "https://browiki.org/wiki/Ilha_Bios",
+        "https://browiki.org/wiki/Caverna_de_Mors"
+    ]
     # Iterar por cada bloco
     for bloco in array_items_guardar:
         instancia = bloco[0]
@@ -427,13 +450,28 @@ def items_page():
                 tabela_formatada.append(("", item, moeda))
  
 
+    dados_com_links = []
+    link_index = 0
 
+    for item in tabela_formatada:
+        nome, descricao, quantidade = item
 
+        if nome.strip():  # se tem nome (não é vazio)
+            link = array_link_instancias[link_index]
+            link_index += 1
+        else:
+            link = None
 
+    dados_com_links.append((nome, descricao, quantidade, link))
+
+    # merge_tabelaformatada_instancias_links = [
+    # (*base, info) for base, info in zip(tabela_formatada, array_link_instancias)
+    # ]
+
+    print(dados_com_links)
 
         ###################  items n vender ###############
-
-
+    
     array_items_n_vender = [
     {"classe": items_n_vender_raw_3[0].replace(" Nada", "").strip(), "items": [], "imagem": "assets/classes/espadachin.png"}, #Espadachin
     {"classe": items_n_vender_raw_3[1], "items": [
@@ -700,11 +738,14 @@ def items_page():
     },#Odalistica
     {"classe": items_n_vender_raw_9[15].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/musa.png"}#Musa
 ]
+    
+    links = carregar_links()
     return render_template('items.html', 
                            tabela_items=tabela_items,
                            tabela_items_importantes=tabela_items_importantes,
                            array_items_guardar=tabela_formatada,
-                           array_items_n_vender=array_items_n_vender
+                           array_items_n_vender=array_items_n_vender,
+                           links=links
                            )
 
 @app.route('/monstros')
@@ -809,8 +850,9 @@ def monstros_page():
 
     data = df_agrupado.to_dict(orient='records')
 
+    links = carregar_links()
 
-    return render_template('monstros.html', data=data)
+    return render_template('monstros.html', data=data,links=links)
 
 @app.route("/timer")
 def timer_page():
@@ -874,13 +916,13 @@ def timer_page():
     tabela_unificada_terceira =  tabela_unificada_terceira.dropna(subset=['Level'])
     tabela_unificada_terceira['Level'] =  tabela_unificada_terceira['Level'].astype(int)
 
-    print(tabela_unificada_terceira)
-
+    links= carregar_links()
 
     return render_template('timer.html', data=data,
                             tabela_unificada_segunda_classe = tabela_unificada.to_dict(orient='records'),
                             tabela_unificada_transclasse = tabela_unificada_tranclasse.to_dict(orient='records'),
-                            tabela_unificada_terceira = tabela_unificada_terceira.to_dict(orient='records')
+                            tabela_unificada_terceira = tabela_unificada_terceira.to_dict(orient='records'),
+                            links=links
                             )
 @app.route('/streamers')
 def streamers_page():
@@ -902,21 +944,22 @@ def streamers_page():
             links.append(cell.value)
 
     dados_links_imagens = [
-         {"dados": dados[0], "links": links[0],"imagem": "assets/classes/feiticeiro.png","imagem_gif": "assets/classes/gifs/feiticeiro.gif","status": "on"},
-         {"dados": dados[1], "links": links[1],"imagem": "assets/classes/sura.png","imagem_gif": "assets/classes/gifs/sura.gif","status": "on"},
-         {"dados": dados[2], "links": links[2],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
-         {"dados": dados[3], "links": links[3],"imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
-         {"dados": dados[4], "links": links[4],"imagem": "assets/classes/arcebispo.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
-         {"dados": dados[5], "links": links[5],"imagem": "assets/classes/trovador.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "off"},    # lyelz
-         {"dados": dados[6], "links": links[6],"imagem": "assets/classes/guardioes_reais.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"}, 
-         {"dados": dados[7], "links": links[7],"imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},  #Asbrun 
-         {"dados": dados[8], "links": links[8],"imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
-         {"dados": dados[9], "links": links[9],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
-         {"dados": dados[10], "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "on"},   
+         {"dados": dados[0].split(':')[0].strip(), "links": links[0],"imagem": "assets/classes/feiticeiro.png","imagem_gif": "assets/classes/gifs/feiticeiro.gif","status": "on"},
+         {"dados": dados[1].split(':')[0].strip(), "links": links[1],"imagem": "assets/classes/sura.png","imagem_gif": "assets/classes/gifs/sura.gif","status": "on"},
+         {"dados": dados[2].split(':')[0].strip(), "links": links[2],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
+         {"dados": dados[3].split(':')[0].strip(), "links": links[3],"imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
+         {"dados": dados[4].split(':')[0].strip(), "links": links[4],"imagem": "assets/classes/arcebispo.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
+         {"dados": dados[5].split(':')[0].strip(), "links": links[5],"imagem": "assets/classes/trovador.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "off"},    # lyelz
+         {"dados": dados[6].split(':')[0].strip(), "links": links[6],"imagem": "assets/classes/guardioes_reais.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"}, 
+         {"dados": dados[7].split(':')[0].strip(), "links": links[7],"imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},  #Asbrun 
+         {"dados": dados[8].split(':')[0].strip(), "links": links[8],"imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
+         {"dados": dados[9].split(':')[0].strip(), "links": links[9],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
+         {"dados": dados[10].split(':')[0].strip(), "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "on"},   
     ]
+    links = carregar_links()
 
     return render_template('streamers.html', data=dados_links_imagens,
-                        
+                            links=links
                             )
 if __name__ == '__main__':
     app.run(debug=True)
@@ -925,33 +968,9 @@ if __name__ == '__main__':
 
 @app.route('/links')
 def links_page():
-    file_path = 'rola.xlsx'
-    df = pd.read_excel(file_path, header=None)
-
-    links = df.iloc[10:14, 1].dropna().tolist()
-
-    icones = {
-    'Discord': 'fa-brands fa-discord',
-    'Site': 'fa-solid fa-globe',
-    'Calculadora': 'fa-solid fa-calculator',
-    'Skill Simulator': 'fa-solid fa-wand-magic-sparkles'
-    }
-
-
-    links_formatados = []
-    for item in links:
-     if ':' in item:
-            nome, link = item.split(':', 1)
-            nome = nome.strip()
-            link = link.strip()
-            icone = icones.get(nome, 'fa-solid fa-link')  # ícone padrão
-            links_formatados.append({
-                'nome': nome,
-                'link': link,
-                'icone': icone
-            })
-
+  
     return render_template(
     'links.html',
-    links=links_formatados,
+    links=carregar_links(),
 )
+
