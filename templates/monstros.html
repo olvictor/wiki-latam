@@ -197,7 +197,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: .5rem;
+  gap: .2rem;
+
 }
 
 .imagen-monstro{
@@ -326,6 +327,7 @@
   justify-content: center;
   gap: 1rem;
 }
+
 button{
   cursor: pointer;
 }
@@ -347,21 +349,35 @@ button:disabled{
 .button-calcular{
   display: none;
 }
+.mapas{
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.info-mapas{
+  width: 100%;
+  text-align: center;
+}
 
 .container-mapas-monstro{
   display: flex;
   gap: .5rem;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
-/* .mapas-monstro{
-  display: flex;
-  flex-direction: column;
-  position: relative;
-} */
+.mapas-monstro:hover{
+  opacity: .6;
+}
+
 
 .info-items{
   display: flex;
+  width: 100%;
+  gap: 1rem;
 }
 
 .info-items a{
@@ -371,6 +387,10 @@ button:disabled{
 .info-items img{
   filter: drop-shadow(0px 0px 5px white);
 
+}
+h3{
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
 }
     @keyframes spin {
       to { transform: rotate(360deg); }
@@ -392,7 +412,8 @@ button:disabled{
         margin-left: 0;
         padding: 20px;
       }
-  .tooltip-copiado {
+  
+      .tooltip-copiado {
   position: absolute;
   bottom: 100%; /* aparece acima do elemento */
   left: 50%;
@@ -524,37 +545,25 @@ button:disabled{
               <strong>📈 EXP Base:</strong> ${monstro.exp_base}<br>
               <strong>📈 EXP Job:</strong> ${monstro.exp_job}<br>
               </div>
-              <p>📦 Drops :</p>
+              <h3>📦 Drops :</h3>
               <div class="info-items">
                 ${itens}  
               </div>
-              <p>📍 Localização:</p>
-              <div class="container-mapas-monstro">
-                ${locais}
-              <div> 
+              <div class="info-mapas">
+                <h3>📍 Localização:<h3/>
+                <div class="container-mapas-monstro">
+                  ${locais}
+                <div> 
+              </div>
             `;
           }
         });
-      //   document.addEventListener('click', function (e) {
-      //   const el = e.target.closest('.mapas-monstro');
-      //   if (el) {
-      //     const nomeMapa = el.getAttribute('data-clipboard');
-      //     navigator.clipboard.writeText(nomeMapa)
-      //       .then(() => {
-      //         console.log(`📋 Copiado: ${nomeMapa}`);
-      //         el.style.boxShadow = '0 0 6px 2px limegreen';
-      //         setTimeout(() => el.style.boxShadow = '', 1000);
-      //       })
-      //       .catch(err => {
-      //         console.error('Erro ao copiar:', err);
-      //       });
-      //   }
-      // });
+
       document.addEventListener('click', function (e) {
       const el = e.target.closest('.mapas-monstro');
       if (el) {
         const nomeMapa = el.getAttribute('data-clipboard');
-        navigator.clipboard.writeText(nomeMapa)
+        navigator.clipboard.writeText("/nav "+ nomeMapa)
           .then(() => {
             // Feedback visual (box shadow)
             el.style.boxShadow = '0 0 6px 2px limegreen';

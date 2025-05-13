@@ -4,13 +4,71 @@ import pandas as pd
 import re
 import unicodedata
 from flask_cors import CORS
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from openpyxl import load_workbook
-
+import urllib.request
+import urllib.parse
+import json
 app = Flask(__name__)
 CORS(app)
 
 
+CLIENT_ID = 'qdn4nkcag974fxftx5xwfs5goddqx6'
+CLIENT_SECRET = 'l0a2yo19o38jl7luid7nu0xerz38m1'
+
+def get_access_token():
+    url = 'https://id.twitch.tv/oauth2/token'
+    data = urllib.parse.urlencode({
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+        'grant_type': 'client_credentials'
+    }).encode('utf-8')
+
+    req = urllib.request.Request(url, data=data, method='POST')
+    with urllib.request.urlopen(req) as response:
+        result = json.loads(response.read().decode())
+        return result['access_token']
+    
+ 
+def is_stream_live(username):
+    token = get_access_token()
+
+    # Aqui, estamos usando o nome de usuário extraído da URL
+    url = f'https://api.twitch.tv/helix/streams?user_login={username}'
+    req = urllib.request.Request(url)
+    req.add_header('Client-ID', CLIENT_ID)
+    req.add_header('Authorization', f'Bearer {token}')
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            result = json.loads(response.read().decode())
+            streams = result.get('data', [])
+            return len(streams) > 0  # Retorna True se a live estiver online, caso contrário, False
+    except urllib.error.HTTPError as e:
+        # Isso captura o erro 400 e imprime o conteúdo da resposta
+        print(f"Erro HTTP {e.code}: {e.reason}")
+        print(f"Resposta: {e.read()}")
+        return False
+    
+
+def extrair_nome_usuario(url):
+    # Utiliza expressão regular para pegar a parte após "https://www.twitch.tv/"
+    match = re.search(r'https://www.twitch.tv/([a-zA-Z0-9_]+)', url)
+    if match:
+        return match.group(1)
+    return None  # Caso o URL não esteja no formato esperado   
+
+
+def check_live(username):
+        try:
+            live, data = is_stream_live(username)
+            return jsonify({
+                'username': username,
+                'live': live,
+                'stream_data': data
+            })
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
 
 def carregar_links():
     file_path = 'rola.xlsx'
@@ -938,20 +996,31 @@ def streamers_page():
             links.append(cell.value)
 
     dados_links_imagens = [
-         {"dados": dados[0].split(':')[0].strip(), "links": links[0],"imagem": "assets/classes/feiticeiro.png","imagem_gif": "assets/classes/gifs/feiticeiro.gif","status": "on"},
-         {"dados": dados[1].split(':')[0].strip(), "links": links[1],"imagem": "assets/classes/sura.png","imagem_gif": "assets/classes/gifs/sura.gif","status": "on"},
-         {"dados": dados[2].split(':')[0].strip(), "links": links[2],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
-         {"dados": dados[3].split(':')[0].strip(), "links": links[3],"imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
+         {"dados": dados[0].split(':')[0].strip(), "links": links[0],"imagem": "assets/classes/feiticeiro.png","imagem_gif": "assets/classes/gifs/feiticeiro.gif","status": "off"},
+         {"dados": dados[1].split(':')[0].strip(), "links": links[1],"imagem": "assets/classes/sura.png","imagem_gif": "assets/classes/gifs/sura.gif","status": "off"},
+        #  {"dados": dados[2].split(':')[0].strip(), "links": links[2],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
+        #  {"dados": dados[3].split(':')[0].strip(), "links": links[3],"imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
          {"dados": dados[4].split(':')[0].strip(), "links": links[4],"imagem": "assets/classes/arcebispo.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
          {"dados": dados[5].split(':')[0].strip(), "links": links[5],"imagem": "assets/classes/trovador.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "off"},    # lyelz
          {"dados": dados[6].split(':')[0].strip(), "links": links[6],"imagem": "assets/classes/guardioes_reais.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"}, 
          {"dados": dados[7].split(':')[0].strip(), "links": links[7],"imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},  #Asbrun 
          {"dados": dados[8].split(':')[0].strip(), "links": links[8],"imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
          {"dados": dados[9].split(':')[0].strip(), "links": links[9],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
-         {"dados": dados[10].split(':')[0].strip(), "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "on"},   
+         {"dados": dados[10].split(':')[0].strip(), "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "off"},   
     ]
+    print(dados_links_imagens)
     links = carregar_links()
-
+    for item in dados_links_imagens:
+            username = extrair_nome_usuario(item['links'])  # Extrai o nome de usuário da URL
+            if username:
+                is_live = is_stream_live(username)  # Verifica se está ao vivo
+                
+                # Atualiza o status com base no estado da live
+                item['status'] = 'on' if is_live else 'off'
+            else:
+                print(f"Nome de usuário não encontrado na URL: {item['links']}")
+    print(dados_links_imagens)
+    
     return render_template('streamers.html', data=dados_links_imagens,
                             links=links
                             )
@@ -967,4 +1036,3 @@ def links_page():
     'links.html',
     links=carregar_links(),
 )
-
