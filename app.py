@@ -452,23 +452,17 @@ def items_page():
 
     dados_com_links = []
     link_index = 0
-
-    for item in tabela_formatada:
-        nome, descricao, quantidade = item
-
-        if nome.strip():  # se tem nome (não é vazio)
-            link = array_link_instancias[link_index]
+    for nome, descricao, quantidade in tabela_formatada:
+        if nome.strip():  # se nome não está vazio
+            link = array_link_instancias[link_index] if link_index < len(array_link_instancias) else None
             link_index += 1
         else:
-            link = None
+            link = " "
 
-    dados_com_links.append((nome, descricao, quantidade, link))
+        dados_com_links.append((nome, descricao, quantidade, link))
 
-    # merge_tabelaformatada_instancias_links = [
-    # (*base, info) for base, info in zip(tabela_formatada, array_link_instancias)
-    # ]
-
-    print(dados_com_links)
+    for item in dados_com_links:
+        print(item)
 
         ###################  items n vender ###############
     
@@ -743,7 +737,7 @@ def items_page():
     return render_template('items.html', 
                            tabela_items=tabela_items,
                            tabela_items_importantes=tabela_items_importantes,
-                           array_items_guardar=tabela_formatada,
+                           array_items_guardar=dados_com_links,
                            array_items_n_vender=array_items_n_vender,
                            links=links
                            )

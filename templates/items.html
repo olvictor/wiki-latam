@@ -210,7 +210,14 @@
 .item-col.right {
     text-align: right;
 }
+a{
+  text-decoration: none;
+  color: rgb(19, 221, 221);
+}
 
+a:hover{
+  text-decoration: underline;
+}
 @media (max-width: 768px) {
       body {
         flex-direction: column;
@@ -304,11 +311,18 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for instancia, item, moeda in array_items_guardar %}
+                  {% for instancia, item, moeda, link in array_items_guardar %}
                   <tr>
-                    <td>{{ instancia }}</td>
+                    <td>
+                      {% if instancia.strip() %}
+                        <a href="{{ link }}" target="_blank" title="Ver no Browiki">🔗 {{ instancia }}</a>
+                      {% else %}
+                      
+                        <span style="color: gray;">{{ instancia }}</span>
+                      {% endif %}
+                    </td>
                     <td>{{ item }}</td>
-                    <td>{{ moeda }}</td>
+                    <td>🪙 {{ moeda }}</td>
                   </tr>
                 {% endfor %}
                 </tbody>
