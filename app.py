@@ -804,68 +804,19 @@ def items_page():
 def monstros_page():
     file_path = 'rola.xlsx'
     df = pd.read_excel(file_path, sheet_name='Monstros + Drop + XP', header=None)
+    df_monstro_novo = pd.read_excel('monstros_e_drops.xlsx',header=None)
 
-    arquivos = ["item_db_usable.yml", "item_db_equip.yml", "item_db_etc.yml"]
 
-    def normalizar(texto):
-        if texto is None:
-            return ""
-        return unicodedata.normalize('NFKD', texto).encode('ASCII', 'ignore').decode('ASCII').strip().lower()
 
-    def carregar_ids_em_memoria(arquivos):
-        dicionario = {}
-
-        for caminho_arquivo in arquivos:
-            try:
-                with open(caminho_arquivo, 'r', encoding='latin-1') as file:
-                    bloco = []
-                    for linha in file:
-                        if linha.strip().startswith('- Id:'):
-                            if bloco:
-                                nome, id_item = extrair_nome_id(bloco)
-                                if nome and id_item:
-                                    dicionario[nome] = id_item
-                            bloco = [linha]
-                        else:
-                            bloco.append(linha)
-
-                    # Processa o último bloco
-                    nome, id_item = extrair_nome_id(bloco)
-                    if nome and id_item:
-                        dicionario[nome] = id_item
-
-            except Exception as e:
-                print(f"Erro ao processar {caminho_arquivo}: {e}")
-
-        return dicionario
-
-    def extrair_nome_id(bloco):
-        nome = None
-        id_item = None
-        for linha in bloco:
-            if "AegisName:" in linha:
-                nome = normalizar(linha.split(":", 1)[1].strip())
-            if "Id:" in linha:
-                id_item = linha.split(":", 1)[1].strip()
-        return nome, id_item
-    def limpar_item(item):
-        item = item.strip()
-        item = re.sub(r'\[\d+\]', '', item) 
-        return item.strip()
+    caminho_arquivos = 'itens.xlsx'
+ 
 
     def buscar_ids_itens_para_monstro(itens_str, dict_ids):
-        nomes_itens = [limpar_item(item) for item in itens_str.split(',') if item.strip()]
+        nomes_itens = [item.strip() for item in itens_str.split(',') if item.strip()]
         resultado = []
 
         for nome in nomes_itens:
-            nome_norm = normalizar(nome).replace(' ', '_')
-            id_encontrado = None
-
-            for chave, id_item in dict_ids.items():
-                if nome_norm in chave:
-                    id_encontrado = id_item
-                    break
-
+            id_encontrado = dict_ids.get(nome)
             resultado.append({
                 "nome": nome,
                 "id": id_encontrado
@@ -873,18 +824,36 @@ def monstros_page():
 
         return resultado
 
-    df_monstros = pd.DataFrame({
-        "id": df.iloc[1:, 0],
-        "nome": df.iloc[1:, 1],
-        "level": df.iloc[1:, 2],
-        "hp": df.iloc[1:, 3],
-        "exp_base": df.iloc[1:, 4],
-        "exp_job": df.iloc[1:, 5],
-        "itens": df.iloc[1:, 7],
-        "mapa": df.iloc[1:, 9]
+    def carregar_ids_em_memoria(caminho_arquivo):
+        dicionario = {}
+
+        try:
+            df = pd.read_excel(caminho_arquivo, header=None)
+
+            for _, row in df.iterrows():
+                id_item = str(row[0]).strip()
+                nome = str(row[1]).strip()
+                if nome and id_item:
+                    dicionario[nome] = id_item
+
+        except Exception as e:
+            print(f"Erro ao processar {caminho_arquivo}: {e}")
+
+        return dicionario
+
+
+    df_monstros_novo = pd.DataFrame({
+        "id": df_monstro_novo.iloc[1:, 0],
+        "nome": df_monstro_novo.iloc[1:, 1],
+        "level": df_monstro_novo.iloc[1:, 2],
+        "hp": df_monstro_novo.iloc[1:, 3],
+        "exp_base": df_monstro_novo.iloc[1:, 4],
+        "exp_job": df_monstro_novo.iloc[1:, 5],
+        "itens": df_monstro_novo.iloc[1:, 7],
+        "mapa": df_monstro_novo.iloc[1:, 9]
     })
 
-    df_agrupado = df_monstros.groupby("nome", as_index=False).agg({
+    df_agrupado = df_monstros_novo.groupby("nome", as_index=False).agg({
         "id": "first",
         "level": "first",
         "hp": "first",
@@ -894,12 +863,12 @@ def monstros_page():
         "mapa": lambda x: ', '.join(sorted(set(str(i).strip() for i in x if pd.notna(i))))
     })
 
-    dicionario_ids = carregar_ids_em_memoria(arquivos)
+    dicionario_ids = carregar_ids_em_memoria(caminho_arquivos)
 
     df_agrupado["itens_com_id"] = df_agrupado["itens"].apply(
         lambda x: buscar_ids_itens_para_monstro(x, dicionario_ids)
     )
-
+    
     data = df_agrupado.to_dict(orient='records')
 
     links = carregar_links()

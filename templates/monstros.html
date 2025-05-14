@@ -495,7 +495,7 @@ h3{
       select.addEventListener("change", function () {
       const index = this.value;
       const monstro = dados[index];
-
+      console.log(monstro)
 
    
         
@@ -518,13 +518,13 @@ h3{
          .map(item =>{
             const id = Number(item);
             if(item.id == null){
-              return `<img src="https://www3.worldrag.com/database/media/item/${item.id}.gif" alt="${item.nome}" style="width: 30px;">`
+              return `<img src="https://game.ragnaplace.com/ro/bro/item/${item.id}.webp" alt="${item.nome}" style="width: 30px;">`
             }
 
             return `
             <div style="display: inline-block; text-align: center; margin: 4px;">
               <a href="https://ratemyserver.net/item_db.php?item_id=${item.id}&small=1&back=1" target="_blank">
-                <img src="https://www3.worldrag.com/database/media/item/${item.id}.gif" alt="${item.nome}" style="width: 30px;">
+                <img src="https://game.ragnaplace.com/ro/bro/item/${item.id}.webp" alt="${item.nome}" style="width: 30px;">
                 <p>${item.nome}</p>
               <a/>
             </div>
@@ -533,7 +533,7 @@ h3{
          })
 
         infoDiv.innerHTML = `
-              <img class="imagen-monstro" src=${`https://static.divine-pride.net/images/mobs/png/${monstro.id}.png`} alt=${monstro.id}>
+              <img class="imagen-monstro" src=${`https://game.ragnaplace.com/ro/job/${monstro.id}/0.png`} alt=${monstro.id}>
               <br>
               <strong>ID:</strong> ${monstro.id}<br>
               <strong>${monstro.nome.trim()}</strong><br>
