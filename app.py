@@ -993,9 +993,20 @@ def streamers_page():
     return render_template('streamers.html', data=dados_links_imagens,
                             links=links
                             )
-if __name__ == '__main__':
-    app.run(debug=True)
 
+
+
+@app.route('/utilitarios')
+def utilitarios_page():
+  
+    return render_template(
+    'utilitarios.html',
+    links=carregar_links(),
+)
+
+if __name__ == '__main__':
+
+ app.run(debug=True)
 
 
 @app.route('/links')

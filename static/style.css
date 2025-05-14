@@ -1,3 +1,40 @@
+@import "https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css";
+html {
+  background-color: #121212; 
+
+}
+.title{
+  color:gold
+}
+
+#toggle-menu{
+  position: fixed;
+  top: 1rem;
+  left: 13rem; 
+  z-index: 1000;
+  transition: left 0.3s ease;
+}
+.menu-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh;
+  color: white;
+  padding: 1rem;
+  transition: transform 0.3s ease;
+  z-index: 999;
+  overflow-y: auto;
+  padding-top: 3.5rem;
+}
+
+.menu-sidebar.collapsed {
+  transform: translateX(-90%);
+  transition: transform 0.3s ease;
+}
+.menu-sidebar {
+  transition: transform 0.3s ease;
+}
 
 .lista-links{
     display: flex ;

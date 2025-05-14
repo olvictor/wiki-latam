@@ -1,5 +1,8 @@
-<aside>
-        <h2>Seções</h2>
+<button id="toggle-menu" class="button is-small is-light" style="position: fixed; top: 1rem; left: 13rem; z-index: 1000;">
+        <i id="toggle-icon" class="fas fa-arrow-left"></i>
+</button>
+<aside id="sidebar" class="menu-sidebar">
+        <h3 class="title is-3">Seções</h3>
         <nav>
           <a href="{{ url_for('info_page') }}">📌 Info Essenciais</a>
           <a href="{{ url_for('classes_page') }}">🧙 Classes & Builds</a>

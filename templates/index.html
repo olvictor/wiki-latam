@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Wiki do Servidor</title>
+  <title>Home | GUIA-ROLATAM</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
@@ -100,7 +100,7 @@
       max-width: 800px;
       width: 100%;
       margin: 16px auto;
-      background-color: #1e1e2f;
+      background-color: #0D0D0D;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
@@ -111,6 +111,7 @@
     .card h2 {
     font-size: 1.5rem;
     margin-bottom: 12px;
+    color: #FFD700	;
     }
 
     .card ul {
@@ -443,6 +444,22 @@ a{
         document.getElementById("conteudo").style.display = "flex";
         }, 1000); // 1000 milissegundos = 1 segundo
     }
+
+    const toggleButton = document.getElementById('toggle-menu');
+    const sidebar = document.getElementById('sidebar');
+    const toggleIcon = document.getElementById('toggle-icon');
+
+    toggleButton.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+
+    if (sidebar.classList.contains('collapsed')) {
+      toggleIcon.className = 'fas fa-arrow-right';
+      toggleButton.style.left = '1rem'; 
+    } else {
+      toggleIcon.className = 'fas fa-arrow-left';
+      toggleButton.style.left = '13rem';
+    }
+});
   </script>
 </body>
 </html>

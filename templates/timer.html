@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Wiki do Servidor</title>
+  <title>Timer | GUIA-ROLATAM</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
@@ -208,13 +208,9 @@
   padding: .4rem;
   border-bottom: 1px solid rgba(255,255,255,0.2);
 }
-.box_monstro input{
-    height: 3rem;
-    outline: none;
-    
-}
 .timer-container{
   position: relative;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -256,36 +252,26 @@
   padding: 1rem;
 }
 .timer-container input{
-  height: 2rem;
+  height: 2.7rem;
   padding: .3rem;
   width: 4rem;
-  border: none;
-  border-radius: 8px;
-  filter: saturate(70%);
-  color: black;
   outline: none;
+  margin-bottom: 2.1rem;
 }
 
 .timer-container input:focus{
-  filter: drop-shadow(0px 0px 5px orange);
+  border: none;
 }
 .container-porcentagem{
-  display: flex;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  width: 50vw;
   gap: 3rem;
 }
 
-.start-timer{
-  background-color: orange;
-  padding: .5rem;
-  width: 8rem;
-  outline: none;
-  border: none;
-  border-radius: 1rem;
-  font-weight: bolder;
-  text-transform: uppercase;
-  margin-top: 2rem;
-  color: white;
-}
 .start-timer:hover{
   opacity: .4;
 }
@@ -305,25 +291,16 @@
   padding: 2rem;
   margin-top: 1rem;
 }
-
-.container-calculo button{
-  background-color: orange;
-  padding: .5rem;
-  width: 8rem;
-  outline: none;
-  border: none;
-  border-radius: 1rem;
-  font-weight: bolder;
-  text-transform: uppercase;
-  color: white;
-
-}
 .inputBox{
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 1rem;
+}
+
+.inputs-container-porcentagem{
+  width: 100%;
 }
 button{
   cursor: pointer;
@@ -346,16 +323,32 @@ button:disabled{
 .button-calcular{
   display: none;
 }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
 
-    @media (max-width: 768px) {
+.simbolo-pagina{
+  font-size: 4rem;
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeInAnim 1.5s ease forwards;
+}
+
+@keyframes fadeInAnim {
+  to {
+    opacity: 1;
+  }
+}
+
+ @keyframes spin {
+      to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
       body {
         flex-direction: column;
-      }
+}
 
-      aside {
+aside {
         width: 100%;
         height: auto;
         position: static;
@@ -373,7 +366,7 @@ button:disabled{
   {% include 'components/links.html' %}
     <main>
         <section id="rank" class="section">
-              <h2>⏱️ Calcule sua quantidade de XP</h2>
+              <h2 class="simbolo-pagina">⏱️</h2>
               <br>
               <div id="loader" class="loader-container">
                 <div class="spinner"></div>
@@ -381,6 +374,84 @@ button:disabled{
               </div>
               <div id="conteudo" class="container">
                 <div class="timer-container">
+                  <div class="content">
+                    <h1 class="title is-size-4">Como funciona o Timer de 10 minutos?</h1>
+
+                    <p class="has-text-grey-lighter">
+                      Este timer foi desenvolvido para ajudar você a calcular seu ganho de experiência (XP) de forma prática durante treinos de 10 minutos. Veja como utilizá-lo:
+                    </p>
+                  
+                    <h2 class="subtitle is-size-5">1. Preenchimento Inicial:</h2>
+                    <p class="has-text-grey-lighter">Antes de iniciar o cronômetro, preencha os seguintes campos obrigatórios:</p>
+                    <ul class="has-text-grey-lighter">
+                      <li>Seu nível atual</li>
+                      <li>Sua porcentagem atual de XP</li>
+                      <li>Selecione sua classe no menu correspondente</li>
+                    </ul>
+                  
+                    <h2 class="subtitle is-size-5">2. Início do Timer:</h2>
+                    <ul class="has-text-grey-lighter">
+                      <li>Após preencher todos os campos, o botão de início do timer será liberado.</li>
+                      <li>O cronômetro começará a contar exatamente 10 minutos.</li>
+                      <li>Vá para o game e mate monstros para aumentar a sua experiência.</li>
+                    </ul>
+                  
+                    <h2 class="subtitle is-size-5">3. Alerta sonoro no fim:</h2>
+                    <ul class="has-text-grey-lighter">
+                      <li>Quando os 10 minutos se completarem, será emitido um som de alerta, sinalizando o fim do tempo.</li>
+                      <li>Esse é o momento de parar sua ação in-game e registrar seu progresso.</li>
+                    </ul>
+                  
+                    <h2 class="subtitle is-size-5">4. Preenchimento Final:</h2>
+                    <ul class="has-text-grey-lighter">
+                      <li>Após o alerta, informe a porcentagem atual de XP (quanto você acumulou após os 10 minutos).</li>
+                    </ul>
+                  
+                    <h2 class="subtitle is-size-5">5. Cálculo automático de XP:</h2>
+                    <p class="has-text-grey-lighter">Com base nas informações fornecidas, será calculado automaticamente:</p>
+                    <ul class="has-text-grey-lighter">
+                      <li>A quantidade total de XP ganha.</li>
+                      <li>A média de XP por minuto.</li>
+                      <li>Outras informações relevantes para otimizar seu UP.</li>
+                    </ul>
+                    <div class="has-text-centered">
+                      <button class="button is-normal" id="botao-continuar">Continuar</button>
+                    </div>
+                  </div>
+                  <div class="container-porcentagem">
+                    <h2>Calcule a xp</h2>
+                    <div class="timer">
+                      <p class="minutos">10</p>
+                      <p>:</p>
+                      <p class="segundos">00</p>
+                    </div> 
+                    <div class="inputs-container-porcentagem is-flex is-justify-content-center is-align-items-center" style="gap: 1rem; flex-wrap: wrap;" >
+                      <div class="inputBox">
+                        <div class="select">
+                          <select name="classe" id="selecao_classe">
+                            <option value="null">Selecione a classe...</option>
+                            <option value="0">Segunda Classe</option>
+                            <option value="1">Transclasse</option>
+                            <option value="2">Terceira Classe</option>
+                          </select>
+                        </div>
+                      </div>
+    
+                      <div class="inputBox">
+                        <label for="levelInicial">Digite o seu <span>level</span>: </label>
+                        <input class="input level-inicial" type="number" placeholder="LvL" id="levelInicial" />
+                      </div>
+                      <div class="inputBox">
+                        <label for="porcentagemIncial">Digite a % inicial: </label>
+                        <input class="input porcentagem-inicial" type="number" placeholder="%" id="porcentagemInicial" />
+                      </div>
+                    </div>
+                    <button class="button start-timer is-normal">Iniciar</button>
+
+                  </div>
+
+
+
                   <div class="mensagem">
                     <div class="mensagem-box">
                      <p class="mensagem-text"></p>
@@ -401,38 +472,7 @@ button:disabled{
                     
                     <button class="button-calcular">CALCULAR</button>
                    </div>
-                  <h2>Calcule a xp</h2>
-                  <div class="timer">
-                    <p class="minutos">10</p>
-                    <p>:</p>
-                    <p class="segundos">00</p>
                   </div>
-                 
-                  <div class="container-porcentagem">
-  
-                    <div class="inputBox">
-                      <label for="levelInicial">Qual a sua <span>classe</span>: </label>
-                      <select name="classe" id="selecao_classe">
-                        <option value="null">Opção...</option>
-                        <option value="0">Segunda Classe</option>
-                        <option value="1">Transclasse</option>
-                        <option value="2">Terceira Classe</option>
-                      </select>
-                    
-                    </div>
-  
-                    <div class="inputBox">
-                      <label for="levelInicial">Digite o seu <span>level</span>: </label>
-                      <input class="level-inicial" type="number" placeholder="Lvl" id="levelInicial">
-                    </div>
-                    <div class="inputBox">
-                      <label for="porcentagemIncial">Digite a % inicial: </label>
-                      <input class="porcentagem-inicial" type="number" placeholder="%" id="porcentagemIncial">
-                    </div>
-                  </div>
-                  <button class="start-timer">Iniciar</button>
-  
-                </div>
               </div>
               
           </section>
@@ -471,8 +511,38 @@ button:disabled{
         let containerCalculo = document.querySelector('.container-calculo');
         let mensagemCalculo = document.querySelector('.mensagem-container-calculo');
         let closeCalculo = document.querySelector(".close-container-calculo");
-        const selecao_classe = document.getElementById("selecao_classe")
+        const selecao_classe = document.getElementById("selecao_classe");
+        const botaoContinuar = document.getElementById("botao-continuar");
+        const containerPorcentagem = document.querySelector(".container-porcentagem");
+        const conteudoExplicacao = document.querySelector(".content");
 
+
+
+        const toggleButton = document.getElementById('toggle-menu');
+        const sidebar = document.getElementById('sidebar');
+        const toggleIcon = document.getElementById('toggle-icon');
+
+        toggleButton.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+
+        if (sidebar.classList.contains('collapsed')) {
+          toggleIcon.className = 'fas fa-arrow-right';
+          toggleButton.style.left = '1rem'; 
+        } else {
+          toggleIcon.className = 'fas fa-arrow-left';
+          toggleButton.style.left = '13rem';
+        }
+      })
+
+        botaoContinuar.addEventListener("click",()=>{
+          conteudoExplicacao.style.display= "none"
+          setTimeout(() => {
+            containerPorcentagem.classList.add('fade-in');
+            containerPorcentagem.style.display= "flex"
+
+          }, 50);
+
+        })
 
         buttonMensagem.addEventListener("click",()=>{
           containerMensagem.style.display = 'none'
