@@ -998,11 +998,71 @@ def streamers_page():
 
 @app.route('/utilitarios')
 def utilitarios_page():
-  
-    return render_template(
-    'utilitarios.html',
-    links=carregar_links(),
+
+   return render_template('utilitarios.html',links=carregar_links(),
 )
+
+
+@app.route('/spots')
+def melhores_spots_page():
+    file_path = 'rola.xlsx'
+    df = pd.read_excel(file_path, sheet_name='Melhor Spot Por Level', header=None)
+
+
+    monstros = df.iloc[1:,0].dropna().tolist()
+    base_exp = df.iloc[1:,1].dropna().tolist()
+    job_exp = df.iloc[1:,2].dropna().tolist()
+    quantidade = df.iloc[1:,3].dropna().tolist()
+    mapa = df.iloc[1:,4].dropna().tolist()
+    xp_ajustada = df.iloc[1:,5].dropna().tolist()
+    nivel_jogador = df.iloc[1:,6].dropna().tolist()
+
+    dicionario_ids= 'monstros_e_drops.xlsx'
+
+    def normalizar(texto):
+        if not isinstance(texto, str):
+            return ""
+        return unicodedata.normalize('NFKD', texto).encode('ASCII', 'ignore').decode('ASCII').strip().lower()
+
+    def carregar_ids_monstros(caminho_arquivo):
+        df = pd.read_excel(caminho_arquivo)
+        dicionario = {}
+
+        for _, row in df.iterrows():
+            nome = normalizar(str(row['nome_monstro']))
+            id_monstro = row['id']
+            dicionario[nome] = id_monstro
+
+        return dicionario
+    
+
+    def buscar_ids_para_monstros(lista_nomes, dict_ids):
+        resultado = []
+
+        for nome in lista_nomes:
+            nome_limpo = normalizar(nome)
+            id_encontrado = dict_ids.get(nome_limpo)
+            resultado.append({
+                "nome": nome,
+                "id": id_encontrado
+            })
+
+        return resultado
+    dicionario_ids = carregar_ids_monstros(dicionario_ids)
+    
+    dados_com_ids = buscar_ids_para_monstros(monstros, dicionario_ids)
+
+    data = list(zip(dados_com_ids,base_exp,job_exp,quantidade,mapa,xp_ajustada,nivel_jogador))
+
+
+    print(data)
+
+    return render_template(
+        'spots.html',
+        dados = data,
+        links=carregar_links(),
+)
+
 
 if __name__ == '__main__':
 

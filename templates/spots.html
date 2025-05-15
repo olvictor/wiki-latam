@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Builds | GUIA-ROLATAM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+    }
+
+    aside {
+      width: 250px;
+      background-color: #1e1e1e;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      border-right: 1px solid #333;
+    }
+
+    aside h2 {
+      color: #ffc107;
+      margin-bottom: 20px;
+    }
+
+    aside nav a {
+      display: block;
+      color: #bbb;
+      text-decoration: none;
+      margin-bottom: 10px;
+      padding: 5px;
+      border-radius: 4px;
+    }
+
+    aside nav a:hover {
+      background-color: #292929;
+      color: #fff;
+    }
+
+    main {
+      margin-left: 270px;
+      padding: 30px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #ffc107;
+    }
+
+    .section {
+      margin-bottom: 50px;
+    }
+
+    .card {
+      background-color: #1e1e2f;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #444;
+    }
+
+    th {
+      background-color: #333;
+    }
+
+    tr:nth-child(even) {
+      background-color: #1c1c2c;
+    }
+  strong{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  strong img{
+    filter: drop-shadow(0px 0px 5px white);
+  }
+  .build-tag {
+  background-color: #3a3a5a;
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 3px 5px 3px 0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #f1f1f1;
+  transition: background-color 0.2s ease;
+}
+
+.build-tag:hover {
+  background-color: #4b4b7a;
+}
+
+/* Cores dinâmicas por tipo */
+.build-tag.suporte {
+  background-color: #4a7aa9	; 
+}
+
+.build-tag.dano {
+  background-color: #a94a4a; 
+}
+.dano::before {
+  content: "⚔️ ";
+}
+.suporte::before {
+  content: "💚 ";
+}
+
+.build-tag.controle {
+  background-color: #1e90ff; /* azul */
+}
+.loader-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+    }
+    .spinner {
+        border: 6px solid #ccc;
+        border-top: 6px solid #4b4b7a;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+    }
+
+    tr:hover{
+      opacity: .5;
+      cursor: pointer;
+    }
+
+    td a{
+      text-decoration: underline;
+      color:#1e90ff
+    }
+    .container-explicacao{
+      display: flex;
+      flex-direction: column;
+      width: 40vw;
+      padding:  3rem 0px;
+    }
+    .container-tabela{
+      width: 40vw;
+      position: relative;
+    }
+    .linha-copiavel {
+    cursor: pointer;
+  }
+
+  .linha-copiavel:hover {
+    background-color: #f8f8f8;
+  }
+
+  .notificacao-flutuante {
+    margin-bottom: 6px;
+    animation: fadeInOut 2.5s ease forwards;
+  }
+
+  .custom tbody tr:nth-child(odd) {
+    background-color: #1e1e1e; /* cor para linhas ímpares */
+  }
+
+  .custom tbody tr:nth-child(even) {
+    background-color: #2a2a2a; /* cor para linhas pares */
+  }
+
+  .custom tbody tr:hover {
+    background-color: #333 !important; 
+  }
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-10px); }
+  }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      aside {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+      }
+
+      main {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+    .container{
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body onload=esconderLoader()>
+  {% include 'components/links.html' %}
+
+  <main>
+    <section id="classes-builds" class="section">
+      <div id="loader" class="loader-container">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+      </div>
+      <div class="container" id="conteudo" style="display: none;">
+          <h4 class="title is-3">👣 Melhores SPOTS</h4>
+          <div class="container-explicacao">
+          <div class="content is-small">
+            <h1 class="title is-size-4">Como usar a tabela ?
+
+            <h2 class="subtitle is-size-5">1. Clique sobre o item desejado.</h2>
+            <p class="has-text-grey-lighter">
+              Para usar a tabela, basta procurar o lugar desejado na tabela. Quando encontrá-lo, clique sobre o nome. Ao fazer isso, o caminho do mapa (também conhecido como /nav) correspondente será copiado automaticamente para o seu clipboard.
+            </p>
+          <p class="has-text-grey-lighter">
+            Basta utilizar o shift + insert dentro do jogo para colar a coordenada.
+          </p>
+          </div>
+         </div>
+         <div class="container-tabela">
+          <table class="table custom">
+            <thead>
+              <tr>
+                <th>Monstro</abbr></th>
+                <th>base_exp</abbr></th>
+                <th>job_exp	</abbr></th>
+                <th>Quantidade</abbr></th>
+                <th>mapa</abbr></th>
+                <th>xp_ajustada</abbr></th>
+                <th>nivel_jogador</abbr></th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {% for monstro, exp, job_exp, quantidade, mapa, xp_ajustada, nivel_jogador in dados %}
+              <tr class="linha-copiavel" data-mapa="{{ mapa }}">
+              <td>
+                <img src="https://game.ragnaplace.com/ro/job/{{monstro.id}}/0.png" alt="{{monstro.nome}}" style="width: 30px;">`
+                {{ monstro.nome }}
+              </td>
+              <td>{{ exp }}</td>
+              <td>{{ job_exp }}</td>
+              <td>{{ quantidade }}</td>
+              <td>{{ mapa }}</td>
+              <td>{{ xp_ajustada }}</td>
+              <td>{{ nivel_jogador }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        </div>
+    </section>
+    
+  </main>
+  <script>
+    function esconderLoader() {
+        setTimeout(() => {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("conteudo").style.display = "flex";
+        }, 1000);
+    }
+    const toggleButton = document.getElementById('toggle-menu');
+    const sidebar = document.getElementById('sidebar');
+    const toggleIcon = document.getElementById('toggle-icon');
+    const containerNotificacao = document.querySelector('.notification')
+    const notificacao = document.querySelector('.notificacao_paragrafo')
+
+    toggleButton.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+
+    if (sidebar.classList.contains('collapsed')) {
+      toggleIcon.className = 'fas fa-arrow-right';
+      toggleButton.style.left = '1rem'; 
+    } else {
+      toggleIcon.className = 'fas fa-arrow-left';
+      toggleButton.style.left = '13rem';
+    }
+  })
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const linhas = document.querySelectorAll('.linha-copiavel');
+
+    linhas.forEach(linha => {
+      linha.addEventListener('click', (e) => {
+        const mapa = linha.getAttribute('data-mapa');
+        if (mapa) {
+          navigator.clipboard.writeText(`/nav ${mapa}`).then(() => {
+            mostrarNotificacao(linha, `/nav ${mapa} copiado!`);
+          }).catch(err => {
+            console.error('Erro ao copiar para o clipboard', err);
+          });
+        }
+      });
+    });
+
+    function mostrarNotificacao(linha, texto) {
+      // Cria o elemento da notificação
+      const notificacao = document.createElement('div');
+      notificacao.className = 'notification is-success is-light notificacao-flutuante';
+      notificacao.textContent = texto;
+
+      // Adiciona a notificação logo acima da linha
+      linha.parentNode.insertBefore(notificacao, linha);
+
+      // Remove a notificação após 2,5 segundos
+      setTimeout(() => {
+        notificacao.remove();
+      }, 2500);
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+  (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+    const $notification = $delete.parentNode;
+
+    $delete.addEventListener('click', () => {
+      containerNotificacao.style.display = 'none'
+    });
+  });
+});
+  </script>
+  
+</body>
+</html>

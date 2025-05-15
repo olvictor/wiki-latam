@@ -206,7 +206,7 @@
   gap: 1rem;
   margin-bottom: 1rem;
   padding: .4rem;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  /* border-bottom: 1px solid rgba(255,255,255,0.2); */
 }
 .timer-container{
   position: relative;
@@ -317,11 +317,17 @@ button:disabled{
   font-size: 1rem;
 }
 .mensagem-container-calculo div{
-  border-bottom: 1px solid rgba(255,255,255,0.1);
   padding: 1rem;
 }
 .button-calcular{
   display: none;
+}
+
+.box{
+  margin-left: 15rem ;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .simbolo-pagina{
@@ -378,7 +384,7 @@ aside {
                     <h1 class="title is-size-4">Como funciona o Timer de 10 minutos?</h1>
 
                     <p class="has-text-grey-lighter">
-                      Este timer foi desenvolvido para ajudar você a calcular seu ganho de experiência (XP) de forma prática durante treinos de 10 minutos. Veja como utilizá-lo:
+                      Este timer foi desenvolvido para ajudar você a calcular seu ganho de experiência (XP) de forma prática durante seu farm de 10 minutos. Veja como utilizá-lo:
                     </p>
                   
                     <h2 class="subtitle is-size-5">1. Preenchimento Inicial:</h2>
@@ -459,18 +465,39 @@ aside {
                      <button class="button-mensagem">OK</button>
                     </div>
                    </div>
+                   
+                   <div id="meuModal" class="modal">
+                    <div class="modal-background"></div>
+                    <div class="modal-content">
+                      <div class="box">
+                        <p class="mensagem-text"></p>
+                        <div style="display: flex; width: 100%; justify-content: space-between; position: relative;">
+                          <h2 style="margin: 15px auto;">⏰</h2>
+                        </div>
+                        
+                        <h3>O Tempo chegou ao fim, Qual a % de XP final?</h3>
+                        <input class="porcentagem-final input" type="number" placeholder="%" disabled="true" />
+
+                        <div class="mensagem-container-calculo"></div>
+                        
+                        <button class="button-calcular button is-normal">CALCULAR</button>
+   
+                      </div>
+                    </div>
+                    <button class="modal-close is-large" aria-label="close"></button>
+                  </div>
+
   
                    <div class="container-calculo">
                     <div style="display: flex; width: 100%; justify-content: space-between; position: relative;">
                       <h2 style="margin: 15px auto;">⏰</h2>
-                      <span style="position: absolute; right: 0; cursor: pointer;" class="close-container-calculo">❌</span>
                     </div>
                     
                     <h3>O Tempo chegou ao fim, Qual a % de XP final ?</h3>
                     <input class="porcentagem-final" type="number" disabled="true" placeholder="%">
                     <div class="mensagem-container-calculo"></div>
                     
-                    <button class="button-calcular">CALCULAR</button>
+                    <button class="button-calcular is-dark">CALCULAR</button>
                    </div>
                   </div>
               </div>
@@ -510,7 +537,6 @@ aside {
         let buttonCalcular = document.querySelector('.button-calcular');
         let containerCalculo = document.querySelector('.container-calculo');
         let mensagemCalculo = document.querySelector('.mensagem-container-calculo');
-        let closeCalculo = document.querySelector(".close-container-calculo");
         const selecao_classe = document.getElementById("selecao_classe");
         const botaoContinuar = document.getElementById("botao-continuar");
         const containerPorcentagem = document.querySelector(".container-porcentagem");
@@ -521,6 +547,20 @@ aside {
         const toggleButton = document.getElementById('toggle-menu');
         const sidebar = document.getElementById('sidebar');
         const toggleIcon = document.getElementById('toggle-icon');
+
+        const modal = document.getElementById('meuModal');
+        const btnAbrir = document.getElementById('abrir-modal');
+        const btnFechar = modal.querySelector('.modal-close');
+
+        btnFechar.addEventListener('click', () => {
+          modal.classList.remove('is-active');
+        });
+
+        // Também fecha clicando no fundo escuro
+        modal.querySelector('.modal-background').addEventListener('click', () => {
+          modal.classList.remove('is-active');
+        });
+
 
         toggleButton.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
@@ -548,11 +588,12 @@ aside {
           containerMensagem.style.display = 'none'
         })
 
-        closeCalculo.addEventListener("click",()=>{
+        btnFechar.addEventListener("click",()=>{
           containerCalculo.style.display = 'none'
           porcentagemInicial.disabled = false;
           porcentagemInicial.value = ""
           levelInicial.disabled = false;
+          porcentagemFinal = ""
           levelInicial.value ="";
           minutos.innerText = "10"
           segundos.innerText = "00"
@@ -607,19 +648,14 @@ aside {
           tempoFormatado += `${minutos}min`;
 
           mensagemCalculo.innerHTML = `
-          <div>  
-            <p>Você ganhou ${parseInt(porcentagemFinal.value) - parseInt(porcentagemInicial.value)}% em ⏱️ 10 minutos </p>  
-          </div>
-          <div>
-            <p>O correspondente a ${xpGanho} 📶 de XP e restam ${xpRestante} 📶 XP para o nivel máximo. </p>
-          </div>
-
-          <div>
-            <p>Oque levaria ⌛ ${tempoFormatado} , para alcançar o nível ${parseInt(tabelas[selecao_classe.value][tabelas[selecao_classe.value].length - 1].Level) + 1}. </p>
-          <div>
-
+             <h3 class="title is-3">Você ganhou ${parseInt(porcentagemFinal.value) - parseInt(porcentagemInicial.value)}% em ⏱️ 10 minutos </h3>  
+            <h2 class="subtitle is-5">
+              O correspondente a ${xpGanho} 📶 de XP e restam ${xpRestante} 📶 XP para o nivel máximo.
+            </h2>
+            <h2 class="subtitle is-5">
+             Oque levaria ⌛ ${tempoFormatado} , para alcançar o nível ${parseInt(tabelas[selecao_classe.value][tabelas[selecao_classe.value].length - 1].Level) + 1}.
+            </h2>
           `
-
         })
         const calcularTempo = () =>{
           console.log((tabelas[selecao_classe.value][tabelas[selecao_classe.value].length-1].Level))
@@ -646,7 +682,7 @@ aside {
           if (min === 0 && seg === 0) {
               clearInterval(timer);
               mensagemErro.innerText = "⏰ Tempo esgotado! Preencha o campo da %final"
-              containerCalculo.style.display = 'flex'
+              modal.classList.add('is-active');
               iniciar.disabled = false;
               porcentagemFinal.disabled = false;
               buttonCalcular.style.display = 'block'
