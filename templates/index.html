@@ -6,6 +6,7 @@
   <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
   <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
   <style>
     * {
@@ -478,7 +479,7 @@ a{
             </div>
           </div>
           <div class="content container-news">
-            <h2 class="title is-2">Novidades recentes</h2>
+            <h2 class="title is-2">Ultimas Notícias</h2>
             <div class="box-noticias">
               <ul class="lista-noticias">
               </ul>
@@ -528,6 +529,13 @@ a{
         document.getElementById("conteudo").style.display = "flex";
         }, 1000); // 1000 milissegundos = 1 segundo
     }
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-K3HW966K67');
+
 
     const toggleButton = document.getElementById('toggle-menu');
     const sidebar = document.getElementById('sidebar');
