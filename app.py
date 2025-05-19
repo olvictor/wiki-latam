@@ -1009,6 +1009,13 @@ def utilitarios_page():
    return render_template('utilitarios.html',links=carregar_links(),
 )
 
+@app.route('/contato&apoio')
+def contato_page():
+
+   return render_template('contato&apoio.html',links=carregar_links(),
+)
+
+
 
 @app.route('/spots')
 def melhores_spots_page():

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Contato & Apoio | GUIA-ROLATAM</title>
+  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+    }
+
+    aside {
+      width: 250px;
+      background-color: #1e1e1e;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+      border-right: 1px solid #333;
+    }
+
+    aside h2 {
+      color: #ffc107;
+      margin-bottom: 20px;
+    }
+
+    aside nav a {
+      display: block;
+      color: #bbb;
+      text-decoration: none;
+      margin-bottom: 10px;
+      padding: 5px;
+      border-radius: 4px;
+    }
+
+    aside nav a:hover {
+      background-color: #292929;
+      color: #fff;
+    }
+
+    main {
+      margin-left: 270px;
+      padding: 30px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #ffc107;
+    }
+    .content{
+        display: flex;
+        flex-direction: column;
+        margin-top: 5rem;
+        gap: 1rem;
+        height: auto;
+    }
+    .field{
+        width: 30vw;
+    }
+    form{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .submit{
+        width: 6rem;
+    }
+@keyframes spin {
+      to { transform: rotate(360deg); }
+}
+@media (max-width: 768px) {
+     body {
+        flex-direction: column;
+      }
+
+      aside {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+      }
+
+      main {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body onload=esconderLoader()>
+  {% include 'components/links.html' %}
+
+  <main>
+    <div class="content">
+        <h1 class="title is-1">Sobre o Projeto</h1>
+        <p class="subtitle is-6 has-text-grey-lighter"> O site RolaGuiada nasceu da paixão pela comunidade de Ragnarok e pela vontade de facilitar o acesso às informações mais importantes sobre o servidor.
+            Nossa missão é oferecer um ambiente acessível, organizado e sempre atualizado para jogadores de todos os níveis do novato ao veterano.
+        </p> 
+        <div>
+        <h3>💬 Entre em Contato</h3>
+            <p class="subtitle is-6 has-text-grey-lighter">Se você quiser sugerir melhorias, reportar erros ou apenas trocar uma ideia, estamos disponíveis:
+                <ul class="has-text-grey-lighter">
+                    <li>Discord: Michels#0484</li>
+                    <li>Discord: wakabayashigg2</li>
+                    <li>In-game: Subuconde</li>
+                </ul>
+            </p>       
+        </div>  
+        <div> 
+        <h3>🤝 Contribua com o Projeto</h3>
+        <p class="subtitle is-6 has-text-grey-lighter">  Se você gostou do conteúdo e quer apoiar o projeto, há várias formas de contribuir:</p>   
+        <ul class="has-text-grey-lighter">
+            <li>Enviando sugestões ou conteúdos úteis (builds, guias, dicas).</li>
+            <li>Compartilhando o site com amigos e clãs.</li>
+            <li>Apoiando via <span style="color:#ffc107">Pix.</span></li>
+
+        </ul>        
+        </p>
+        </div>
+          <div class="field">
+            <form action="https://formsubmit.co/wikirolaguiada@gmail.com" method="POST">
+                <input class="input" type="text" name="nome" placeholder="Seu nome" required />
+                <input class="input" type="email" name="email" placeholder="Seu email" required />
+                <textarea class="textarea" placeholder="Digite sua mensagem." name="mensagem" required></textarea>
+                <button type="submit" class="submit button is-link">Enviar</button>
+            </form>
+          </div>  
+        </form>
+
+
+        <p class="subtitle is-6 has-text-grey-lighter">Juntos podemos manter este guia sempre vivo e atualizado 💛</p>
+      </div>
+  </main>
+  <script>
+    document.querySelectorAll(".clickable-row").forEach(row => {
+    const link = row.dataset.link;
+    if (link) {
+      row.style.cursor = "pointer";
+      row.addEventListener("click", () => {
+        window.open(link, "_blank");
+      });
+    }
+    });
+
+    const toggleButton = document.getElementById('toggle-menu');
+    const sidebar = document.getElementById('sidebar');
+    const toggleIcon = document.getElementById('toggle-icon');
+
+    toggleButton.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+
+    if (sidebar.classList.contains('collapsed')) {
+      toggleIcon.className = 'fas fa-arrow-right';
+      toggleButton.style.left = '1rem'; 
+    } else {
+      toggleIcon.className = 'fas fa-arrow-left';
+      toggleButton.style.left = '13rem';
+    }
+  })
+  </script>
+</body>
+</html>

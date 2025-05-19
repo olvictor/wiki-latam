@@ -37,6 +37,10 @@
           class="{% if request.path == url_for('streamers_page') %}is-active{% endif %}">
           🎥 Streamers
           </a>
+          <a href="{{ url_for('contato_page') }}"
+          class="{% if request.path == url_for('contato_page') %}is-active{% endif %}">
+          ❤️ Contato & Apoio
+          </a>
         </nav>
         <div class="lista-links">
          {% for item in links %}
