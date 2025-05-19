@@ -55,6 +55,13 @@
       align-items: center;
       justify-content: center;
     }
+
+    .content h2{
+      color: #ffc107;
+      font-size: 4rem;
+      font-weight: bold;
+    }
+
     .box-noticias{
       display: flex;
       justify-content: center;
@@ -77,8 +84,7 @@
       align-items: start;
       padding-bottom: .5rem;
       border-bottom: 1px solid rgba(255,255,255,0.05);
-
-    }
+      }
 
     .box-noticias a {
       font-size: 1rem;
@@ -187,7 +193,7 @@
     }
 
     li:hover {
-      color: orange;
+      color: #ffc107;
     }
     li a{
       display: flex;
@@ -197,57 +203,6 @@
       color: inherit;
       font-size: .5rem;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #444;
-    }
-
-    th {
-      background-color: #333;
-    }
-
-    tr:nth-child(even) {
-      background-color: #1c1c2c;
-    }
-
-.build-tag {
-  background-color: #3a3a5a;
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 3px 5px 3px 0;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  color: #f1f1f1;
-  transition: background-color 0.2s ease;
-}
-
-.build-tag:hover {
-  background-color: #4b4b7a;
-}
-
-.build-tag.suporte {
-  background-color: #4a7aa9	; 
-}
-
-.build-tag.dano {
-  background-color: #a94a4a; 
-}
-.dano::before {
-  content: "⚔️ ";
-}
-.suporte::before {
-  content: "💚 ";
-}
-
-.build-tag.controle {
-  background-color: #1e90ff; 
-}
 
 .loader-container {
     width: 100%;
@@ -327,16 +282,42 @@
 .ranking-item {
   background: #1c1c1c;
   border: 1px solid #444;
-  border-left: 5px solid gold;
+  border-left: 5px solid #ffc107;
   border-radius: 10px;
   padding-left: 1rem;
   box-shadow: 0 0 5px rgba(255,255,255,0.1);
   width: 50%;
   height: 40%;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
 }
 .ranking-item:hover{
   opacity: .7;
 }
+
+.ranking-item::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 50%; 
+  left: 120%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+.ranking-item:hover::after {
+  opacity: 1;
+}
+
 
 .ranking-item h2 {
   font-size: 1rem;
@@ -349,7 +330,7 @@
 }
 
 .ranking span{
-  color: gold;
+  color: #ffc107;
   text-decoration: underline;
 }
 
@@ -497,29 +478,29 @@ a{
   </main>
   <section class="ranking-container"> 
     <div class="ranking">
-      <h3><strong>🎗️</strong> Rank de classes <span>Inicio</span></h3>
+      <h3><strong>🎗️</strong> Comece da <span>melhor</span> forma!</h3>
       {% for tier, classes in rank_data %}
-        <a href="{{ url_for('classes_page') }}" target="_blank" class="ranking-item">
-          <h2>
-            {% if loop.index0 == 0 %}
-              🏆 {{ tier }}
-            {% elif loop.index0 == 1 %}
-              🥈 {{ tier }}
-            {% elif loop.index0 == 2 %}
-              🥉 {{ tier }}
-            {% elif loop.index0 == 3 %}
-              🎖️ {{ tier }}
-            {% elif loop.index0 == 4 %}
-              🪙 {{ tier }}
-            {% elif loop.index0 == 5 %}
-              🪙 {{ tier }}
-            {% else %}
-              🪙 {{ tier }}
-            {% endif %}
-          </h2>
-          <p>{{ classes }}</p>
-        </a>
-      {% endfor %}
+      <a href="{{ url_for('classes_page') }}" target="_blank" class="ranking-item" data-tooltip="Clique e confira a build">
+        <h2>
+          {% if loop.index0 == 0 %}
+            🏆 {{ tier }}
+          {% elif loop.index0 == 1 %}
+            🥈 {{ tier }}
+          {% elif loop.index0 == 2 %}
+            🥉 {{ tier }}
+          {% elif loop.index0 == 3 %}
+            🎖️ {{ tier }}
+          {% elif loop.index0 == 4 %}
+            🪙 {{ tier }}
+          {% elif loop.index0 == 5 %}
+            🪙 {{ tier }}
+          {% else %}
+            🪙 {{ tier }}
+          {% endif %}
+        </h2>
+        <p>{{ classes }}</p>
+      </a>
+    {% endfor %}
     </div>
   </section>
   <script>

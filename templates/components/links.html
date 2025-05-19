@@ -4,15 +4,39 @@
 <aside id="sidebar" class="menu-sidebar">
         <h3 class="title is-3">Seções</h3>
         <nav>
-          <a href="{{ url_for('info_page') }}">📌 Info Essenciais</a>
-          <a href="{{ url_for('classes_page') }}">🧙 Classes & Builds</a>
-          <a href="{{ url_for('rotas_page') }}">⚔️ Rotas de UP + Dicas</a>
-          <a href="{{ url_for('melhores_spots_page') }}">👣 Melhores SPOTS</a>
-          <a href="{{ url_for('items_page') }}">🧈 Items Importantes</a>
-          <a href="{{ url_for('monstros_page') }}">🐺 Monstros</a>
-          <a href="{{ url_for('timer_page') }}">⏱️ Calc de EXP</a>
-          <a href="{{ url_for('streamers_page') }}">🎥 Streamers</a>
+                <a href="{{ url_for('info_page') }}"
+                class="{% if request.path == url_for('info_page') %}is-active{% endif %}">
+                📌 Info Essenciais
+             </a>
+             <a href="{{ url_for('classes_page') }}"
+                class="{% if request.path == url_for('classes_page') %}is-active{% endif %}">
+                🧙 Classes & Builds
+             </a>
 
+          <a href="{{ url_for('rotas_page') }}"
+             class="{% if request.path == url_for('rotas_page') %}is-active{% endif %}">
+             ⚔️ Rotas de UP + Dicas
+          </a>
+          <a href="{{ url_for('melhores_spots_page') }}"
+          class="{% if request.path == url_for('melhores_spots_page') %}is-active{% endif %}">
+          👣 Melhores SPOTS
+          </a>
+          <a href="{{ url_for('items_page') }}"
+          class="{% if request.path == url_for('items_page') %}is-active{% endif %}">
+          🧈 Items Importantes
+          </a>
+          <a href="{{ url_for('monstros_page') }}"
+          class="{% if request.path == url_for('monstros_page') %}is-active{% endif %}">
+          🐺 Monstros
+          </a>
+           <a href="{{ url_for('timer_page') }}"
+          class="{% if request.path == url_for('timer_page') %}is-active{% endif %}">
+          ⏱️ Calc de EXP
+          </a>
+          <a href="{{ url_for('streamers_page') }}"
+          class="{% if request.path == url_for('streamers_page') %}is-active{% endif %}">
+          🎥 Streamers
+          </a>
         </nav>
         <div class="lista-links">
          {% for item in links %}

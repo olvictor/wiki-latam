@@ -1,5 +1,5 @@
 from collections import defaultdict
-from flask import Flask
+from flask import Flask, request
 import pandas as pd
 import re
 import unicodedata
@@ -100,6 +100,11 @@ def carregar_links():
             })
 
     return links_formatados
+
+
+@app.context_processor
+def inject_request():
+    return dict(request=request)
 
 @app.route('/')
 def info_page():
