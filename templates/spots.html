@@ -271,6 +271,7 @@
             <thead>
               <tr>
                 <th>Monstro</abbr></th>
+                <th>Nível Monstro</th>
                 <th>base_exp</abbr></th>
                 <th>job_exp	</abbr></th>
                 <th>Quantidade</abbr></th>
@@ -281,12 +282,13 @@
               </tr>
             </thead>
             <tbody>
-              {% for monstro, exp, job_exp, quantidade, mapa, xp_ajustada, nivel_jogador in dados %}
+              {% for monstro, exp, job_exp, quantidade, mapa, xp_ajustada, nivel_jogador, nivel_monstro in dados %}
               <tr class="linha-copiavel" data-mapa="{{ mapa }}">
               <td>
                 <img src="https://game.ragnaplace.com/ro/job/{{monstro.id}}/0.png" alt="{{monstro.nome}}" style="width: 30px;">`
                 {{ monstro.nome }}
               </td>
+              <td>{{nivel_monstro}}</td>
               <td>{{ exp }}</td>
               <td>{{ job_exp }}</td>
               <td>{{ quantidade }}</td>

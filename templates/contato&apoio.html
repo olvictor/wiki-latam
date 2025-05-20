@@ -81,6 +81,18 @@
     .submit{
         width: 6rem;
     }
+
+    .modal-content{
+      background-color: rgba(11,11,13,255);
+      display: flex;
+      padding: 2rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .js-modal-trigger{
+      cursor: pointer;
+    }
 @keyframes spin {
       to { transform: rotate(360deg); }
 }
@@ -103,7 +115,7 @@
     }
   </style>
 </head>
-<body onload=esconderLoader()>
+<body>
   {% include 'components/links.html' %}
 
   <main>
@@ -130,7 +142,7 @@
         <ul class="has-text-grey-lighter">
             <li>Enviando sugestões ou conteúdos úteis (builds, guias, dicas).</li>
             <li>Compartilhando o site com amigos e clãs.</li>
-            <li>Apoiando via <span style="color:#ffc107">Pix.</span></li>
+            <li>Apoiando via <span style="color:#ffc107" class="js-modal-trigger">Pix.</span></li>
 
         </ul>        
         </p>
@@ -144,6 +156,16 @@
             </form>
           </div>  
         <p class="subtitle is-6 has-text-grey-lighter">Juntos podemos manter este guia sempre vivo e atualizado 💛</p>
+        <div class="modal">
+          <div class="modal-background"></div>
+          <div class="modal-content">
+             <h3>Contribua com o projeto !</h3>
+             <img src="{{ url_for('static', filename='assets/QRCode.jpg') }}" alt="QRCode">
+             <p style="margin-top: 3rem;">Chave Pix :</p>
+             <span>b6ba72ec-122d-4993-b67d-838b8d73a4de</span>
+          </div>
+          <button class="modal-close is-large" aria-label="close"></button>
+        </div>
       </div>
   </main>
   <script>
@@ -160,6 +182,21 @@
     const toggleButton = document.getElementById('toggle-menu');
     const sidebar = document.getElementById('sidebar');
     const toggleIcon = document.getElementById('toggle-icon');
+    const modal = document.querySelector('.modal');
+    const botaoDesativarModal = document.querySelector('.modal-close')
+    const botaoAtivarModal = document.querySelector('.js-modal-trigger');
+
+    botaoAtivarModal.addEventListener("click",()=>{
+      modal.classList.add('is-active')
+    })
+
+    botaoDesativarModal.addEventListener("click",()=>{
+      modal.classList.remove('is-active')
+    })
+
+    modal.querySelector('.modal-background').addEventListener('click', () => {
+          modal.classList.remove('is-active');
+    });
 
     toggleButton.addEventListener('click', () => {
     sidebar.classList.toggle('collapsed');
@@ -172,6 +209,7 @@
       toggleButton.style.left = '13rem';
     }
   })
+
   </script>
 </body>
 </html>

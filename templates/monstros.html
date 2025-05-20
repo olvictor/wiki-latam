@@ -59,84 +59,10 @@
       width: 100%;
     }
 
-    h1 {
-      margin-bottom: 30px;
-      color: #ffc107;
-    }
-
     .section {
       margin-bottom: 50px;
+      text-align: center;
     }
-
-    .card {
-      background-color: #1e1e2f;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    li {
-      margin-bottom: 5px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #444;
-    }
-
-    th {
-      background-color: #333;
-    }
-
-    tr:nth-child(even) {
-      background-color: #1c1c2c;
-    }
-
-.build-tag {
-  background-color: #3a3a5a;
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 3px 5px 3px 0;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  color: #f1f1f1;
-  transition: background-color 0.2s ease;
-}
-
-.build-tag:hover {
-  background-color: #4b4b7a;
-}
-
-/* Cores dinâmicas por tipo */
-.build-tag.suporte {
-  background-color: #4a7aa9	; 
-}
-
-.build-tag.dano {
-  background-color: #a94a4a; 
-}
-.dano::before {
-  content: "⚔️ ";
-}
-.suporte::before {
-  content: "💚 ";
-}
-
-.build-tag.controle {
-  background-color: #1e90ff; /* azul */
-}
 
 .loader-container {
     width: 100%;
@@ -147,44 +73,15 @@
     flex-direction: column;
     z-index: 9999;
     }
-    .spinner {
+.spinner {
         border: 6px solid #ccc;
         border-top: 6px solid #4b4b7a;
         border-radius: 50%;
         width: 60px;
         height: 60px;
         animation: spin 1s linear infinite;
-    }
-  .accordion {
-  background-color: red;
-  color: #444;
-  cursor: pointer;
-  padding: 18px;
-  width: 100%;
-  text-align: left;
-  border: none;
-  outline: none;
-  transition: 0.4s;
 }
 
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active, .accordion:hover {
-  background-color: #ccc;
-}
-
-/* Style the accordion panel. Note: hidden by default */
-.panel {
-  padding: 0 18px;
-  background-color: white;
-  display: none;
-  overflow: hidden;
-}
-#rank{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
 .box_monstro{
   width: 40vw;
   height: auto;
@@ -216,7 +113,6 @@
 .box_monstro input{
     height: 3rem;
     outline: none;
-    
 }
 .timer-container{
   position: relative;
@@ -337,6 +233,12 @@ button:disabled{
   cursor: wait;
   background-color: gray;
 }
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .mensagem-container-calculo{
   display: flex;
   flex-direction: column;
@@ -378,11 +280,14 @@ button:disabled{
 .info-items{
   display: flex;
   width: 100%;
-  gap: 1rem;
+  gap: .3rem;
+  flex-wrap: wrap;
+  width: 60%;
 }
 
 .info-items a{
   color: #1e90ff;
+  font: .4rem;
 }
 
 .info-items img{
@@ -443,21 +348,23 @@ h3{
 
   <main>
     <section id="rank" class="section">
-          <h2>🐺 Monstros ragnarok</h2>
+          <h2 class="title is-2">🐺 Monstros ragnarok</h2>
           <br>
           <div id="loader" class="loader-container">
             <div class="spinner"></div>
             <p>Carregando...</p>
           </div>
           <div id="conteudo" class="container">
-            <div class="box_monstro">
-                <label for="monstroSelect">Selecione um Monstro:</label>
-                <select id="monstroSelect">
-                  <option disabled selected>Escolha...</option>
-                  {% for monstro in data %}
+            <div class="box_monstro">              
+              <label for="monstroSelect">Selecione um Monstro:</label>
+              <div class="select">
+                  <select id="monstroSelect">
+                    <option disabled selected>Escolha...</option>
+                    {% for monstro in data %}
                     <option value="{{ loop.index0 }}">{{ monstro.nome }}</option>
-                  {% endfor %}
-                </select>
+                    {% endfor %}
+                  </select>
+                </div>
 
                 <div id="infoMonstro" style="margin-top: 20px;">
                   
@@ -496,7 +403,6 @@ h3{
       select.addEventListener("change", function () {
       const index = this.value;
       const monstro = dados[index];
-      console.log(monstro)
 
    
         
@@ -515,23 +421,22 @@ h3{
         })
          .join('');
 
-         const itens = monstro.itens_com_id
-         .map(item =>{
-            const id = Number(item);
-            if(item.id == null){
-              return `<img src="https://game.ragnaplace.com/ro/bro/item/${item.id}.webp" alt="${item.nome}" style="width: 30px;">`
-            }
+         const itens = monstro.itens_com_id.map(item => {
+          const id = Number(item);
 
-            return `
+          if (item.id == null) {
+            return `<img src="https://game.ragnaplace.com/ro/bro/item/${item.id}.webp" alt="${item.nome}" style="width: 30px;">`;
+          }
+
+          return `
             <div style="display: inline-block; text-align: center; margin: 4px;">
               <a href="https://ratemyserver.net/item_db.php?item_id=${item.id}&small=1&back=1" target="_blank">
                 <img src="https://game.ragnaplace.com/ro/bro/item/${item.id}.webp" alt="${item.nome}" style="width: 30px;">
                 <p>${item.nome}</p>
-              <a/>
+              </a>
             </div>
-            `
-
-         })
+          `;
+        }).join('');
 
         infoDiv.innerHTML = `
               <img class="imagen-monstro" src=${`https://game.ragnaplace.com/ro/job/${monstro.id}/0.png`} alt=${monstro.id}>

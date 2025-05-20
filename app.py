@@ -1019,17 +1019,17 @@ def contato_page():
 
 @app.route('/spots')
 def melhores_spots_page():
-    file_path = 'rola.xlsx'
-    df = pd.read_excel(file_path, sheet_name='Melhor Spot Por Level', header=None)
+    file_path = 'melhor_spot_por_level.xlsx'
+    df = pd.read_excel(file_path, header=None)
 
-
-    monstros = df.iloc[1:,0].dropna().tolist()
-    base_exp = df.iloc[1:,1].dropna().tolist()
-    job_exp = df.iloc[1:,2].dropna().tolist()
-    quantidade = df.iloc[1:,3].dropna().tolist()
-    mapa = df.iloc[1:,4].dropna().tolist()
-    xp_ajustada = df.iloc[1:,5].dropna().tolist()
-    nivel_jogador = df.iloc[1:,6].dropna().tolist()
+    monstros = df.iloc[1:,1].dropna().tolist()
+    base_exp = df.iloc[1:,3].dropna().tolist()
+    job_exp = df.iloc[1:,4].dropna().tolist()
+    quantidade = df.iloc[1:,5].dropna().tolist()
+    mapa = df.iloc[1:,6].dropna().tolist()
+    xp_ajustada = df.iloc[1:,7].dropna().tolist()
+    nivel_jogador = df.iloc[1:,8].dropna().tolist()
+    nivel_monstro = df.iloc[1:,2].dropna().tolist()
 
     dicionario_ids= 'monstros_e_drops.xlsx'
 
@@ -1066,7 +1066,7 @@ def melhores_spots_page():
     
     dados_com_ids = buscar_ids_para_monstros(monstros, dicionario_ids)
 
-    data = list(zip(dados_com_ids,base_exp,job_exp,quantidade,mapa,xp_ajustada,nivel_jogador))
+    data = list(zip(dados_com_ids,base_exp,job_exp,quantidade,mapa,xp_ajustada,nivel_jogador,nivel_monstro))
 
 
     print(data)
