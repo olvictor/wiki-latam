@@ -32,27 +32,7 @@ def get_access_token():
     with urllib.request.urlopen(req) as response:
         result = json.loads(response.read().decode())
         return result['access_token']
-    
-def is_stream_live(username):
-    token = get_access_token()
-
-    url = f'https://api.twitch.tv/helix/streams?user_login={username}'
-    req = urllib.request.Request(url)
-    req.add_header('Client-ID', CLIENT_ID)
-    req.add_header('Authorization', f'Bearer {token}')
-
-    try:
-        with urllib.request.urlopen(req) as response:
-            result = json.loads(response.read().decode())
-            streams = result.get('data', [])
-            print(streams)
-            return len(streams) > 0 
-    except urllib.error.HTTPError as e:
-        print(f"Erro HTTP {e.code}: {e.reason}")
-        print(f"Resposta: {e.read()}")
-        return False
-    
-
+       
 def get_stream_data(username):
     token = get_access_token()
 
@@ -73,7 +53,6 @@ def get_stream_data(username):
         print(f"Erro HTTP {e.code}: {e.reason}")
         print(f"Resposta: {e.read()}")
         return None
-
 
 def extrair_nome_usuario(url):
     match = re.search(r'https://www.twitch.tv/([a-zA-Z0-9_]+)', url)
@@ -184,11 +163,19 @@ def carregar_links():
 
     return links_formatados
 
+cache_started = False
+
+@app.before_request
+def start_cache_once():
+    global cache_started
+    if not cache_started:
+        cache_started = True
+        threading.Thread(target=atualizar_stream_cache, daemon=True).start()
 
 @app.context_processor
 def inject_request():
     return dict(request=request)
-# atualizar_stream_cache() 
+
 
 @app.route('/')
 def info_page():
