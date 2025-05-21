@@ -188,7 +188,7 @@ def carregar_links():
 @app.context_processor
 def inject_request():
     return dict(request=request)
-atualizar_stream_cache() 
+# atualizar_stream_cache() 
 
 @app.route('/')
 def info_page():
