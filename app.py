@@ -132,6 +132,8 @@ scheduler = BackgroundScheduler()
 scheduler.add_job(func=atualizar_stream_cache, trigger="interval", seconds=1800)
 scheduler.start()
 
+atualizar_stream_cache() 
+
 def check_live(username):
         try:
             live, data = is_stream_live(username)
@@ -1123,6 +1125,5 @@ def melhores_spots_page():
 )
 
 if __name__ == '__main__':
- atualizar_stream_cache() 
  app.run(debug=True)
 
