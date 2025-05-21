@@ -9,7 +9,8 @@ from openpyxl import load_workbook
 import urllib.request
 import urllib.parse
 import json
-
+import threading
+import time
 
 app = Flask(__name__)
 CORS(app)
@@ -17,6 +18,7 @@ CORS(app)
 
 CLIENT_ID = 'qdn4nkcag974fxftx5xwfs5goddqx6'
 CLIENT_SECRET = 'l0a2yo19o38jl7luid7nu0xerz38m1'
+stream_cache = []
 
 def get_access_token():
     url = 'https://id.twitch.tv/oauth2/token'
@@ -31,11 +33,9 @@ def get_access_token():
         result = json.loads(response.read().decode())
         return result['access_token']
     
- 
 def is_stream_live(username):
     token = get_access_token()
 
-    # Aqui, estamos usando o nome de usuário extraído da URL
     url = f'https://api.twitch.tv/helix/streams?user_login={username}'
     req = urllib.request.Request(url)
     req.add_header('Client-ID', CLIENT_ID)
@@ -45,21 +45,104 @@ def is_stream_live(username):
         with urllib.request.urlopen(req) as response:
             result = json.loads(response.read().decode())
             streams = result.get('data', [])
-            return len(streams) > 0  # Retorna True se a live estiver online, caso contrário, False
+            print(streams)
+            return len(streams) > 0 
     except urllib.error.HTTPError as e:
-        # Isso captura o erro 400 e imprime o conteúdo da resposta
         print(f"Erro HTTP {e.code}: {e.reason}")
         print(f"Resposta: {e.read()}")
         return False
     
 
+def get_stream_data(username):
+    token = get_access_token()
+
+    url = f'https://api.twitch.tv/helix/streams?user_login={username}'
+    req = urllib.request.Request(url)
+    req.add_header('Client-ID', CLIENT_ID)
+    req.add_header('Authorization', f'Bearer {token}')
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            result = json.loads(response.read().decode())
+            streams = result.get('data', [])
+            if streams:
+                return streams[0]
+            else:
+                return None
+    except urllib.error.HTTPError as e:
+        print(f"Erro HTTP {e.code}: {e.reason}")
+        print(f"Resposta: {e.read()}")
+        return None
+
+
 def extrair_nome_usuario(url):
-    # Utiliza expressão regular para pegar a parte após "https://www.twitch.tv/"
     match = re.search(r'https://www.twitch.tv/([a-zA-Z0-9_]+)', url)
     if match:
         return match.group(1)
-    return None  # Caso o URL não esteja no formato esperado   
+    return None  
 
+def atualizar_stream_cache():
+    global stream_cache
+
+    print("Atualizando cache de streamers...")
+
+    file_path = 'rola.xlsx'
+
+    df = pd.read_excel(file_path, sheet_name='INFORMAÇÕES', header=None)
+
+    dados = df.iloc[19:,1].dropna().tolist()
+
+    wb = load_workbook(file_path)
+    ws = wb["INFORMAÇÕES"]
+    
+    links = []
+    for row in ws.iter_rows(min_row=20,max_row=31, min_col=2, max_col=2):
+        cell = row[0]
+        if cell.hyperlink:
+            links.append(cell.hyperlink.target)
+        elif cell.value:
+            links.append(cell.value)
+
+    dados_links_imagens = [
+         {"dados": dados[0].split(':')[0].strip(), "links": links[0],"imagem": "assets/classes/feiticeiro.png","imagem_gif": "assets/classes/gifs/feiticeiro.gif","status": "off"},
+         {"dados": dados[1].split(':')[0].strip(), "links": links[1],"imagem": "assets/classes/sura.png","imagem_gif": "assets/classes/gifs/sura.gif","status": "off"},
+        #  {"dados": dados[2].split(':')[0].strip(), "links": links[2],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
+        #  {"dados": dados[3].split(':')[0].strip(), "links": links[3],"imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
+         {"dados": dados[4].split(':')[0].strip(), "links": links[4],"imagem": "assets/classes/arcebispo.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
+         {"dados": dados[5].split(':')[0].strip(), "links": links[5],"imagem": "assets/classes/trovador.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "off"},    # lyelz
+         {"dados": dados[6].split(':')[0].strip(), "links": links[6],"imagem": "assets/classes/guardioes_reais.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"}, 
+         {"dados": dados[7].split(':')[0].strip(), "links": links[7],"imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},  #Asbrun 
+         {"dados": dados[8].split(':')[0].strip(), "links": links[8],"imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
+         {"dados": dados[9].split(':')[0].strip(), "links": links[9],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
+         {"dados": dados[10].split(':')[0].strip(), "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "off"},   
+    ]
+
+    for item in dados_links_imagens:
+        username = extrair_nome_usuario(item['links'])
+        if username:
+            try:
+                stream_data = get_stream_data(username)
+                if stream_data:
+                    item['status'] = 'on'
+                    item['stream_info'] = {
+                        'title': stream_data.get('title'),
+                        'game_name': stream_data.get('game_name'),
+                        'viewer_count': stream_data.get('viewer_count'),
+                        'started_at': stream_data.get('started_at'),
+                        'language': stream_data.get('language'),
+                        'thumbnail_url': stream_data.get('thumbnail_url')
+                    }
+                else:
+                    item['status'] = 'off'
+            except Exception as e:
+                print(f"Erro ao verificar status de {username}: {e}")
+                item['status'] = 'off'
+        else:
+            print(f"Nome de usuário não encontrado na URL: {item['links']}")
+
+    stream_cache = dados_links_imagens
+
+    threading.Timer(5400, atualizar_stream_cache).start()
 
 def check_live(username):
         try:
@@ -105,15 +188,22 @@ def carregar_links():
 @app.context_processor
 def inject_request():
     return dict(request=request)
+atualizar_stream_cache() 
 
 @app.route('/')
 def info_page():
     file_path = 'rola.xlsx'
     df_link = pd.read_excel(file_path, header=None)
     info_essenciais = df_link.iloc[2:7, 1].dropna().tolist()
-
     links = df_link.iloc[10:14, 1].dropna().tolist()
+    df_videos = pd.read_excel('videos_ragnarok.xlsx')
 
+    titulos = df_videos.iloc[0:,0].dropna().tolist()
+    thumb = df_videos.iloc[0:,1].dropna().tolist()
+    data_publicacao = df_videos.iloc[0:,2].dropna().tolist()
+    video_url = df_videos.iloc[0:,3].dropna().tolist()
+    
+    data_videos = list(zip(titulos,thumb,data_publicacao,video_url))
 
     icones = {
     'Discord': 'fa-brands fa-discord',
@@ -129,7 +219,7 @@ def info_page():
             nome, link = item.split(':', 1)
             nome = nome.strip()
             link = link.strip()
-            icone = icones.get(nome, 'fa-solid fa-link')  # ícone padrão
+            icone = icones.get(nome, 'fa-solid fa-link') 
             links_formatados.append({
                 'nome': nome,
                 'link': link,
@@ -148,7 +238,9 @@ def info_page():
         'index.html',
         info=info_essenciais,
         links=links_formatados,
-        rank_data = rank_data
+        rank_data = rank_data,
+        data_videos = data_videos,
+        streamers = stream_cache
         )
 
 
@@ -188,7 +280,8 @@ def classes_page():
     links = carregar_links()
     return render_template('classes.html', 
                            class_builds=class_builds,
-                           links = links
+                           links = links,
+                           streamers = stream_cache
                            )
 
 @app.route('/rank')
@@ -202,7 +295,8 @@ def rank_page():
     rank_data = list(zip(rank_tiers, rank_classes))
     return render_template('rank.html', 
                            rank_data=rank_data,
-                           links= links
+                           links= links,
+                           streamers = stream_cache
                            )
 
 @app.route('/rotas')
@@ -332,7 +426,8 @@ def rotas_page():
         rotas_ranged=rotas_ranged,
         array_quest_ranged=array_quest_ranged,
         array_builds_ranged_formatado = array_builds_ranged_formatado,
-        links=links
+        links=links,
+        streamers = stream_cache
     )
 
 @app.route('/items')
@@ -804,7 +899,8 @@ def items_page():
                            tabela_items_importantes=tabela_items_importantes,
                            array_items_guardar=dados_com_links,
                            array_items_n_vender=array_items_n_vender,
-                           links=links
+                           links=links,
+                           streamers = stream_cache
                            )
 
 @app.route('/monstros')
@@ -958,47 +1054,11 @@ def streamers_page():
 
     df = pd.read_excel(file_path, sheet_name='INFORMAÇÕES', header=None)
 
-    dados = df.iloc[19:,1].dropna().tolist()
-    
-    wb = load_workbook(file_path)
-    ws = wb["INFORMAÇÕES"]
-    
-    links = []
-    for row in ws.iter_rows(min_row=20,max_row=31, min_col=2, max_col=2):
-        cell = row[0]
-        if cell.hyperlink:
-            links.append(cell.hyperlink.target)
-        elif cell.value:
-            links.append(cell.value)
 
-    dados_links_imagens = [
-         {"dados": dados[0].split(':')[0].strip(), "links": links[0],"imagem": "assets/classes/feiticeiro.png","imagem_gif": "assets/classes/gifs/feiticeiro.gif","status": "off"},
-         {"dados": dados[1].split(':')[0].strip(), "links": links[1],"imagem": "assets/classes/sura.png","imagem_gif": "assets/classes/gifs/sura.gif","status": "off"},
-        #  {"dados": dados[2].split(':')[0].strip(), "links": links[2],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
-        #  {"dados": dados[3].split(':')[0].strip(), "links": links[3],"imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
-         {"dados": dados[4].split(':')[0].strip(), "links": links[4],"imagem": "assets/classes/arcebispo.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
-         {"dados": dados[5].split(':')[0].strip(), "links": links[5],"imagem": "assets/classes/trovador.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "off"},    # lyelz
-         {"dados": dados[6].split(':')[0].strip(), "links": links[6],"imagem": "assets/classes/guardioes_reais.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"}, 
-         {"dados": dados[7].split(':')[0].strip(), "links": links[7],"imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},  #Asbrun 
-         {"dados": dados[8].split(':')[0].strip(), "links": links[8],"imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
-         {"dados": dados[9].split(':')[0].strip(), "links": links[9],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
-         {"dados": dados[10].split(':')[0].strip(), "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "off"},   
-    ]
-    print(dados_links_imagens)
     links = carregar_links()
-    for item in dados_links_imagens:
-            username = extrair_nome_usuario(item['links'])  # Extrai o nome de usuário da URL
-            if username:
-                is_live = is_stream_live(username)  # Verifica se está ao vivo
-                
-                # Atualiza o status com base no estado da live
-                item['status'] = 'on' if is_live else 'off'
-            else:
-                print(f"Nome de usuário não encontrado na URL: {item['links']}")
-    print(dados_links_imagens)
-    
-    return render_template('streamers.html', data=dados_links_imagens,
-                            links=links
+    return render_template('streamers.html', data=stream_cache,
+                            links=links,
+                            streamers = stream_cache
                             )
 
 
@@ -1012,7 +1072,7 @@ def utilitarios_page():
 @app.route('/contato&apoio')
 def contato_page():
 
-   return render_template('contato&apoio.html',links=carregar_links(),
+   return render_template('contato&apoio.html',links=carregar_links(),streamers = stream_cache
 )
 
 
@@ -1075,6 +1135,7 @@ def melhores_spots_page():
         'spots.html',
         dados = data,
         links=carregar_links(),
+        streamers = stream_cache
 )
 
 
@@ -1089,4 +1150,13 @@ def links_page():
     return render_template(
     'links.html',
     links=carregar_links(),
+)
+
+@app.route('/header')
+def links_page():
+  
+    return render_template(
+    'header.html',
+    links=carregar_links(),
+    streamers = stream_cache
 )

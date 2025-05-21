@@ -31,7 +31,6 @@
       top: 0;
       left: 0;
       overflow-y: auto;
-      border-right: 1px solid #333;
     }
 
     aside h2 {
@@ -244,7 +243,8 @@
 </head>
 <body onload=esconderLoader()>
   {% include 'components/links.html' %}
-
+<div class="global">
+  {% include 'components/header.html' %}
   <main>
     <section id="classes-builds" class="section">
       <div id="loader" class="loader-container">
@@ -278,7 +278,6 @@
                 <th>mapa</abbr></th>
                 <th>xp_ajustada</abbr></th>
                 <th>nivel_jogador</abbr></th>
-
               </tr>
             </thead>
             <tbody>
@@ -301,9 +300,10 @@
           </table>
         </div>
         </div>
-    </section>
-    
+    </section>    
   </main>
+</div>
+  
   <script>
     function esconderLoader() {
         setTimeout(() => {
@@ -318,16 +318,19 @@
     const notificacao = document.querySelector('.notificacao_paragrafo')
 
     toggleButton.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
+      sidebar.classList.toggle('collapsed');
+      toggleButton.classList.toggle('collapsed');
 
-    if (sidebar.classList.contains('collapsed')) {
-      toggleIcon.className = 'fas fa-arrow-right';
-      toggleButton.style.left = '1rem'; 
-    } else {
-      toggleIcon.className = 'fas fa-arrow-left';
-      toggleButton.style.left = '13rem';
-    }
-  })
+      if (sidebar.classList.contains('collapsed')) {
+        icon.classList.remove('fa-chevron-left');
+        icon.classList.add('fa-chevron-right');
+        toggleButton.style.left = '1rem'; 
+      } else {
+        icon.classList.remove('fa-chevron-right');
+        icon.classList.add('fa-chevron-left');
+        toggleButton.style.left = '13rem';
+      }
+    });
 
   document.addEventListener('DOMContentLoaded', () => {
     const linhas = document.querySelectorAll('.linha-copiavel');

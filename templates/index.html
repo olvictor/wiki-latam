@@ -23,9 +23,9 @@
       display: flex;
       
     }
-
-
-
+    .global{
+      width: 100vw;
+    }
     .container{
       width: 100%;
       display: flex;
@@ -65,25 +65,25 @@
     .box-noticias{
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       width: 100%;
     }
 
     .box-noticias ul{
       list-style: none;
-      width: 30vw;
-      margin-left: 10rem;
-      margin-top: 3rem;
+      width: 100%;
+      margin: 0;
     }
 
     .box-noticias li {
       text-align: start;
       display: flex;
       flex-direction: column;
+      width: 55%;
       gap: .7rem;
       align-items: start;
       padding-bottom: .5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
       }
 
     .box-noticias a {
@@ -104,7 +104,6 @@
       top: 0;
       left: 0;
       overflow-y: auto;
-      border-right: 1px solid #333;
     }
 
     aside h2 {
@@ -127,15 +126,21 @@
     }
 
     main {
-      margin-left: 270px;
-      padding: 30px;
-      width: 60vw;
+      padding: 30px 15rem;
+      width: 100vw;
+      min-height: 100vh;
+      height: auto;
       display: flex;
       flex-direction: column;
     }
 
+    .principal-comunidade{
+      margin-top: 1rem;
+      height: 43vh;
+    }
+
     .ranking-container{
-      width: 40vw;
+      width: 50%;
     }
 
     h1 {
@@ -165,27 +170,31 @@
 
     .card {
       max-width: 800px;
-      width: 100%;
-      margin: 16px auto;
-      height: 20vh;
-      background-color: #0D0D0D;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 49%;
+      height: 30vh;
       padding: 20px;
+      background-color: transparent;
+      border: 1px solid rgba(255,255,255,0.03);
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
       box-sizing: border-box;
       gap: .4rem;
+      box-shadow: none;
     }
 
     .card h2 {
     font-size: 1.2rem;
-    /* margin-bottom: 12px; */
     color: #FFD700	;
     }
 
     .card ul {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       list-style: none;
-      padding-left: 20px;
     }
 
     .card li {
@@ -195,14 +204,15 @@
     li:hover {
       color: #ffc107;
     }
-    li a{
+
+.principal-comunidade  li a{
       display: flex;
       flex-direction: column;
       align-items: center;
       text-decoration: none;
       color: inherit;
       font-size: .5rem;
-    }
+}
 
 .loader-container {
     width: 100%;
@@ -273,10 +283,13 @@
 .ranking {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
+  padding: 20px;
   max-width: 400px;
   margin: auto;
-  padding-top: 4rem;
+  border: 1px solid rgba(255,255,255,0.03);
 }
 
 .ranking-item {
@@ -286,7 +299,7 @@
   border-radius: 10px;
   padding-left: 1rem;
   box-shadow: 0 0 5px rgba(255,255,255,0.1);
-  width: 50%;
+  width: 70%;
   height: 40%;
   position: relative;
   display: inline-block;
@@ -321,12 +334,14 @@
 
 .ranking-item h2 {
   font-size: 1rem;
+  
   margin-bottom: 0.35rem;
 }
 
 
 .ranking h3{
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  color: #FFD700	;
 }
 
 .ranking span{
@@ -335,7 +350,7 @@
 }
 
 .ranking strong{
-  font-size: 2.5rem;
+  font-size: 1.5rem;
 }
 .ranking-item p {
   font-size: .6rem;
@@ -345,62 +360,103 @@ a{
   text-decoration: none;
   color: #fff
 }
+.videoPrincipal {
+    position: relative;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Sombra na div inteira */
 
-.live-notification {
-    margin-top: .5rem;
-    display: inline-flex;
-    align-items: center;
-    background-color: #1f1f1f;
-    color: #4caf50;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
-    box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
-    font-family: Arial, sans-serif;
-    animation: pulse 2s infinite;
-    cursor: pointer;
   }
 
-  .live-dot {
-    width: 10px;
-    height: 10px;
-    background-color: #4caf50;
-    border-radius: 50%;
-    margin-right: 8px;
-    box-shadow: 0 0 6px rgba(76, 175, 80, 0.8);
-    animation: blink 1s infinite;
+.videoPrincipal img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.4s ease;
+}
+.videoPrincipal:hover img {
+    opacity: .8;
+}
+.videoPrincipal p {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 1rem;
+    text-align: center;
+    word-wrap: break-word;
   }
+.colunaSecundaria{
+  max-height: 42.5vh;
+}
 
+.videosSecundarios{
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.videoSecundario{
+  width: 48%;
+  height: 45%;
+  position:relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Sombra na div inteira */
+}
 
-  @keyframes aparecer {
+.videoSecundario img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.4s ease;
+}
+.videoSecundario:hover img {
+  opacity: .8;
+}
+.videoSecundario p {
+    position: absolute;
+    bottom: -12px;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: .7rem;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.noticias{
+  height: 40vh;
+  margin-top: 1rem;
+}
+
+.colunaNoticias{
+  height: 60vh;
+}
+
+.colunaSecundariaNoticias{
+  display: flex;
+  height: 60vh;
+  gap: 1rem;
+}
+@keyframes aparecer {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
 }
-
-  @keyframes blink {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.3;
-    }
-  }
-
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
-    }
-    50% {
-      box-shadow: 0 0 20px rgba(76, 175, 80, 0.9);
-    }
-    100% {
-      box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
-    }
-  }
-
-
+}
 
 @keyframes spin {
       to { transform: rotate(360deg); }
@@ -427,88 +483,98 @@ a{
 </head>
 <body onload=esconderLoader()>
   {% include 'components/links.html' %}
-  <main>
-    <section>
-      <div id="loader" class="loader-container">
-        <div class="spinner"></div>
-        <p>Carregando...</p>
-      </div>
-      <div  id="conteudo" class="container" style="display: none;">
-          <div class="topo-container">
+  <div class="global">
+    {% include 'components/header.html' %}
+    <div>
+    <main>
+      <div class="fixed-grid">
+        <div class="grid-title">
+          <h3 class="title is-3">🔥Novidades</h3>
+        </div>
+        <div class="grid principal-comunidade">
+          <div class="cell">
+            <div class="videoPrincipal">
+              <a href="https://www.youtube.com/watch?v=ItDguzza20g" target="_blank">
+                <img src="https://img.youtube.com/vi/ItDguzza20g/maxresdefault.jpg" alt="">
+                <p>O BÁSICO PARA COMEÇAR NO SERVIDOR OFICIAL DE RAGNAROK LATAM (ROLA)</p>
+              </a>
+            </div>
+          </div>
+          <div class="cell colunaSecundaria">
+            <div class="videosSecundarios">
+              {% for titulo,thumb,data_publicacao,video_url in data_videos[:4] %}
+              <div class="videoSecundario">
+                <a href={{video_url}} target="_blank">
+                  <img src={{thumb}} alt="">
+                  <p>{{titulo}}</p>
+                </a>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <div class="grid-title">
+          <h3 class="title is-3">📢Noticias</h3>
+        </div>
+        <div class="grid noticias">
+          <div class="cell colunaNoticias">
+            <div class="content container-news">
+              <div class="box-noticias">
+                <ul class="lista-noticias">
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="cell colunaSecundariaNoticias">
             <div class="card" >
               <h2>📌 Informações Essenciais</h2>
               <ul>
                 {% for item in info %}
                   <li>{{ item }}</li>
                 {% endfor %}
+                <li class="paragrafo_links">Sugestões: <span>Michels #0484</span> <- Discord</li>
+                <li class="paragrafo_links">PM in game: <span>Sabuconde</span></li>
               </ul>
             </div>
-
-            <div class="card">
-              <h2>🔗 Links Úteis</h2>
-              <ul class="list-items">
-                {% for item in links %}
-                <li>
-                  <a href="{{ item.link }}" target="_blank" class="link-vertical">
-                    <i class="{{ item.icone }}"></i> {{ item.nome }}
-                  </a>
-                </li>
+            <div class="ranking-container"> 
+              <div class="ranking">
+                <h3><strong>🎗️</strong> Comece da <span>melhor</span> forma!</h3>
+                {% for tier, classes in rank_data %}
+                <a href="{{ url_for('classes_page') }}" target="_blank" class="ranking-item" data-tooltip="Clique e confira a build">
+                  <h2>
+                    {% if loop.index0 == 0 %}
+                      🏆 {{ tier }}
+                    {% elif loop.index0 == 1 %}
+                      🥈 {{ tier }}
+                    {% elif loop.index0 == 2 %}
+                      🥉 {{ tier }}
+                    {% elif loop.index0 == 3 %}
+                      🎖️ {{ tier }}
+                    {% elif loop.index0 == 4 %}
+                      🪙 {{ tier }}
+                    {% elif loop.index0 == 5 %}
+                      🪙 {{ tier }}
+                    {% else %}
+                      🪙 {{ tier }}
+                    {% endif %}
+                  </h2>
+                  <p>{{ classes }}</p>
+                </a>
               {% endfor %}
-              </ul>
-              <p class="paragrafo_links">Sugestões: <span>Michels #0484</span> <- Discord</p>
-              <p class="paragrafo_links">PM in game: <span>Sabuconde</span></p>
+              </div>
             </div>
           </div>
-          <div class="content container-news">
-            <h2 class="title is-2">Ultimas Notícias</h2>
-            <div class="box-noticias">
-              <ul class="lista-noticias">
-              </ul>
-            </div>
-          </div>
-      </div>
-    </section>   
-  <!-- <section class="conteudoImg">
-    <img src="{{ url_for('static', filename='assets/pngwing.com.png') }}" alt="Logo do Rag" />
-  </section> -->
-  <!-- <div class="live-notification">
-    <span class="live-dot"></span>
-    <span class="live-text">Live ON</span>
-  </div> -->
-  </main>
-  <section class="ranking-container"> 
-    <div class="ranking">
-      <h3><strong>🎗️</strong> Comece da <span>melhor</span> forma!</h3>
-      {% for tier, classes in rank_data %}
-      <a href="{{ url_for('classes_page') }}" target="_blank" class="ranking-item" data-tooltip="Clique e confira a build">
-        <h2>
-          {% if loop.index0 == 0 %}
-            🏆 {{ tier }}
-          {% elif loop.index0 == 1 %}
-            🥈 {{ tier }}
-          {% elif loop.index0 == 2 %}
-            🥉 {{ tier }}
-          {% elif loop.index0 == 3 %}
-            🎖️ {{ tier }}
-          {% elif loop.index0 == 4 %}
-            🪙 {{ tier }}
-          {% elif loop.index0 == 5 %}
-            🪙 {{ tier }}
-          {% else %}
-            🪙 {{ tier }}
-          {% endif %}
-        </h2>
-        <p>{{ classes }}</p>
-      </a>
-    {% endfor %}
+        </div>
+    </div>  
+
     </div>
-  </section>
+  </div>
   <script>
     function esconderLoader() {
         setTimeout(() => {
         document.getElementById("loader").style.display = "none";
         document.getElementById("conteudo").style.display = "flex";
-        }, 1000); // 1000 milissegundos = 1 segundo
+        }, 1000); 
     }
 
     window.dataLayer = window.dataLayer || [];
@@ -520,19 +586,22 @@ a{
 
     const toggleButton = document.getElementById('toggle-menu');
     const sidebar = document.getElementById('sidebar');
-    const toggleIcon = document.getElementById('toggle-icon');
+    const icon = document.getElementById('toggle-icon');
 
     toggleButton.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
+      sidebar.classList.toggle('collapsed');
+      toggleButton.classList.toggle('collapsed');
 
-    if (sidebar.classList.contains('collapsed')) {
-      toggleIcon.className = 'fas fa-arrow-right';
-      toggleButton.style.left = '1rem'; 
-    } else {
-      toggleIcon.className = 'fas fa-arrow-left';
-      toggleButton.style.left = '13rem';
-    }
-  });
+      if (sidebar.classList.contains('collapsed')) {
+        icon.classList.remove('fa-chevron-left');
+        icon.classList.add('fa-chevron-right');
+        toggleButton.style.left = '1rem'; 
+      } else {
+        icon.classList.remove('fa-chevron-right');
+        icon.classList.add('fa-chevron-left');
+        toggleButton.style.left = '13rem';
+      }
+    });
 
     const noticias = [
       {

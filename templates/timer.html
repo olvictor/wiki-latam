@@ -31,7 +31,6 @@
       top: 0;
       left: 0;
       overflow-y: auto;
-      border-right: 1px solid #333;
     }
 
     aside h2 {
@@ -54,7 +53,6 @@
     }
 
     main {
-      margin-left: 270px;
       padding: 30px;
       width: 100%;
     }
@@ -371,140 +369,143 @@ aside {
 </head>
 <body onload=esconderLoader()>
   {% include 'components/links.html' %}
+  <div class="global">
+    {% include 'components/header.html' %}
     <main>
-        <section id="rank" class="section">
-              <h2 class="simbolo-pagina">⏱️</h2>
-              <br>
-              <div id="loader" class="loader-container">
-                <div class="spinner"></div>
-                <p>Carregando...</p>
-              </div>
-              <div id="conteudo" class="container">
-                <div class="timer-container">
-                  <div class="content">
-                    <h1 class="title is-size-4">Como funciona o Timer de 10 minutos?</h1>
+      <section id="rank" class="section">
+            <h2 class="simbolo-pagina">⏱️</h2>
+            <br>
+            <div id="loader" class="loader-container">
+              <div class="spinner"></div>
+              <p>Carregando...</p>
+            </div>
+            <div id="conteudo" class="container">
+              <div class="timer-container">
+                <div class="content">
+                  <h1 class="title is-size-4">Como funciona o Timer de 10 minutos?</h1>
 
-                    <p class="has-text-grey-lighter">
-                      Este timer foi desenvolvido para ajudar você a calcular seu ganho de experiência (XP) de forma prática durante seu farm de 10 minutos. Veja como utilizá-lo:
-                    </p>
-                  
-                    <h2 class="subtitle is-size-5">1. Preenchimento Inicial:</h2>
-                    <p class="has-text-grey-lighter">Antes de iniciar o cronômetro, preencha os seguintes campos obrigatórios:</p>
-                    <ul class="has-text-grey-lighter">
-                      <li>Seu nível atual</li>
-                      <li>Sua porcentagem atual de XP</li>
-                      <li>Selecione sua classe no menu correspondente</li>
-                    </ul>
-                  
-                    <h2 class="subtitle is-size-5">2. Início do Timer:</h2>
-                    <ul class="has-text-grey-lighter">
-                      <li>Após preencher todos os campos, o botão de início do timer será liberado.</li>
-                      <li>O cronômetro começará a contar exatamente 10 minutos.</li>
-                      <li>Vá para o game e mate monstros para aumentar a sua experiência.</li>
-                    </ul>
-                  
-                    <h2 class="subtitle is-size-5">3. Alerta sonoro no fim:</h2>
-                    <ul class="has-text-grey-lighter">
-                      <li>Quando os 10 minutos se completarem, será emitido um som de alerta, sinalizando o fim do tempo.</li>
-                      <li>Esse é o momento de parar sua ação in-game e registrar seu progresso.</li>
-                    </ul>
-                  
-                    <h2 class="subtitle is-size-5">4. Preenchimento Final:</h2>
-                    <ul class="has-text-grey-lighter">
-                      <li>Após o alerta, informe a porcentagem atual de XP (quanto você acumulou após os 10 minutos).</li>
-                    </ul>
-                  
-                    <h2 class="subtitle is-size-5">5. Cálculo automático de XP:</h2>
-                    <p class="has-text-grey-lighter">Com base nas informações fornecidas, será calculado automaticamente:</p>
-                    <ul class="has-text-grey-lighter">
-                      <li>A quantidade total de XP ganha.</li>
-                      <li>A média de XP por minuto.</li>
-                      <li>Outras informações relevantes para otimizar seu UP.</li>
-                    </ul>
-                    <div class="has-text-centered">
-                      <button class="button is-normal" id="botao-continuar">Continuar</button>
-                    </div>
+                  <p class="has-text-grey-lighter">
+                    Este timer foi desenvolvido para ajudar você a calcular seu ganho de experiência (XP) de forma prática durante seu farm de 10 minutos. Veja como utilizá-lo:
+                  </p>
+                
+                  <h2 class="subtitle is-size-5">1. Preenchimento Inicial:</h2>
+                  <p class="has-text-grey-lighter">Antes de iniciar o cronômetro, preencha os seguintes campos obrigatórios:</p>
+                  <ul class="has-text-grey-lighter">
+                    <li>Seu nível atual</li>
+                    <li>Sua porcentagem atual de XP</li>
+                    <li>Selecione sua classe no menu correspondente</li>
+                  </ul>
+                
+                  <h2 class="subtitle is-size-5">2. Início do Timer:</h2>
+                  <ul class="has-text-grey-lighter">
+                    <li>Após preencher todos os campos, o botão de início do timer será liberado.</li>
+                    <li>O cronômetro começará a contar exatamente 10 minutos.</li>
+                    <li>Vá para o game e mate monstros para aumentar a sua experiência.</li>
+                  </ul>
+                
+                  <h2 class="subtitle is-size-5">3. Alerta sonoro no fim:</h2>
+                  <ul class="has-text-grey-lighter">
+                    <li>Quando os 10 minutos se completarem, será emitido um som de alerta, sinalizando o fim do tempo.</li>
+                    <li>Esse é o momento de parar sua ação in-game e registrar seu progresso.</li>
+                  </ul>
+                
+                  <h2 class="subtitle is-size-5">4. Preenchimento Final:</h2>
+                  <ul class="has-text-grey-lighter">
+                    <li>Após o alerta, informe a porcentagem atual de XP (quanto você acumulou após os 10 minutos).</li>
+                  </ul>
+                
+                  <h2 class="subtitle is-size-5">5. Cálculo automático de XP:</h2>
+                  <p class="has-text-grey-lighter">Com base nas informações fornecidas, será calculado automaticamente:</p>
+                  <ul class="has-text-grey-lighter">
+                    <li>A quantidade total de XP ganha.</li>
+                    <li>A média de XP por minuto.</li>
+                    <li>Outras informações relevantes para otimizar seu UP.</li>
+                  </ul>
+                  <div class="has-text-centered">
+                    <button class="button is-normal" id="botao-continuar">Continuar</button>
                   </div>
-                  <div class="container-porcentagem">
-                    <h2>Calcule a xp</h2>
-                    <div class="timer">
-                      <p class="minutos">10</p>
-                      <p>:</p>
-                      <p class="segundos">00</p>
-                    </div> 
-                    <div class="inputs-container-porcentagem is-flex is-justify-content-center is-align-items-center" style="gap: 1rem; flex-wrap: wrap;" >
-                      <div class="inputBox">
-                        <div class="select">
-                          <select name="classe" id="selecao_classe">
-                            <option value="null">Selecione a classe...</option>
-                            <option value="0">Segunda Classe</option>
-                            <option value="1">Transclasse</option>
-                            <option value="2">Terceira Classe</option>
-                          </select>
-                        </div>
-                      </div>
-    
-                      <div class="inputBox">
-                        <label for="levelInicial">Digite o seu <span>level</span>: </label>
-                        <input class="input level-inicial" type="number" placeholder="LvL" id="levelInicial" />
-                      </div>
-                      <div class="inputBox">
-                        <label for="porcentagemIncial">Digite a % inicial: </label>
-                        <input class="input porcentagem-inicial" type="number" placeholder="%" id="porcentagemInicial" />
+                </div>
+                <div class="container-porcentagem">
+                  <h2>Calcule a xp</h2>
+                  <div class="timer">
+                    <p class="minutos">10</p>
+                    <p>:</p>
+                    <p class="segundos">00</p>
+                  </div> 
+                  <div class="inputs-container-porcentagem is-flex is-justify-content-center is-align-items-center" style="gap: 1rem; flex-wrap: wrap;" >
+                    <div class="inputBox">
+                      <div class="select">
+                        <select name="classe" id="selecao_classe">
+                          <option value="null">Selecione a classe...</option>
+                          <option value="0">Segunda Classe</option>
+                          <option value="1">Transclasse</option>
+                          <option value="2">Terceira Classe</option>
+                        </select>
                       </div>
                     </div>
-                    <button class="button start-timer is-normal">Iniciar</button>
-
-                  </div>
-
-
-
-                  <div class="mensagem">
-                    <div class="mensagem-box">
-                     <p class="mensagem-text"></p>
-   
-                     <button class="button-mensagem">OK</button>
-                    </div>
-                   </div>
-                   
-                   <div id="meuModal" class="modal">
-                    <div class="modal-background"></div>
-                    <div class="modal-content">
-                      <div class="box">
-                        <p class="mensagem-text"></p>
-                        <div style="display: flex; width: 100%; justify-content: space-between; position: relative;">
-                          <h2 style="margin: 15px auto;">⏰</h2>
-                        </div>
-                        
-                        <h3>O Tempo chegou ao fim, Qual a % de XP final?</h3>
-                        <input class="porcentagem-final input" type="number" placeholder="%" disabled="true" />
-
-                        <div class="mensagem-container-calculo"></div>
-                        
-                        <button class="button-calcular button is-normal">CALCULAR</button>
-   
-                      </div>
-                    </div>
-                    <button class="modal-close is-large" aria-label="close"></button>
-                  </div>
-
   
-                   <div class="container-calculo">
-                    <div style="display: flex; width: 100%; justify-content: space-between; position: relative;">
-                      <h2 style="margin: 15px auto;">⏰</h2>
+                    <div class="inputBox">
+                      <label for="levelInicial">Digite o seu <span>level</span>: </label>
+                      <input class="input level-inicial" type="number" placeholder="LvL" id="levelInicial" />
                     </div>
-                    
-                    <h3>O Tempo chegou ao fim, Qual a % de XP final ?</h3>
-                    <input class="porcentagem-final" type="number" disabled="true" placeholder="%">
-                    <div class="mensagem-container-calculo"></div>
-                    
-                    <button class="button-calcular is-dark">CALCULAR</button>
-                   </div>
+                    <div class="inputBox">
+                      <label for="porcentagemIncial">Digite a % inicial: </label>
+                      <input class="input porcentagem-inicial" type="number" placeholder="%" id="porcentagemInicial" />
+                    </div>
                   </div>
-              </div>
-              
-          </section>
-    </main>
+                  <button class="button start-timer is-normal">Iniciar</button>
+
+                </div>
+
+
+
+                <div class="mensagem">
+                  <div class="mensagem-box">
+                   <p class="mensagem-text"></p>
+ 
+                   <button class="button-mensagem">OK</button>
+                  </div>
+                 </div>
+                 
+                 <div id="meuModal" class="modal">
+                  <div class="modal-background"></div>
+                  <div class="modal-content">
+                    <div class="box">
+                      <p class="mensagem-text"></p>
+                      <div style="display: flex; width: 100%; justify-content: space-between; position: relative;">
+                        <h2 style="margin: 15px auto;">⏰</h2>
+                      </div>
+                      
+                      <h3>O Tempo chegou ao fim, Qual a % de XP final?</h3>
+                      <input class="porcentagem-final input" type="number" placeholder="%" disabled="true" />
+
+                      <div class="mensagem-container-calculo"></div>
+                      
+                      <button class="button-calcular button is-normal">CALCULAR</button>
+ 
+                    </div>
+                  </div>
+                  <button class="modal-close is-large" aria-label="close"></button>
+                </div>
+
+
+                 <div class="container-calculo">
+                  <div style="display: flex; width: 100%; justify-content: space-between; position: relative;">
+                    <h2 style="margin: 15px auto;">⏰</h2>
+                  </div>
+                  
+                  <h3>O Tempo chegou ao fim, Qual a % de XP final ?</h3>
+                  <input class="porcentagem-final" type="number" disabled="true" placeholder="%">
+                  <div class="mensagem-container-calculo"></div>
+                  
+                  <button class="button-calcular is-dark">CALCULAR</button>
+                 </div>
+                </div>
+            </div>     
+        </section>
+  </main>
+  </div>
+   
 
     
 
@@ -565,15 +566,18 @@ aside {
 
         toggleButton.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
+        toggleButton.classList.toggle('collapsed');
 
         if (sidebar.classList.contains('collapsed')) {
-          toggleIcon.className = 'fas fa-arrow-right';
+          icon.classList.remove('fa-chevron-left');
+          icon.classList.add('fa-chevron-right');
           toggleButton.style.left = '1rem'; 
         } else {
-          toggleIcon.className = 'fas fa-arrow-left';
+          icon.classList.remove('fa-chevron-right');
+          icon.classList.add('fa-chevron-left');
           toggleButton.style.left = '13rem';
         }
-      })
+      });
 
         botaoContinuar.addEventListener("click",()=>{
           conteudoExplicacao.style.display= "none"

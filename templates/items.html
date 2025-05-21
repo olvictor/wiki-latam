@@ -31,7 +31,6 @@
       top: 0;
       left: 0;
       overflow-y: auto;
-      border-right: 1px solid #333;
     }
 
     aside h2 {
@@ -216,9 +215,6 @@ a{
   color: rgb(19, 221, 221);
 }
 
-a:hover{
-  text-decoration: underline;
-}
 @media (max-width: 768px) {
       body {
         flex-direction: column;
@@ -243,140 +239,143 @@ a:hover{
 </head>
 <body onload=esconderLoader()>
   {% include 'components/links.html' %}
-  <main>
-    <div id="loader" class="loader-container">
-        <div class="spinner"></div>
-        <p>Carregando...</p>
-    </div>
-    <div>
-    <section class="section">
-        <div id="conteudo" class="container-accordion">
-            <div>
-                <button class="accordion">🧈 Items</button>
-                <div class="panel">
-                  <table>
+  <div class="global">
+    {% include 'components/header.html' %}
+    <main>
+      <div id="loader" class="loader-container">
+          <div class="spinner"></div>
+          <p>Carregando...</p>
+      </div>
+      <div>
+      <section class="section">
+          <div id="conteudo" class="container-accordion">
+              <div>
+                  <button class="accordion">🧈 Items</button>
+                  <div class="panel">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Utilizar</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item, utilizar, imagem in tabela_items %}
+                            {% if utilizar == 'Éden' %}
+                            <tr>
+                                <td>{{ item }} 
+                                    <img src="{{ imagem }}" style="height: 25px; width: 25px; vertical-align: middle;" alt="imagem_item">
+                                </td>
+                                <td>{{ utilizar }}</td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+              </div>
+              
+              <div>
+                  <button class="accordion">💡 Items IMPORTANTES!</button>
+                  <div class="panel">
+                    <table>
                       <thead>
                       <tr>
                           <th>Item</th>
-                          <th>Utilizar</th>
+                          <th>Onde Utilizar</th>
                       </tr>
                       </thead>
                       <tbody>
-                      {% for item, utilizar, imagem in tabela_items %}
-                          {% if utilizar == 'Éden' %}
-                          <tr>
-                              <td>{{ item }} 
-                                  <img src="{{ imagem }}" style="height: 25px; width: 25px; vertical-align: middle;" alt="imagem_item">
-                              </td>
-                              <td>{{ utilizar }}</td>
-                          </tr>
-                          {% endif %}
-                      {% endfor %}
+                        {% for item,local,imagem in tabela_items_importantes %}
+                        <tr>
+                          <td>{{ item }} <img src="{{imagem}}" style="height: 25px; width: 25px; vertical-align: middle;" alt="imagem_item"></td>
+                          <td>{{ local }}</td>
+                         </tr>
+                        {% endfor %}
                       </tbody>
-                  </table>
-              </div>
-            </div>
-            
-            <div>
-                <button class="accordion">💡 Items IMPORTANTES!</button>
-                <div class="panel">
-                  <table>
-                    <thead>
-                    <tr>
-                        <th>Item</th>
-                        <th>Onde Utilizar</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                      {% for item,local,imagem in tabela_items_importantes %}
-                      <tr>
-                        <td>{{ item }} <img src="{{imagem}}" style="height: 25px; width: 25px; vertical-align: middle;" alt="imagem_item"></td>
-                        <td>{{ local }}</td>
-                       </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-            </div>    
-        </div>
-
-        <div>
-          <button class="accordion">💎 Items para o futuro !</button>
-          <div class="panel">
-            <table>
+                    </table>
+              </div>    
+          </div>
+  
+          <div>
+            <button class="accordion">💎 Items para o futuro !</button>
+            <div class="panel">
               <table>
-                <thead>
-                  <tr>
-                    <th>Instância</th>
-                    <th>Item</th>
-                    <th>Moeda</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for instancia, item, moeda, link in array_items_guardar %}
-                  <tr>
-                    <td>
-                      {% if instancia.strip() %}
-                        <a href="{{ link }}" target="_blank" title="Ver no Browiki">🔗 {{ instancia }}</a>
-                      {% else %}
-                      
-                        <span style="color: gray;">{{ instancia }}</span>
-                      {% endif %}
-                    </td>
-                    <td>{{ item }}</td>
-                    <td>🪙 {{ moeda }}</td>
-                  </tr>
-                {% endfor %}
-                </tbody>
-              </table>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Instância</th>
+                      <th>Item</th>
+                      <th>Moeda</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for instancia, item, moeda, link in array_items_guardar %}
+                    <tr>
+                      <td>
+                        {% if instancia.strip() %}
+                          <a href="{{ link }}" target="_blank" title="Ver no Browiki">🔗 {{ instancia }}</a>
+                        {% else %}
+                        
+                          <span style="color: gray;">{{ instancia }}</span>
+                        {% endif %}
+                      </td>
+                      <td>{{ item }}</td>
+                      <td>🪙 {{ moeda }}</td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+        </div>
       </div>
-    </div>
-
-    <div>
-      <button class="accordion">🎒 Items de quest !</button>
-      <div class="panel">
-        <table>
+  
+      <div>
+        <button class="accordion">🎒 Items de quest !</button>
+        <div class="panel">
           <table>
-            <thead>
-              <tr>
-                <th>Classe</th>
-                <th>Item</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for entry in array_items_n_vender %}
-              {% set num_subgrupos = entry["items"]|length %}
+            <table>
+              <thead>
                 <tr>
-                  <td class="classes" rowspan="{{ num_subgrupos if num_subgrupos > 0 else 1 }}">
-                    <div style="text-align: center;">
-                      <img src="{{ url_for('static', filename=entry.imagem) }}" alt="{{ entry.classe }}" style="display: block; margin: 0 auto; width: 100px; height: auto;">
-                      <div style="margin-top: 8px;">{{ entry.classe }}</div>
-                    </div>
-                  </td>
-                  {% if num_subgrupos > 0 %}
+                  <th>Classe</th>
+                  <th>Item</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for entry in array_items_n_vender %}
+                {% set num_subgrupos = entry["items"]|length %}
+                  <tr>
+                    <td class="classes" rowspan="{{ num_subgrupos if num_subgrupos > 0 else 1 }}">
+                      <div style="text-align: center;">
+                        <img src="{{ url_for('static', filename=entry.imagem) }}" alt="{{ entry.classe }}" style="display: block; margin: 0 auto; width: 100px; height: auto;">
+                        <div style="margin-top: 8px;">{{ entry.classe }}</div>
+                      </div>
+                    </td>
+                    {% if num_subgrupos > 0 %}
+                      <td>
+                        {% for item in entry["items"][0] %}
+                          {{ item }}<br>
+                        {% endfor %}
+                      </td>
+                    {% else %}
+                      <td>(sem itens)</td>
+                    {% endif %}
+                  </tr>
+                  {% for grupo in entry["items"][1:] %}
+                  <tr>
                     <td>
-                      {% for item in entry["items"][0] %}
+                      {% for item in grupo %}
                         {{ item }}<br>
                       {% endfor %}
                     </td>
-                  {% else %}
-                    <td>(sem itens)</td>
-                  {% endif %}
-                </tr>
-                {% for grupo in entry["items"][1:] %}
-                <tr>
-                  <td>
-                    {% for item in grupo %}
-                      {{ item }}<br>
-                    {% endfor %}
-                  </td>
-                </tr>
+                  </tr>
+                  {% endfor %}
                 {% endfor %}
-              {% endfor %}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+    </div>
+      </section>
+    </main>
   </div>
-    </section>
-  </main>
   <script>
     function esconderLoader() {
         setTimeout(() => {
@@ -401,16 +400,19 @@ a:hover{
     const toggleIcon = document.getElementById('toggle-icon');
 
     toggleButton.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
+      sidebar.classList.toggle('collapsed');
+      toggleButton.classList.toggle('collapsed');
 
-    if (sidebar.classList.contains('collapsed')) {
-      toggleIcon.className = 'fas fa-arrow-right';
-      toggleButton.style.left = '1rem'; 
-    } else {
-      toggleIcon.className = 'fas fa-arrow-left';
-      toggleButton.style.left = '13rem';
-    }
-  })
+      if (sidebar.classList.contains('collapsed')) {
+        icon.classList.remove('fa-chevron-left');
+        icon.classList.add('fa-chevron-right');
+        toggleButton.style.left = '1rem'; 
+      } else {
+        icon.classList.remove('fa-chevron-right');
+        icon.classList.add('fa-chevron-left');
+        toggleButton.style.left = '13rem';
+      }
+    });
   </script>
 </body>
 </html>

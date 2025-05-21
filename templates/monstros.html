@@ -31,7 +31,6 @@
       top: 0;
       left: 0;
       overflow-y: auto;
-      border-right: 1px solid #333;
     }
 
     aside h2 {
@@ -54,7 +53,6 @@
     }
 
     main {
-      margin-left: 270px;
       padding: 30px;
       width: 100%;
     }
@@ -346,44 +344,47 @@ h3{
 
   {% include 'components/links.html' %}
 
-  <main>
-    <section id="rank" class="section">
-          <h2 class="title is-2">🐺 Monstros ragnarok</h2>
-          <br>
-          <div id="loader" class="loader-container">
-            <div class="spinner"></div>
-            <p>Carregando...</p>
-          </div>
-          <div id="conteudo" class="container">
-            <div class="box_monstro">              
-              <label for="monstroSelect">Selecione um Monstro:</label>
-              <div class="select">
-                  <select id="monstroSelect">
-                    <option disabled selected>Escolha...</option>
-                    {% for monstro in data %}
-                    <option value="{{ loop.index0 }}">{{ monstro.nome }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-
-                <div id="infoMonstro" style="margin-top: 20px;">
-                  
-                </div>
-            </div>
-          </div>
-          
-          <div class="timer-container">
-            <div class="mensagem">
-              <div class="mensagem-box">
-               <p class="mensagem-text"></p>
-
-               <button class="button-mensagem">OK</button>
+  <div class="global">
+    {% include 'components/header.html' %}
+      <main>
+        <section id="rank" class="section">
+              <h2 class="title is-2">🐺 Monstros ragnarok</h2>
+              <br>
+              <div id="loader" class="loader-container">
+                <div class="spinner"></div>
+                <p>Carregando...</p>
               </div>
-             </div>
-
-      </section>
-</main>
-
+              <div id="conteudo" class="container">
+                <div class="box_monstro">              
+                  <label for="monstroSelect">Selecione um Monstro:</label>
+                  <div class="select">
+                      <select id="monstroSelect">
+                        <option disabled selected>Escolha...</option>
+                        {% for monstro in data %}
+                        <option value="{{ loop.index0 }}">{{ monstro.nome }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+    
+                    <div id="infoMonstro" style="margin-top: 20px;">
+                      
+                    </div>
+                </div>
+              </div>
+              
+              <div class="timer-container">
+                <div class="mensagem">
+                  <div class="mensagem-box">
+                  <p class="mensagem-text"></p>
+    
+                  <button class="button-mensagem">OK</button>
+                  </div>
+                </div>
+    
+          </section>
+    </main>
+  </div>
+ 
     
 
     <script >
@@ -500,16 +501,19 @@ h3{
     const toggleIcon = document.getElementById('toggle-icon');
 
     toggleButton.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
+      sidebar.classList.toggle('collapsed');
+      toggleButton.classList.toggle('collapsed');
 
-    if (sidebar.classList.contains('collapsed')) {
-      toggleIcon.className = 'fas fa-arrow-right';
-      toggleButton.style.left = '1rem'; 
-    } else {
-      toggleIcon.className = 'fas fa-arrow-left';
-      toggleButton.style.left = '13rem';
-    }
-  })
+      if (sidebar.classList.contains('collapsed')) {
+        icon.classList.remove('fa-chevron-left');
+        icon.classList.add('fa-chevron-right');
+        toggleButton.style.left = '1rem'; 
+      } else {
+        icon.classList.remove('fa-chevron-right');
+        icon.classList.add('fa-chevron-left');
+        toggleButton.style.left = '13rem';
+      }
+    });
 
     </script>
 </body>

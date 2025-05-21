@@ -31,7 +31,6 @@
       top: 0;
       left: 0;
       overflow-y: auto;
-      border-right: 1px solid #333;
     }
 
     aside h2 {
@@ -225,12 +224,14 @@
   {% include 'components/links.html' %}
 
 
+  <div class="global">
+    {% include 'components/header.html' %}
   <main>
     <div id="loader" class="loader-container">
         <div class="spinner"></div>
         <p>Carregando...</p>
     </div>
-    <section class="section">
+      <section class="section">
         <div class="card">
             <div id="conteudo" style="display: none;">
               <div class="container-accordion">
@@ -354,9 +355,11 @@
                 </div>
               </div>
             </div>
+          </section>
         </div>
-    </section>
-  </main>
+        
+      </main>
+    </div>
   <script>
     function esconderLoader() {
         setTimeout(() => {
@@ -380,16 +383,19 @@
     const toggleIcon = document.getElementById('toggle-icon');
 
     toggleButton.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
+      sidebar.classList.toggle('collapsed');
+      toggleButton.classList.toggle('collapsed');
 
-    if (sidebar.classList.contains('collapsed')) {
-      toggleIcon.className = 'fas fa-arrow-right';
-      toggleButton.style.left = '1rem'; 
-    } else {
-      toggleIcon.className = 'fas fa-arrow-left';
-      toggleButton.style.left = '13rem';
-    }
-  })
+      if (sidebar.classList.contains('collapsed')) {
+        icon.classList.remove('fa-chevron-left');
+        icon.classList.add('fa-chevron-right');
+        toggleButton.style.left = '1rem'; 
+      } else {
+        icon.classList.remove('fa-chevron-right');
+        icon.classList.add('fa-chevron-left');
+        toggleButton.style.left = '13rem';
+      }
+    });
   </script>
 </body>
 </html>

@@ -31,14 +31,7 @@
       top: 0;
       left: 0;
       overflow-y: auto;
-      border-right: 1px solid #333;
     }
-
-    aside h2 {
-      color: #ffc107;
-      margin-bottom: 20px;
-    }
-
     aside nav a {
       display: block;
       color: #bbb;
@@ -117,57 +110,59 @@
 </head>
 <body>
   {% include 'components/links.html' %}
-
-  <main>
-    <div class="content">
-        <h1 class="title is-1">Sobre o Projeto</h1>
-        <p class="subtitle is-6 has-text-grey-lighter"> O site RolaGuiada nasceu da paixão pela comunidade de Ragnarok e pela vontade de facilitar o acesso às informações mais importantes sobre o jogo.
-            Nossa missão é oferecer um ambiente acessível, organizado e sempre atualizado para jogadores de todos os níveis do novato ao veterano.
-        </p> 
-        <div>
-        <h3>💬 Entre em Contato</h3>
-            <p class="subtitle is-6 has-text-grey-lighter">Se você quiser sugerir melhorias, reportar erros ou apenas trocar uma ideia, estamos disponíveis:
-                <ul class="has-text-grey-lighter">
-                    <li>Discord: Michels#0484</li>
-                    <li>Discord: wakabayashigg2</li>
-                    <li>In-game: Ghostring</li>
-                    <li>Email: wikirolaguiada@gmail.com</li>
-
-                </ul>
-            </p>       
-        </div>  
-        <div> 
-        <h3>🤝 Contribua com o Projeto</h3>
-        <p class="subtitle is-6 has-text-grey-lighter">  Se você gostou do conteúdo e quer apoiar o projeto, há várias formas de contribuir:</p>   
-        <ul class="has-text-grey-lighter">
-            <li>Enviando sugestões ou conteúdos úteis (builds, guias, dicas).</li>
-            <li>Compartilhando o site com amigos e clãs.</li>
-            <li>Apoiando via <span style="color:#ffc107" class="js-modal-trigger">Pix.</span></li>
-
-        </ul>        
-        </p>
-        </div>
-          <div class="field">
-            <form action="https://formsubmit.co/wikirolaguiada@gmail.com" method="POST">
-                <input class="input" type="text" name="nome" placeholder="Seu nome" required />
-                <input class="input" type="email" name="email" placeholder="Seu email" required />
-                <textarea class="textarea" placeholder="Digite sua mensagem." name="mensagem" required></textarea>
-                <button type="submit" class="submit button is-link">Enviar</button>
-            </form>
+  <div class="global">
+    {% include 'components/header.html' %}
+    <main>
+      <div class="content">
+          <h1 class="title is-1">Sobre o Projeto</h1>
+          <p class="subtitle is-6 has-text-grey-lighter"> O site RolaGuiada nasceu da paixão pela comunidade de Ragnarok e pela vontade de facilitar o acesso às informações mais importantes sobre o jogo.
+              Nossa missão é oferecer um ambiente acessível, organizado e sempre atualizado para jogadores de todos os níveis do novato ao veterano.
+          </p> 
+          <div>
+          <h3>💬 Entre em Contato</h3>
+              <p class="subtitle is-6 has-text-grey-lighter">Se você quiser sugerir melhorias, reportar erros ou apenas trocar uma ideia, estamos disponíveis:
+                  <ul class="has-text-grey-lighter">
+                      <li>Discord: Michels#0484</li>
+                      <li>Discord: wakabayashigg2</li>
+                      <li>In-game: Ghostring</li>
+                      <li>Email: wikirolaguiada@gmail.com</li>
+  
+                  </ul>
+              </p>       
           </div>  
-        <p class="subtitle is-6 has-text-grey-lighter">Juntos podemos manter este guia sempre vivo e atualizado 💛</p>
-        <div class="modal">
-          <div class="modal-background"></div>
-          <div class="modal-content">
-             <h3>Contribua com o projeto !</h3>
-             <img src="{{ url_for('static', filename='assets/QRCode.jpg') }}" alt="QRCode">
-             <p style="margin-top: 3rem;">Chave Pix :</p>
-             <span>b6ba72ec-122d-4993-b67d-838b8d73a4de</span>
+          <div> 
+          <h3>🤝 Contribua com o Projeto</h3>
+          <p class="subtitle is-6 has-text-grey-lighter">  Se você gostou do conteúdo e quer apoiar o projeto, há várias formas de contribuir:</p>   
+          <ul class="has-text-grey-lighter">
+              <li>Enviando sugestões ou conteúdos úteis (builds, guias, dicas).</li>
+              <li>Compartilhando o site com amigos e clãs.</li>
+              <li>Apoiando via <span style="color:#ffc107" class="js-modal-trigger">Pix.</span></li>
+  
+          </ul>        
+          </p>
           </div>
-          <button class="modal-close is-large" aria-label="close"></button>
+            <div class="field">
+              <form action="https://formsubmit.co/wikirolaguiada@gmail.com" method="POST">
+                  <input class="input" type="text" name="nome" placeholder="Seu nome" required />
+                  <input class="input" type="email" name="email" placeholder="Seu email" required />
+                  <textarea class="textarea" placeholder="Digite sua mensagem." name="mensagem" required></textarea>
+                  <button type="submit" class="submit button is-link">Enviar</button>
+              </form>
+            </div>  
+          <p class="subtitle is-6 has-text-grey-lighter">Juntos podemos manter este guia sempre vivo e atualizado 💛</p>
+          <div class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+               <h3>Contribua com o projeto !</h3>
+               <img src="{{ url_for('static', filename='assets/QRCode.jpg') }}" alt="QRCode">
+               <p style="margin-top: 3rem;">Chave Pix :</p>
+               <span>b6ba72ec-122d-4993-b67d-838b8d73a4de</span>
+            </div>
+            <button class="modal-close is-large" aria-label="close"></button>
+          </div>
         </div>
-      </div>
-  </main>
+    </main>
+  </div>
   <script>
     document.querySelectorAll(".clickable-row").forEach(row => {
     const link = row.dataset.link;
@@ -185,6 +180,8 @@
     const modal = document.querySelector('.modal');
     const botaoDesativarModal = document.querySelector('.modal-close')
     const botaoAtivarModal = document.querySelector('.js-modal-trigger');
+    const icon = document.getElementById('toggle-icon');
+
 
     botaoAtivarModal.addEventListener("click",()=>{
       modal.classList.add('is-active')
@@ -199,16 +196,19 @@
     });
 
     toggleButton.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
+      sidebar.classList.toggle('collapsed');
+      toggleButton.classList.toggle('collapsed');
 
-    if (sidebar.classList.contains('collapsed')) {
-      toggleIcon.className = 'fas fa-arrow-right';
-      toggleButton.style.left = '1rem'; 
-    } else {
-      toggleIcon.className = 'fas fa-arrow-left';
-      toggleButton.style.left = '13rem';
-    }
-  })
+      if (sidebar.classList.contains('collapsed')) {
+        icon.classList.remove('fa-chevron-left');
+        icon.classList.add('fa-chevron-right');
+        toggleButton.style.left = '1rem'; 
+      } else {
+        icon.classList.remove('fa-chevron-right');
+        icon.classList.add('fa-chevron-left');
+        toggleButton.style.left = '13rem';
+      }
+    });
 
   </script>
 </body>

@@ -15,30 +15,22 @@
       scroll-behavior: smooth;
     }
 
-    body {
+  body {
       font-family: 'Inter', sans-serif;
       background-color: #121212;
       color: #fff;
       display: flex;
-    }
-
-    .container{
+  }
+ 
+  .container{
       width: 60vw;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       gap: 2rem;
+      width: 100vw;
     }
-    .classe-container{
-      width: 20%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      cursor: pointer;
-      gap: .7rem;
-    }
+
     
     .classe-container h3{
       font-size: 1rem;
@@ -62,7 +54,6 @@
       top: 0;
       left: 0;
       overflow-y: auto;
-      border-right: 1px solid #333;
     }
 
     aside h2 {
@@ -85,7 +76,6 @@
     }
 
     main {
-      margin-left: 270px;
       padding: 30px;
       width: 100%;
     }
@@ -130,57 +120,7 @@
       margin-bottom: 5px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
 
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #444;
-    }
-
-    th {
-      background-color: #333;
-    }
-
-    tr:nth-child(even) {
-      background-color: #1c1c2c;
-    }
-
-  .build-tag {
-  background-color: #3a3a5a;
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 3px 5px 3px 0;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  color: #f1f1f1;
-  transition: background-color 0.2s ease;
-}
-
-.build-tag:hover {
-  background-color: #4b4b7a;
-}
-
-.build-tag.suporte {
-  background-color: #4a7aa9	; 
-}
-
-.build-tag.dano {
-  background-color: #a94a4a; 
-}
-.dano::before {
-  content: "⚔️ ";
-}
-.suporte::before {
-  content: "💚 ";
-}
-
-.build-tag.controle {
-  background-color: #1e90ff; 
-}
 .loader-container {
     width: 100%;
     height: 100vh;
@@ -285,54 +225,52 @@ aside {
         border-right: none;
 }
 
-main{
-        margin-left: 0;
-        padding: 20px;
-}
 
 }
   </style>
 </head>
 <body onload=esconderLoader()>
   {% include 'components/links.html' %}
-  <main>
-    <h1>🎥Streamers</h1>
-    <section>
+  <div class="global">
+    {% include 'components/header.html' %}
+    <main>
       <div id="loader" class="loader-container">
         <div class="spinner"></div>
         <p>Carregando...</p>
       </div>
       <div  id="conteudo" class="container" style="display: none;">
-        <div class="online-section">
-          {% for item in data %}
-            {% if item.status == "on" %}
-              <div class="classe-container">
-                <img class="pulsando" src="{{ url_for('static', filename=item.imagem_gif) }}" alt="classe" style="width: 100px; height: 125px;">
-                <div>
-                  <h3>{{ item.dados }}</h3>
-                  <p><a href="{{ item.links }}" target="_blank"><span class="live-indicator">Live</span></a></p>
+          <h1>🎥Streamers</h1>
+          <div class="online-section">
+            {% for item in data %}
+              {% if item.status == "on" %}
+                <div class="classe-container">
+                  <img class="pulsando" src="{{ url_for('static', filename=item.imagem_gif) }}" alt="classe" style="width: 100px; height: 125px;">
+                  <div>
+                    <h3>{{ item.dados }}</h3>
+                    <p><a href="{{ item.links }}" target="_blank"><span class="live-indicator">Live</span></a></p>
+                  </div>
                 </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-        
-        <!-- Seção: Itens com status diferente de "on" -->
-        <div class="offline-section">
-          {% for item in data %}
-            {% if item.status != "on" %}
-              <div class="classe-container">
-                <img class="off" src="{{ url_for('static', filename=item.imagem) }}" alt="classe" style="width: 100px;">
-                <div>
-                  <h3>{{ item.dados }}</h3>
-                  <p><a href="{{ item.links }}" target="_blank">Confira o canal</a></p>
+              {% endif %}
+            {% endfor %}
+          </div>
+          
+          <!-- Seção: Itens com status diferente de "on" -->
+          <div class="offline-section">
+            {% for item in data %}
+              {% if item.status != "on" %}
+                <div class="classe-container">
+                  <img class="off" src="{{ url_for('static', filename=item.imagem) }}" alt="classe" style="width: 100px;">
+                  <div>
+                    <h3>{{ item.dados }}</h3>
+                    <p><a href="{{ item.links }}" target="_blank">Confira o canal</a></p>
+                  </div>
                 </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-  </section>   
-  </main>
+              {% endif %}
+            {% endfor %}
+          </div>
+    </main>
+  </div>
+ 
   <script>
 
     const dados = {{ data | tojson | safe }};
@@ -359,16 +297,19 @@ main{
     const toggleIcon = document.getElementById('toggle-icon');
 
     toggleButton.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
+      sidebar.classList.toggle('collapsed');
+      toggleButton.classList.toggle('collapsed');
 
-    if (sidebar.classList.contains('collapsed')) {
-      toggleIcon.className = 'fas fa-arrow-right';
-      toggleButton.style.left = '1rem'; 
-    } else {
-      toggleIcon.className = 'fas fa-arrow-left';
-      toggleButton.style.left = '13rem';
-    }
-  })
+      if (sidebar.classList.contains('collapsed')) {
+        icon.classList.remove('fa-chevron-left');
+        icon.classList.add('fa-chevron-right');
+        toggleButton.style.left = '1rem'; 
+      } else {
+        icon.classList.remove('fa-chevron-right');
+        icon.classList.add('fa-chevron-left');
+        toggleButton.style.left = '13rem';
+      }
+    });
   </script>
 </body>
 </html>

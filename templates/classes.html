@@ -31,12 +31,6 @@
       top: 0;
       left: 0;
       overflow-y: auto;
-      border-right: 1px solid #333;
-    }
-
-    aside h2 {
-      color: #ffc107;
-      margin-bottom: 20px;
     }
 
     aside nav a {
@@ -54,9 +48,9 @@
     }
 
     main {
-      margin-left: 270px;
       padding: 30px;
-      width: 100%;
+      width: 50vw;
+      margin-left: 5rem;
     }
 
     h1 {
@@ -68,22 +62,13 @@
       margin-bottom: 50px;
     }
 
-    .card {
+    /* .card {
       background-color: #1e1e2f;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
       margin-bottom: 20px;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    li {
-      margin-bottom: 5px;
-    }
+    } */
 
     table {
       width: 100%;
@@ -103,15 +88,7 @@
     tr:nth-child(even) {
       background-color: #1c1c2c;
     }
-  strong{
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
+  
   strong img{
     filter: drop-shadow(0px 0px 5px white);
   }
@@ -124,13 +101,12 @@
   font-size: 0.9rem;
   color: #f1f1f1;
   transition: background-color 0.2s ease;
-}
+  }
 
 .build-tag:hover {
   background-color: #4b4b7a;
 }
 
-/* Cores dinâmicas por tipo */
 .build-tag.suporte {
   background-color: #4a7aa9	; 
 }
@@ -146,7 +122,7 @@
 }
 
 .build-tag.controle {
-  background-color: #1e90ff; /* azul */
+  background-color: #1e90ff;
 }
 .loader-container {
     width: 100%;
@@ -201,54 +177,58 @@
 <body onload=esconderLoader()>
   {% include 'components/links.html' %}
 
-  <main>
-    <section id="classes-builds" class="section">
-      <div id="loader" class="loader-container">
-        <div class="spinner"></div>
-        <p>Carregando...</p>
-      </div>
-      <div class="card">
-        <h2>🧙 Classes e Builds</h2>
-        <br>
-        <div class="container" id="conteudo" style="display: none;">
-        <table class="builds-table">
-          <thead>
-            <tr>
-              <th>Classe</th>
-              <th>Build</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for item in class_builds %}
-            <tr class="clickable-row" {% if item.link %}data-link="{{ item.link }}"{% endif %}>
-              <td>
-                <strong>
-                  {% if item.link %}
+  <div class="global">
+    {% include 'components/header.html' %}
+    <main>
+      <section id="classes-builds" class="section">
+        <div id="loader" class="loader-container">
+          <div class="spinner"></div>
+          <p>Carregando...</p>
+        </div>
+        <div class="card">
+          <h2>🧙 Classes e Builds</h2>
+          <br>
+          <div class="container" id="conteudo" style="display: none;">
+          <table class="builds-table">
+            <thead>
+              <tr>
+                <th>Classe</th>
+                <th>Build</th>
+              </tr>
+            </thead>
+  
+            <tbody>
+              {% for item in class_builds %}
+              <tr class="clickable-row" {% if item.link %}data-link="{{ item.link }}"{% endif %}>
+                <td>
+                  <strong>
+                    {% if item.link %}
+                      <img src="{{ url_for('static', filename=item.imagem) }}" alt="classe" style="width: 100px;">
+                      <a href="{{ item.link }}" target="_blank">{{ item.classe }} 📺</a>
+                    {% else %}
                     <img src="{{ url_for('static', filename=item.imagem) }}" alt="classe" style="width: 100px;">
-                    <a href="{{ item.link }}" target="_blank">{{ item.classe }} 📺</a>
-                  {% else %}
-                  <img src="{{ url_for('static', filename=item.imagem) }}" alt="classe" style="width: 100px;">
-                    {{ item.classe }}
-                  {% endif %}
-                </strong>
-              </td>
-              <td>
-                {% for build in item.builds %}
-                <div class="build-tag {% if 'Suporte:' in build %} suporte {% elif 'Dano:' in build %} dano {% elif 'Suporte de Controle: ' in build %} suporte {% endif %}">
-                  {{ build }}
-                </div>
-                {% endfor %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      </div>
-    </section>
-    
-  </main>
+                      {{ item.classe }}
+                    {% endif %}
+                  </strong>
+                </td>
+                <td>
+                  {% for build in item.builds %}
+                  <div class="build-tag {% if 'Suporte:' in build %} suporte {% elif 'Dano:' in build %} dano {% elif 'Suporte de Controle: ' in build %} suporte {% endif %}">
+                    {{ build }}
+                  </div>
+                  {% endfor %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        </div>
+      </section>
+      
+    </main>
+  </div>
+ 
   <script>
     function esconderLoader() {
         setTimeout(() => {
@@ -269,19 +249,22 @@
 
     const toggleButton = document.getElementById('toggle-menu');
     const sidebar = document.getElementById('sidebar');
-    const toggleIcon = document.getElementById('toggle-icon');
+    const icon = document.getElementById('toggle-icon');
 
     toggleButton.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
+      sidebar.classList.toggle('collapsed');
+      toggleButton.classList.toggle('collapsed');
 
-    if (sidebar.classList.contains('collapsed')) {
-      toggleIcon.className = 'fas fa-arrow-right';
-      toggleButton.style.left = '1rem'; 
-    } else {
-      toggleIcon.className = 'fas fa-arrow-left';
-      toggleButton.style.left = '13rem';
-    }
-  })
+      if (sidebar.classList.contains('collapsed')) {
+        icon.classList.remove('fa-chevron-left');
+        icon.classList.add('fa-chevron-right');
+        toggleButton.style.left = '1rem'; 
+      } else {
+        icon.classList.remove('fa-chevron-right');
+        icon.classList.add('fa-chevron-left');
+        toggleButton.style.left = '13rem';
+      }
+    });
   </script>
 </body>
 </html>
