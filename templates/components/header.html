@@ -14,7 +14,7 @@
             <span class="live-dot"></span>
             <ul class="listaLive">
                 <li class="dropdown-wrapper">
-                  <a href="#" class="trigger">Live On</a>
+                  <a href="#" class="trigger">Live On <i class="fa-solid fa-angle-down"></i></a>
                   <ul class="dropdown">
                     {% for item in streamers %}
                     {% if item.status == "on" %}
@@ -32,7 +32,7 @@
                             </div>
                           </div>
                   
-                          <span class="live">● Live ON</span>
+                          <span class="live">● Live ON </span>
                         </a>
                       </li>
                     {% endif %}

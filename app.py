@@ -182,7 +182,7 @@ def inject_request():
 def info_page():
     file_path = 'rola.xlsx'
     df_link = pd.read_excel(file_path, header=None)
-    info_essenciais = df_link.iloc[2:7, 1].dropna().tolist()
+    info_essenciais = df_link.iloc[4:7, 1].dropna().tolist()
     links = df_link.iloc[10:14, 1].dropna().tolist()
     df_videos = pd.read_excel('videos_ragnarok.xlsx')
     titulos = df_videos.iloc[0:,0].dropna().tolist()
@@ -191,7 +191,36 @@ def info_page():
     video_url = df_videos.iloc[0:,3].dropna().tolist()
     
     data_videos = list(zip(titulos,thumb,data_publicacao,video_url))
+    videos_recentes = pd.read_excel('videos_ragnarok_unidos.xlsx',header=None)
 
+    canal = videos_recentes.iloc[1:,1].dropna().tolist()
+    titulo = videos_recentes.iloc[1:,2].dropna().tolist()
+    thumb_recentes = videos_recentes.iloc[1:,3].dropna().tolist()
+    data_publicacao_recentes = videos_recentes.iloc[1:,4].dropna().tolist()
+    url = videos_recentes.iloc[1:,5].dropna().tolist()
+
+    data_videos_recentes = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
+
+    video_mais_recente = max(
+    (item for item in data_videos_recentes if item[4] == "Ragnarokonlineoficial"),
+    key=lambda x: x[2],
+    default=None  
+    )
+
+    # Ignorar o canal principal
+    videos_outros_canais = [v for v in data_videos_recentes if v[4] != "Ragnarokonlineoficial"]
+
+    # Agrupar por canal e manter o vídeo mais recente de cada canal
+    mais_recentes_por_canal = {}
+    for v in videos_outros_canais:
+        canal = v[4]
+        if canal not in mais_recentes_por_canal or v[2] > mais_recentes_por_canal[canal][2]:
+            mais_recentes_por_canal[canal] = v
+
+    # Agora temos um dicionário com 1 vídeo por canal
+    videos_secundarios = sorted(mais_recentes_por_canal.values(), key=lambda x: x[2], reverse=True)
+
+    print(videos_secundarios)
     icones = {
     'Discord': 'fa-brands fa-discord',
     'Site': 'fa-solid fa-globe',
@@ -227,7 +256,9 @@ def info_page():
         links=links_formatados,
         rank_data = rank_data,
         data_videos = data_videos,
-        streamers = stream_cache
+        streamers = stream_cache,
+        video_mais_recente = video_mais_recente,
+        videos_secundarios = videos_secundarios
         )
 
 @app.route('/classes')

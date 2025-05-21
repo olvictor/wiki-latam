@@ -33,6 +33,7 @@
       gap: 2rem;
       height: 100vh;
     }
+ 
     .topo-container{
       display: flex;
       width: 100%;
@@ -132,6 +133,7 @@
       height: auto;
       display: flex;
       flex-direction: column;
+      margin-top: 3rem;
     }
 
     .principal-comunidade{
@@ -360,6 +362,24 @@ a{
   text-decoration: none;
   color: #fff
 }
+.grid-title{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.grid-title div{
+  display: flex;
+  gap: 1rem;
+  padding-right: 1rem;
+  align-self: flex-end;
+}
+.grid-title i{
+ cursor: pointer;
+}
+
+.grid-title i:hover{
+  color: #FFD700;
+}
 .videoPrincipal {
     position: relative;
     width: 100%;
@@ -402,6 +422,13 @@ a{
   height: 100%;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.video-page{
+  height: 100%;
+  display: flex;
   flex-wrap: wrap;
   gap: 1rem;
 }
@@ -490,26 +517,43 @@ a{
       <div class="fixed-grid">
         <div class="grid-title">
           <h3 class="title is-3">🔥Novidades</h3>
+          <div>
+            <i id="seta-esquerda" class="fa-solid fa-arrow-left" onclick="mudarPagina(-1)"></i>  
+            <i id="seta-direita" class="fa-solid fa-arrow-right" onclick="mudarPagina(1)"></i>
+          </div>
         </div>
         <div class="grid principal-comunidade">
           <div class="cell">
+            {% if video_mais_recente %}
             <div class="videoPrincipal">
-              <a href="https://www.youtube.com/watch?v=ItDguzza20g" target="_blank">
-                <img src="https://img.youtube.com/vi/ItDguzza20g/maxresdefault.jpg" alt="">
-                <p>O BÁSICO PARA COMEÇAR NO SERVIDOR OFICIAL DE RAGNAROK LATAM (ROLA)</p>
+              <a href="{{ video_mais_recente[3] }}" target="_blank">
+                <img src="{{ video_mais_recente[1] }}" alt="">
+                <p>{{ video_mais_recente[0] }}</p>
+                <!-- <span>Publicado em: {{ video_mais_recente[2] }}</span> -->
               </a>
             </div>
+            {% endif %}
           </div>
           <div class="cell colunaSecundaria">
             <div class="videosSecundarios">
-              {% for titulo,thumb,data_publicacao,video_url in data_videos[:4] %}
-              <div class="videoSecundario">
-                <a href={{video_url}} target="_blank">
-                  <img src={{thumb}} alt="">
-                  <p>{{titulo}}</p>
-                </a>
+              <div id="videos-container">
+                {% for i in range((videos_secundarios | length) // 4 + ((videos_secundarios | length) % 4 > 0)) %}
+                  {% if i != 0 %}
+                    <div class="video-page" style="display: none;">
+                  {% else %}
+                    <div class="video-page">
+                  {% endif %}
+                      {% for video in videos_secundarios[i*4:(i+1)*4] %}
+                        <div class="videoSecundario">
+                          <a href="{{ video[3] }}" target="_blank">
+                            <img src="{{ video[1] }}" alt="">
+                            <p>{{ video[0] }}</p>
+                          </a>
+                        </div>
+                      {% endfor %}
+                    </div>
+                {% endfor %}
               </div>
-              {% endfor %}
             </div>
           </div>
         </div>
@@ -587,6 +631,9 @@ a{
     const toggleButton = document.getElementById('toggle-menu');
     const sidebar = document.getElementById('sidebar');
     const icon = document.getElementById('toggle-icon');
+    const setaEsquerda = document.getElementById('seta-esquerda');
+    const setaDireita = document.getElementById('seta-direita');
+
 
     toggleButton.addEventListener('click', () => {
       sidebar.classList.toggle('collapsed');
@@ -643,6 +690,26 @@ a{
         listaNoticias.appendChild(li);
       }, index * 200);
     });
+
+    let paginaAtual = 0;
+    const paginas = document.querySelectorAll('.video-page');
+    
+    function atualizarSetas() {
+      setaEsquerda.style.display = paginaAtual === 0 ? 'none' : 'inline-block';
+      setaDireita.style.display = paginaAtual === paginas.length - 1 ? 'none' : 'inline-block';
+    }
+
+    function mudarPagina(direcao) {
+      paginas.forEach(pagina => pagina.style.display = 'none');
+
+      paginaAtual += direcao;
+      if (paginaAtual < 0) paginaAtual = 0;
+      if (paginaAtual >= paginas.length) paginaAtual = paginas.length - 1;
+
+      paginas[paginaAtual].style.display = 'flex';
+      atualizarSetas(); 
+    }
+    document.addEventListener('DOMContentLoaded', atualizarSetas);  
   </script>
 </body>
 </html>

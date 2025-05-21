@@ -187,6 +187,7 @@ margin-top: 80px;
 
   header{
     background-color: black;
+    position: fixed;
     width: 100%;
     z-index: 1;
     height: 3.5rem;
@@ -309,6 +310,7 @@ margin-top: 80px;
   .listaLive .dropdown li a:hover {
     /* opacity: .8; */
     background-color: #1b1a1a;
+  
   }
   
   .listaLive .has-dropdown:hover .dropdown {
@@ -336,7 +338,7 @@ margin-top: 80px;
   }
   .streamers-jogo{
     color: #555;
-    font-size: .6rem;
+    font-size: .5rem;
   }
   .dropdown {
     position: absolute;
