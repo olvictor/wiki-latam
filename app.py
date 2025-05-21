@@ -182,7 +182,7 @@ def inject_request():
 def info_page():
     file_path = 'rola.xlsx'
     df_link = pd.read_excel(file_path, header=None)
-    info_essenciais = df_link.iloc[4:7, 1].dropna().tolist()
+    info_essenciais = df_link.iloc[4:9, 1].dropna().tolist()
     links = df_link.iloc[10:14, 1].dropna().tolist()
     df_videos = pd.read_excel('videos_ragnarok.xlsx')
     titulos = df_videos.iloc[0:,0].dropna().tolist()
@@ -190,6 +190,8 @@ def info_page():
     data_publicacao = df_videos.iloc[0:,2].dropna().tolist()
     video_url = df_videos.iloc[0:,3].dropna().tolist()
     
+    print(info_essenciais)
+
     data_videos = list(zip(titulos,thumb,data_publicacao,video_url))
     videos_recentes = pd.read_excel('videos_ragnarok_unidos.xlsx',header=None)
 
