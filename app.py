@@ -1119,7 +1119,7 @@ def melhores_spots_page():
 def links_page():
 
     return render_template(
-    'links.html',
+    'components/links.html',
     links=carregar_links(),
 )
 
@@ -1127,7 +1127,7 @@ def links_page():
 def header_page():
   
     return render_template(
-    'header.html',
+    'components/header.html',
     links=carregar_links(),
     streamers = stream_cache
 )
