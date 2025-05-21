@@ -721,34 +721,31 @@ a{
     let paginaAtual = 0;
     const itensPorPagina = 4;
     const totalPaginas = Math.ceil(data.length / itensPorPagina); 
-
+    let timeoutReinicio;
     function atualizarSetas() {
       setaEsquerda.style.display = paginaAtual === 0 ? 'none' : 'inline-block';
       setaDireita.style.display = paginaAtual === paginas.length - 1 ? 'none' : 'inline-block';
     }
 
-    function mudarPagina(direcao) {
-      paginas[paginaAtual].classList.remove('ativa');
-      paginaAtual += direcao;
-      if (paginaAtual < 0) paginaAtual = 0;
-      if (paginaAtual >= paginas.length) paginaAtual = paginas.length - 1;
+    function mostrarPagina(index) {
+    paginas.forEach((p) => p.classList.remove('ativa'));
+    paginas[index].classList.add('ativa');
+  }
 
-      paginas[paginaAtual].classList.add('ativa');
-      atualizarSetas(); 
-      
-    }
-    document.addEventListener('DOMContentLoaded', atualizarSetas); 
-    
-    let intervalo;
+  function mudarPagina(direcao) {
+    pausarAutoTrocaTemporariamente(); // pausa em interação manual
 
-    function iniciarAutoTroca() {
+    paginaAtual += direcao;
+    if (paginaAtual >= totalPaginas) paginaAtual = 0;
+    if (paginaAtual < 0) paginaAtual = totalPaginas - 1;
+
+    mostrarPagina(paginaAtual);
+  }
+
+  function iniciarAutoTroca() {
     intervalo = setInterval(() => {
-      if (paginaAtual < totalPaginas - 1) {
-        mudarPagina(1); 
-      } else {
-        paginaAtual = -1; 
-        mudarPagina(1);   
-      }
+      paginaAtual = (paginaAtual + 1) % totalPaginas;
+      mostrarPagina(paginaAtual);
     }, 10000);
   }
 
@@ -760,7 +757,21 @@ a{
     iniciarAutoTroca();
   }
 
-  iniciarAutoTroca();
+  function pausarAutoTrocaTemporariamente() {
+    clearInterval(intervalo);
+    clearTimeout(timeoutReinicio);
+
+    // Retoma após 15 segundos sem interação
+    timeoutReinicio = setTimeout(() => {
+      iniciarAutoTroca();
+    }, 15000);
+  }
+
+  // Inicia ao carregar
+  document.addEventListener("DOMContentLoaded", () => {
+    mostrarPagina(paginaAtual);
+    iniciarAutoTroca();
+  });
 
   </script>
 </body>
