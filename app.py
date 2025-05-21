@@ -1115,23 +1115,6 @@ def melhores_spots_page():
         streamers = stream_cache
 )
 
-@app.route('/links')
-def links_page():
-
-    return render_template(
-    'components/links.html',
-    links=carregar_links(),
-)
-
-@app.route('/header')
-def header_page():
-  
-    return render_template(
-    'components/header.html',
-    links=carregar_links(),
-    streamers = stream_cache
-)
-
 if __name__ == '__main__':
 
  app.run(debug=True)
