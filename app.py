@@ -163,15 +163,6 @@ def carregar_links():
 
     return links_formatados
 
-cache_started = False
-
-@app.before_request
-def start_cache_once():
-    global cache_started
-    if not cache_started:
-        cache_started = True
-        threading.Thread(target=atualizar_stream_cache, daemon=True).start()
-
 @app.context_processor
 def inject_request():
     return dict(request=request)
@@ -184,7 +175,6 @@ def info_page():
     info_essenciais = df_link.iloc[2:7, 1].dropna().tolist()
     links = df_link.iloc[10:14, 1].dropna().tolist()
     df_videos = pd.read_excel('videos_ragnarok.xlsx')
-
     titulos = df_videos.iloc[0:,0].dropna().tolist()
     thumb = df_videos.iloc[0:,1].dropna().tolist()
     data_publicacao = df_videos.iloc[0:,2].dropna().tolist()
@@ -1125,25 +1115,24 @@ def melhores_spots_page():
         streamers = stream_cache
 )
 
-
-if __name__ == '__main__':
-
- app.run(debug=True)
-
-
 @app.route('/links')
 def links_page():
-  
+
     return render_template(
     'links.html',
     links=carregar_links(),
 )
 
 @app.route('/header')
-def links_page():
+def header_page():
   
     return render_template(
     'header.html',
     links=carregar_links(),
     streamers = stream_cache
 )
+
+if __name__ == '__main__':
+
+ app.run(debug=True)
+
