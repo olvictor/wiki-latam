@@ -1,4 +1,5 @@
 from collections import defaultdict
+import os
 from flask import Flask, request
 import pandas as pd
 import re
@@ -6,6 +7,8 @@ import unicodedata
 from flask_cors import CORS
 from flask import Flask, render_template, jsonify
 from openpyxl import load_workbook
+from apscheduler.schedulers.background import BackgroundScheduler
+
 import urllib.request
 import urllib.parse
 import json
@@ -45,6 +48,7 @@ def get_stream_data(username):
         with urllib.request.urlopen(req) as response:
             result = json.loads(response.read().decode())
             streams = result.get('data', [])
+            print(streams)
             if streams:
                 return streams[0]
             else:
@@ -62,20 +66,23 @@ def extrair_nome_usuario(url):
 
 def atualizar_stream_cache():
     global stream_cache
-
     print("Atualizando cache de streamers...")
 
-    file_path = 'rola.xlsx'
+    file_path = os.path.join(os.path.dirname(__file__), 'rola.xlsx')
 
-    df = pd.read_excel(file_path, sheet_name='INFORMAÇÕES', header=None)
+    try:
+        df = pd.read_excel(file_path, sheet_name='INFORMAÇÕES', header=None)
+    except Exception as e:
+        print(f"Erro ao ler o Excel: {e}")
+        return
 
-    dados = df.iloc[19:,1].dropna().tolist()
+    dados = df.iloc[19:, 1].dropna().tolist()
 
     wb = load_workbook(file_path)
     ws = wb["INFORMAÇÕES"]
     
     links = []
-    for row in ws.iter_rows(min_row=20,max_row=31, min_col=2, max_col=2):
+    for row in ws.iter_rows(min_row=20, max_row=31, min_col=2, max_col=2):
         cell = row[0]
         if cell.hyperlink:
             links.append(cell.hyperlink.target)
@@ -120,8 +127,11 @@ def atualizar_stream_cache():
             print(f"Nome de usuário não encontrado na URL: {item['links']}")
 
     stream_cache = dados_links_imagens
+    print("Cache atualizado com sucesso.")
 
-    threading.Timer(5400, atualizar_stream_cache).start()
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=atualizar_stream_cache, trigger="interval", seconds=1800)
+scheduler.start()
 
 def check_live(username):
         try:
@@ -166,7 +176,6 @@ def carregar_links():
 @app.context_processor
 def inject_request():
     return dict(request=request)
-
 
 @app.route('/')
 def info_page():
@@ -219,7 +228,6 @@ def info_page():
         data_videos = data_videos,
         streamers = stream_cache
         )
-
 
 @app.route('/classes')
 def classes_page():
@@ -1116,6 +1124,6 @@ def melhores_spots_page():
 )
 
 if __name__ == '__main__':
-
+ atualizar_stream_cache() 
  app.run(debug=True)
 
