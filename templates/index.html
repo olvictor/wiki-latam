@@ -478,6 +478,29 @@ a{
   height: 60vh;
   gap: 1rem;
 }
+
+#videos-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.video-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.video-page.ativa {
+  opacity: 1;
+  pointer-events: auto;
+  position: relative; /* Para a página visível ocupar o espaço */
+}
+
+
 @keyframes aparecer {
   to {
     opacity: 1;
@@ -536,12 +559,12 @@ a{
           </div>
           <div class="cell colunaSecundaria">
             <div class="videosSecundarios">
-              <div id="videos-container">
+              <div id="videos-container" onmouseenter="pausarAutoTroca()" onmouseleave="retomarAutoTroca()">
                 {% for i in range((videos_secundarios | length) // 4 + ((videos_secundarios | length) % 4 > 0)) %}
                   {% if i != 0 %}
-                    <div class="video-page" style="display: none;">
+                    <div class="video-page" >
                   {% else %}
-                    <div class="video-page">
+                    <div class="video-page ativa">
                   {% endif %}
                       {% for video in videos_secundarios[i*4:(i+1)*4] %}
                         <div class="videoSecundario">
@@ -614,6 +637,9 @@ a{
     </div>
   </div>
   <script>
+    const data = {{ videos_secundarios | tojson | safe }};
+    console.log(data)
+
     function esconderLoader() {
         setTimeout(() => {
         document.getElementById("loader").style.display = "none";
@@ -691,25 +717,51 @@ a{
       }, index * 200);
     });
 
-    let paginaAtual = 0;
     const paginas = document.querySelectorAll('.video-page');
-    
+    let paginaAtual = 0;
+    const itensPorPagina = 4;
+    const totalPaginas = Math.ceil(data.length / itensPorPagina); 
+
     function atualizarSetas() {
       setaEsquerda.style.display = paginaAtual === 0 ? 'none' : 'inline-block';
       setaDireita.style.display = paginaAtual === paginas.length - 1 ? 'none' : 'inline-block';
     }
 
     function mudarPagina(direcao) {
-      paginas.forEach(pagina => pagina.style.display = 'none');
-
+      paginas[paginaAtual].classList.remove('ativa');
       paginaAtual += direcao;
       if (paginaAtual < 0) paginaAtual = 0;
       if (paginaAtual >= paginas.length) paginaAtual = paginas.length - 1;
 
-      paginas[paginaAtual].style.display = 'flex';
+      paginas[paginaAtual].classList.add('ativa');
       atualizarSetas(); 
+      
     }
-    document.addEventListener('DOMContentLoaded', atualizarSetas);  
+    document.addEventListener('DOMContentLoaded', atualizarSetas); 
+    
+    let intervalo;
+
+    function iniciarAutoTroca() {
+    intervalo = setInterval(() => {
+      if (paginaAtual < totalPaginas - 1) {
+        mudarPagina(1); 
+      } else {
+        paginaAtual = -1; 
+        mudarPagina(1);   
+      }
+    }, 10000);
+  }
+
+  function pausarAutoTroca() {
+    clearInterval(intervalo);
+  }
+
+  function retomarAutoTroca() {
+    iniciarAutoTroca();
+  }
+
+  iniciarAutoTroca();
+
   </script>
 </body>
 </html>

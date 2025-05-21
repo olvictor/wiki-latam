@@ -47,7 +47,7 @@ def get_stream_data(username):
         with urllib.request.urlopen(req) as response:
             result = json.loads(response.read().decode())
             streams = result.get('data', [])
-            print(streams)
+
             if streams:
                 return streams[0]
             else:
@@ -207,20 +207,16 @@ def info_page():
     default=None  
     )
 
-    # Ignorar o canal principal
     videos_outros_canais = [v for v in data_videos_recentes if v[4] != "Ragnarokonlineoficial"]
 
-    # Agrupar por canal e manter o vídeo mais recente de cada canal
     mais_recentes_por_canal = {}
     for v in videos_outros_canais:
         canal = v[4]
         if canal not in mais_recentes_por_canal or v[2] > mais_recentes_por_canal[canal][2]:
             mais_recentes_por_canal[canal] = v
 
-    # Agora temos um dicionário com 1 vídeo por canal
     videos_secundarios = sorted(mais_recentes_por_canal.values(), key=lambda x: x[2], reverse=True)
 
-    print(videos_secundarios)
     icones = {
     'Discord': 'fa-brands fa-discord',
     'Site': 'fa-solid fa-globe',
@@ -367,7 +363,6 @@ def rotas_page():
          (quest_melee[19], builds_melee[10]),
     ]
 
-    print(array_builds_melee)
     array_builds_formatado =[]
    
     for quest, build in array_builds_melee:
@@ -1144,9 +1139,6 @@ def melhores_spots_page():
     dados_com_ids = buscar_ids_para_monstros(monstros, dicionario_ids)
 
     data = list(zip(dados_com_ids,base_exp,job_exp,quantidade,mapa,xp_ajustada,nivel_jogador,nivel_monstro))
-
-
-    print(data)
 
     return render_template(
         'spots.html',
