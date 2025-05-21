@@ -12,8 +12,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import urllib.request
 import urllib.parse
 import json
-import threading
-import time
+
 
 app = Flask(__name__)
 CORS(app)
