@@ -291,7 +291,7 @@ def classes_page():
     "Shura": "Shura",
     "Mecânico": "Mecânico",
     "Bioquímicos": "Bioquímico",
-    "Trovador": "Trovador",
+    "Trovadores": "Trovador",
     "Musa": "Musa"
     }   
     def normalizar(texto):
