@@ -297,6 +297,7 @@ def classes_page():
     def normalizar(texto):
         return str(texto).strip().lower()
     df_guias["classe_normalizada"] = df_guias["classe"].apply(normalizar)
+    
 
     class_builds = [
         {"classe": classes[1], "builds": [builds[1], builds[2]], "link": "","imagem": "assets/classes/feiticeiro.png","imagem_sentado": "assets/classes/sentados/feiticeiro.gif","imagem_andando": "assets/classes/andando/feiticeiro.gif"}, #Feiticeiro
@@ -313,6 +314,11 @@ def classes_page():
         {"classe": classes[12], "builds": [builds[17], builds[18]], "link": links_classes[7],"imagem": "assets/classes/trovador.png","imagem_sentado": "assets/classes/sentados/trovador.gif","imagem_andando": "assets/classes/andando/trovador.gif"},# Trovadores
         {"classe": classes[13], "builds": [builds[19], builds[20]], "link": links_classes[7],"imagem": "assets/classes/musa.png","imagem_sentado": "assets/classes/sentados/musa.gif","imagem_andando": "assets/classes/andando/musa.gif"}, # Musa
     ]
+
+    def transformar_para_embed(url):
+        if "youtube.com/watch?v=" in url:
+            return url.replace("watch?v=", "embed/")
+        return url
 
 
     for item in class_builds:
@@ -335,11 +341,17 @@ def classes_page():
 
         item["guias"] = lista_guias
 
+    
+    df_guias['embed_url'] = df_guias['video_url'].apply(transformar_para_embed)
+    guias_gerais = df_guias[df_guias['classe'] == 'Geral']
+    guias_gerais = df_guias[df_guias['classe'] == 'Geral'].to_dict(orient='records')
+    
     links = carregar_links()
     return render_template('classes.html', 
                            class_builds=class_builds,
                            links = links,
-                           streamers = stream_cache
+                           streamers = stream_cache,
+                           guias_gerais  = guias_gerais
                            )
 
 @app.route('/rank')
