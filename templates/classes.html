@@ -54,7 +54,6 @@ main {
 .container-classes{
   width: 100vw;
   display: flex;
-  min-height: 100vh;
   height: auto;
   display: flex;
   flex-wrap: wrap;
@@ -62,7 +61,7 @@ main {
   align-items: center;
   padding: 0 4rem;
   padding-left: 10rem;
-  margin-top: 4rem;
+  margin-top: 8rem;
 }
 
 .box-classe {
@@ -74,37 +73,46 @@ main {
     cursor: pointer;
   }
 
-.container-classes:hover .box-classe {
-    opacity: 0.3;
-}
-
-.container-classes:hover .box-classe:hover {
+/* .container-classes:hover .box-classe:hover {
     opacity: 1; 
     filter: drop-shadow(0px 0px 5px green);
-}
-.box-classe .box-informacoes {
-  position: absolute;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease;
-  margin-top: 10px;
+} */
+
+
+.box-classe:hover{
+  filter: drop-shadow(0px 0px 5px green);
 }
 
 .box-classe:hover .box-informacoes {
   opacity: 1;
   visibility: visible;
 }
+
+.box-classe.ativa{
+  filter: drop-shadow(0px 0px 5px green);
+  z-index: 999;
+}
+
+.box-classe.ativa .box-informacoes {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+}
+
 .box-informacoes {
   background-color: #ffffff;
   border-radius: 16px;      
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
   padding: 20px;             
   max-width: 400px;     
-  margin: 20px auto;      
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
   color: #121212;
   text-align: center;
-  
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 999;
 }
 
 .box-informacoes::after {
@@ -140,9 +148,6 @@ main {
   text-decoration: underline;
 }
 
-.imagem-classe.sentado {
-  pointer-events: none;
-}
 
 @keyframes spin {
       to { transform: rotate(360deg); }
@@ -208,7 +213,7 @@ main {
         setTimeout(() => {
         document.getElementById("loader").style.display = "none";
         document.getElementById("conteudo").style.display = "flex";
-        }, 1000); // 1000 milissegundos = 1 segundo
+        }, 1000); 
     }
 
     document.querySelectorAll(".clickable-row").forEach(row => {
@@ -242,44 +247,32 @@ main {
 
     document.addEventListener("DOMContentLoaded", function () {
     const boxes = document.querySelectorAll(".box-classe");
-    let activeBox = null;
 
+    // Clique em uma box
     boxes.forEach(box => {
-      const img = box.querySelector(".imagem-classe");
-
-      // Hover In: ativa personagem
-      box.addEventListener("mouseenter", () => {
-        if (activeBox === box) return;
-
-        // Desativa anterior
-        if (activeBox) {
-          const oldImg = activeBox.querySelector(".imagem-classe");
-          oldImg.src = oldImg.dataset.original;
-          oldImg.classList.add("sentado");
-        }
-
-        // Ativa nova
-        img.src = img.dataset.hover;
-        img.classList.remove("sentado");
-        activeBox = box;
+      box.addEventListener("click", function (event) {
+        event.stopPropagation(); // Impede que o clique "vaze"
+        
+        // Remove 'ativa' de todas as boxes
+        boxes.forEach(b => b.classList.remove("ativa"));
+        
+        // Adiciona 'ativa' apenas na clicada
+        box.classList.add("ativa");
       });
+    });
 
-      // Hover Out: só desativa se realmente saiu da box inteira
-      box.addEventListener("mouseleave", (e) => {
-        const to = e.relatedTarget;
+    // Clique em qualquer lugar fora das boxes
+    document.addEventListener("click", function (event) {
+      const isClickInsideAnyBox = [...boxes].some(box => box.contains(event.target));
 
-        // Só desativa se o mouse não está indo para nenhum elemento filho da box
-        if (!box.contains(to)) {
-          img.src = img.dataset.original;
-          img.classList.add("sentado");
-          activeBox = null;
-        }
-      });
-
-      // Inicia como sentado
-      img.classList.add("sentado");
+      if (!isClickInsideAnyBox) {
+        boxes.forEach(b => b.classList.remove("ativa"));
+      }
     });
   });
+
+
+
   </script>
 </body>
 </html>
