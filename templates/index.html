@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Home | GUIA-ROLATAM</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6266174717644829"
+     crossorigin="anonymous"></script>
   <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -497,7 +499,14 @@ a{
 .video-page.ativa {
   opacity: 1;
   pointer-events: auto;
-  position: relative; /* Para a página visível ocupar o espaço */
+  position: relative; 
+}
+
+.container-img{
+  background-color: red;
+  width: 100vw;
+  margin-top: 3.5rem;
+  height: 20vh;
 }
 
 
@@ -536,7 +545,7 @@ a{
   <div class="global">
     {% include 'components/header.html' %}
     <div>
-    <main>
+      <main>
       <div class="fixed-grid">
         <div class="grid-title">
           <h3 class="title is-3">🔥Novidades</h3>
