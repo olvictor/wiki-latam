@@ -368,13 +368,16 @@ a{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  text-align: end;
 }
+
 .grid-title div{
   display: flex;
   gap: 1rem;
   padding-right: 1rem;
   align-self: flex-end;
 }
+
 .grid-title i{
  cursor: pointer;
 }
@@ -382,6 +385,7 @@ a{
 .grid-title i:hover{
   color: #FFD700;
 }
+
 .videoPrincipal {
     position: relative;
     width: 100%;
@@ -438,7 +442,7 @@ a{
   width: 48%;
   height: 45%;
   position:relative;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Sombra na div inteira */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
 }
 
 .videoSecundario img {
@@ -687,6 +691,11 @@ a{
 
     const noticias = [
       {
+        titulo:"O Evento de Reserva de Nome Está Encerrado",
+        link: "https://ro.gnjoylatam.com/pt/news/notice/75",
+        data: "21.05.2025"
+      },
+      {
         titulo:"Recompensas OBT",
         link: "https://ro.gnjoylatam.com/pt/news/notice/72",
         data: "16/05/2025"
@@ -705,11 +714,6 @@ a{
         titulo:"Presentes de Brian e Ahn PM",
         link: "https://ro.gnjoylatam.com/pt/news/notice/68",
         data: "14/05/2025"
-      },
-      {
-        titulo:"Reembolsos do OBT processados",
-        link: "https://ro.gnjoylatam.com/pt/news/notice/66",
-        data: "13/05/2025"
       },
     ]
 

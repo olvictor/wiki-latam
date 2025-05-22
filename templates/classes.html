@@ -32,7 +32,6 @@
       left: 0;
       overflow-y: auto;
     }
-
     aside nav a {
       display: block;
       color: #bbb;
@@ -47,116 +46,109 @@
       color: #fff;
     }
 
-    main {
-      padding: 30px;
-      width: 50vw;
-      margin-left: 5rem;
-    }
+main {
+    width: 100vw;
+    min-height: 100vh;
+    height: auto;
+}
+.container-classes{
+  width: 100vw;
+  display: flex;
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 0 4rem;
+  padding-left: 10rem;
+  margin-top: 4rem;
+}
 
-    h1 {
-      margin-bottom: 30px;
-      color: #ffc107;
-    }
+.box-classe {
+    width: 200px;
+    padding: 10px;
+    transition: opacity 0.3s ease;
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+  }
 
-    .section {
-      margin-bottom: 50px;
-    }
+.container-classes:hover .box-classe {
+    opacity: 0.3;
+}
 
-    /* .card {
-      background-color: #1e1e2f;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
-    } */
+.container-classes:hover .box-classe:hover {
+    opacity: 1; 
+    filter: drop-shadow(0px 0px 5px green);
+}
+.box-classe .box-informacoes {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  margin-top: 10px;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #444;
-    }
-
-    th {
-      background-color: #333;
-    }
-
-    tr:nth-child(even) {
-      background-color: #1c1c2c;
-    }
+.box-classe:hover .box-informacoes {
+  opacity: 1;
+  visibility: visible;
+}
+.box-informacoes {
+  background-color: #ffffff;
+  border-radius: 16px;      
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+  padding: 20px;             
+  max-width: 400px;     
+  margin: 20px auto;      
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+  color: #121212;
+  text-align: center;
   
-  strong img{
-    filter: drop-shadow(0px 0px 5px white);
-  }
-  .build-tag {
-  background-color: #3a3a5a;
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 3px 5px 3px 0;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  color: #f1f1f1;
-  transition: background-color 0.2s ease;
-  }
-
-.build-tag:hover {
-  background-color: #4b4b7a;
 }
 
-.build-tag.suporte {
-  background-color: #4a7aa9	; 
+.box-informacoes::after {
+  content: "";
+  position: absolute;
+  top: -10px; 
+  left: 43.5%;    
+  border-width: 10px;
+  border-style: solid;
+  border-color: #ffffff transparent transparent transparent;
+  z-index: 100;
+}
+.box-informacoes h3{
+  margin: .5rem 0px;
+  border-bottom: 1px solid rgba(65, 240, 12, 0.25);
 }
 
-.build-tag.dano {
-  background-color: #a94a4a; 
-}
-.dano::before {
-  content: "⚔️ ";
-}
-.suporte::before {
-  content: "💚 ";
+.class-builds-comuns li{
+  font-size: .7rem;
 }
 
-.build-tag.controle {
-  background-color: #1e90ff;
+.guia-classes{
+  display: flex;
+  flex-direction: column;
+  
 }
-.loader-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 9999;
-    }
-    .spinner {
-        border: 6px solid #ccc;
-        border-top: 6px solid #4b4b7a;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        animation: spin 1s linear infinite;
-    }
 
-    tr:hover{
-      opacity: .5;
-      cursor: pointer;
-    }
+.guia-classes a{
+  font-size: .7rem;
+}
 
-    td a{
-      text-decoration: underline;
-      color:#1e90ff
-    }
+.guia-classes a:hover{
+  text-decoration: underline;
+}
 
-    @keyframes spin {
+.imagem-classe.sentado {
+  pointer-events: none;
+}
+
+@keyframes spin {
       to { transform: rotate(360deg); }
-    }
-    @media (max-width: 768px) {
-      body {
+}
+@media (max-width: 768px) {
+     body {
         flex-direction: column;
       }
 
@@ -180,52 +172,34 @@
   <div class="global">
     {% include 'components/header.html' %}
     <main>
-      <section id="classes-builds" class="section">
-        <div id="loader" class="loader-container">
-          <div class="spinner"></div>
-          <p>Carregando...</p>
+      <div class="container-classes">
+      {% for classe in class_builds %}
+        <div class="box-classe">
+          <h2>{{ classe.classe }}</h2>
+          <img  src="{{ url_for('static', filename=classe.imagem_sentado) }}"
+          data-hover="{{ url_for('static', filename=classe.imagem_andando) }}"
+          data-original="{{ url_for('static', filename=classe.imagem_sentado) }}"
+          alt="Imagem de {{ classe.classe }}"
+          class="imagem-classe">
+          <div class="box-informacoes">
+            <ul>
+              <div class="class-builds-comuns">
+                <h3>Builds comuns</h3>
+                {% for build in classe.builds %}
+                  <li>💎 {{ build }}</li>
+                {% endfor %}
+              </div>
+              <div class="guia-classes">
+                <h3>Guias</h3>
+                {% for guia in classe.guias %}
+                <a href={{guia.video_url}} target="_blank"><i class="fa-solid fa-chevron-right"></i> {{guia.title}} 🧙‍♂️</a>
+                {% endfor %}
+              </div>
+            </ul>
+          </div>
         </div>
-        <div class="card">
-          <h2>🧙 Classes e Builds</h2>
-          <br>
-          <div class="container" id="conteudo" style="display: none;">
-          <table class="builds-table">
-            <thead>
-              <tr>
-                <th>Classe</th>
-                <th>Build</th>
-              </tr>
-            </thead>
-  
-            <tbody>
-              {% for item in class_builds %}
-              <tr class="clickable-row" {% if item.link %}data-link="{{ item.link }}"{% endif %}>
-                <td>
-                  <strong>
-                    {% if item.link %}
-                      <img src="{{ url_for('static', filename=item.imagem) }}" alt="classe" style="width: 100px;">
-                      <a href="{{ item.link }}" target="_blank">{{ item.classe }} 📺</a>
-                    {% else %}
-                    <img src="{{ url_for('static', filename=item.imagem) }}" alt="classe" style="width: 100px;">
-                      {{ item.classe }}
-                    {% endif %}
-                  </strong>
-                </td>
-                <td>
-                  {% for build in item.builds %}
-                  <div class="build-tag {% if 'Suporte:' in build %} suporte {% elif 'Dano:' in build %} dano {% elif 'Suporte de Controle: ' in build %} suporte {% endif %}">
-                    {{ build }}
-                  </div>
-                  {% endfor %}
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        </div>
-      </section>
-      
+      {% endfor %}
+      </div>
     </main>
   </div>
  
@@ -265,6 +239,47 @@
         toggleButton.style.left = '13rem';
       }
     });
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const boxes = document.querySelectorAll(".box-classe");
+    let activeBox = null;
+
+    boxes.forEach(box => {
+      const img = box.querySelector(".imagem-classe");
+
+      // Hover In: ativa personagem
+      box.addEventListener("mouseenter", () => {
+        if (activeBox === box) return;
+
+        // Desativa anterior
+        if (activeBox) {
+          const oldImg = activeBox.querySelector(".imagem-classe");
+          oldImg.src = oldImg.dataset.original;
+          oldImg.classList.add("sentado");
+        }
+
+        // Ativa nova
+        img.src = img.dataset.hover;
+        img.classList.remove("sentado");
+        activeBox = box;
+      });
+
+      // Hover Out: só desativa se realmente saiu da box inteira
+      box.addEventListener("mouseleave", (e) => {
+        const to = e.relatedTarget;
+
+        // Só desativa se o mouse não está indo para nenhum elemento filho da box
+        if (!box.contains(to)) {
+          img.src = img.dataset.original;
+          img.classList.add("sentado");
+          activeBox = null;
+        }
+      });
+
+      // Inicia como sentado
+      img.classList.add("sentado");
+    });
+  });
   </script>
 </body>
 </html>

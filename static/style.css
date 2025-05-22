@@ -9,13 +9,16 @@ html {
 
 }
 body {
-  font-family: 'Merriweather', serif !important;
+  /* font-family: 'Merriweather', serif !important; */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; 
 }
 .global{
   width: 100vw;
 }
 h1, h2, h3, nav a {
-  font-family: 'Inter', sans-serif !important; 
+  /* font-family: 'Inter', sans-serif !important;  */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; 
+
 }
 #toggle-icon{
   color: white;

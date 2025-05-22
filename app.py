@@ -276,22 +276,65 @@ def classes_page():
             elif cell.value:
                 links_classes.append(cell.value)
 
+    df_guias = pd.read_excel('guias.xlsx',header=None)
+    df_guias.columns = ['alguma_coisa','id', 'channel_name', 'title', 'thumbnail', 'video_url', 'classe']
+    
+    classe_map = {
+    "Cavaleiros Rúnicos": "Cavaleiro Rúnico",
+    "Guardião Real": "Guardião Real",
+    "Feiticeiro": "Feiticeiro",
+    "Sentinela": "Sentinela",
+    "Sicário": "Sicário",
+    "Arcano": "Arcano",
+    "Arcebispo": "Arcebispo",
+    "Renegado": "Renegado",
+    "Shura": "Shura",
+    "Mecânico": "Mecânico",
+    "Bioquímicos": "Bioquímico",
+    "Trovador": "Trovador",
+    "Musa": "Musa"
+    }   
+    def normalizar(texto):
+        return str(texto).strip().lower()
+    df_guias["classe_normalizada"] = df_guias["classe"].apply(normalizar)
 
     class_builds = [
-        {"classe": classes[1], "builds": [builds[1], builds[2]], "link": "","imagem": "assets/classes/feiticeiro.png"}, #Feiticeiro
-        {"classe": classes[2], "builds": [builds[3]], "link": links_classes[4],"imagem": "assets/classes/sentinela.png"},# Sentinela
-        {"classe": classes[3], "builds": [builds[4]], "link": links_classes[5],"imagem": "assets/classes/sicario.png"},# Sicario
-        {"classe": classes[4], "builds": [builds[5]], "link": links_classes[6],"imagem": "assets/classes/arcano.png"},# Arcano
-        {"classe": classes[5], "builds": [builds[6], builds[7]], "link": "","imagem": "assets/classes/arcebispo.png"},# Arcebispo
-        {"classe": classes[6], "builds": [builds[9], builds[8]], "link": links_classes[3],"imagem": "assets/classes/renegado.png"},# Renegado
-        {"classe": classes[7], "builds": [builds[11], builds[10]], "link": "","imagem": "assets/classes/sura.png"},# Shura
-        {"classe": classes[8], "builds": [builds[12]], "link": links_classes[1],"imagem": "assets/classes/cavaleiro_runico.png"}, # Cavaleiros Rúnicos
-        {"classe": classes[9], "builds": [builds[14], builds[13]], "link": links_classes[2],"imagem": "assets/classes/guardioes_reais.png"},# Guardião Real
-        {"classe": classes[10], "builds": [builds[15]], "link": "","imagem": "assets/classes/mecanico.png"},# Mecânico
-        {"classe": classes[11], "builds": [builds[16]], "link": "","imagem": "assets/classes/genetico.png"},# Bioquímicos
-        {"classe": classes[12], "builds": [builds[17], builds[18]], "link": links_classes[7],"imagem": "assets/classes/trovador.png"},# Trovadores
-        {"classe": classes[13], "builds": [builds[19], builds[20]], "link": links_classes[7],"imagem": "assets/classes/musa.png"}, # Musa
+        {"classe": classes[1], "builds": [builds[1], builds[2]], "link": "","imagem": "assets/classes/feiticeiro.png","imagem_sentado": "assets/classes/sentados/feiticeiro.gif","imagem_andando": "assets/classes/andando/feiticeiro.gif"}, #Feiticeiro
+        {"classe": classes[2], "builds": [builds[3]], "link": links_classes[4],"imagem": "assets/classes/sentinela.png","imagem_sentado": "assets/classes/sentados/sentinela.gif","imagem_andando": "assets/classes/andando/sentinela.gif"},# Sentinela
+        {"classe": classes[3], "builds": [builds[4]], "link": links_classes[5],"imagem": "assets/classes/sicario.png","imagem_sentado": "assets/classes/sentados/sicario.gif","imagem_andando": "assets/classes/andando/sicario.gif"},# Sicario
+        {"classe": classes[4], "builds": [builds[5]], "link": links_classes[6],"imagem": "assets/classes/arcano.png","imagem_sentado": "assets/classes/sentados/arcano.gif","imagem_andando": "assets/classes/andando/arcano.gif"},# Arcano
+        {"classe": classes[5], "builds": [builds[6], builds[7]], "link": "","imagem": "assets/classes/arcebispo.png","imagem_sentado": "assets/classes/sentados/arcebispo.gif","imagem_andando": "assets/classes/andando/arcebispo.gif"},# Arcebispo
+        {"classe": classes[6], "builds": [builds[9], builds[8]], "link": links_classes[3],"imagem": "assets/classes/renegado.png","imagem_sentado": "assets/classes/sentados/renegado.gif","imagem_andando": "assets/classes/andando/renegado.gif"},# Renegado
+        {"classe": classes[7], "builds": [builds[11], builds[10]], "link": "","imagem": "assets/classes/sura.png","imagem_sentado": "assets/classes/sentados/shura.gif","imagem_andando": "assets/classes/andando/shura.gif"},# Shura
+        {"classe": classes[8], "builds": [builds[12]], "link": links_classes[1],"imagem": "assets/classes/cavaleiro_runico.png","imagem_sentado": "assets/classes/sentados/cavaleiro_runico.gif","imagem_andando": "assets/classes/andando/cavaleiro_runico.gif"}, # Cavaleiros Rúnicos
+        {"classe": classes[9], "builds": [builds[14], builds[13]], "link": links_classes[2],"imagem": "assets/classes/guardioes_reais.png","imagem_sentado": "assets/classes/sentados/guardiao_real.gif","imagem_andando": "assets/classes/andando/guardiao_real.gif"},# Guardião Real
+        {"classe": classes[10], "builds": [builds[15]], "link": "","imagem": "assets/classes/mecanico.png","imagem_sentado": "assets/classes/sentados/mecanico.gif","imagem_andando": "assets/classes/andando/mecanico.gif"},# Mecânico
+        {"classe": classes[11], "builds": [builds[16]], "link": "","imagem": "assets/classes/genetico.png","imagem_sentado": "assets/classes/sentados/bioquimico.gif","imagem_andando": "assets/classes/andando/bioquimico.gif"},# Bioquímicos
+        {"classe": classes[12], "builds": [builds[17], builds[18]], "link": links_classes[7],"imagem": "assets/classes/trovador.png","imagem_sentado": "assets/classes/sentados/trovador.gif","imagem_andando": "assets/classes/andando/trovador.gif"},# Trovadores
+        {"classe": classes[13], "builds": [builds[19], builds[20]], "link": links_classes[7],"imagem": "assets/classes/musa.png","imagem_sentado": "assets/classes/sentados/musa.gif","imagem_andando": "assets/classes/andando/musa.gif"}, # Musa
     ]
+
+
+    for item in class_builds:
+        nome_original = item["classe"]
+        nome_para_buscar = classe_map.get(nome_original, nome_original)  
+        classe_normalizada = normalizar(nome_para_buscar)
+
+        guias_filtrados = df_guias[df_guias["classe_normalizada"] == classe_normalizada]
+
+        lista_guias = []
+        for _, row in guias_filtrados.iterrows():
+            guia = {
+                "id": row["id"],
+                "channel_name": row["channel_name"],
+                "title": row["title"],
+                "thumbnail": row["thumbnail"],
+                "video_url": row["video_url"]
+            }
+            lista_guias.append(guia)
+
+        item["guias"] = lista_guias
+
     links = carregar_links()
     return render_template('classes.html', 
                            class_builds=class_builds,
