@@ -248,29 +248,51 @@ main {
     document.addEventListener("DOMContentLoaded", function () {
     const boxes = document.querySelectorAll(".box-classe");
 
-    // Clique em uma box
     boxes.forEach(box => {
+      const img = box.querySelector(".imagem-classe");
+
+      // Hover: muda para imagem de andar
+      box.addEventListener("mouseenter", () => {
+        img.src = img.dataset.hover;
+      });
+
+      // Saiu do hover: volta para a original, *somente se não estiver ativa*
+      box.addEventListener("mouseleave", () => {
+        if (!box.classList.contains("ativa")) {
+          img.src = img.dataset.original;
+        }
+      });
+
+      // Clique: ativa box e troca imagem
       box.addEventListener("click", function (event) {
-        event.stopPropagation(); // Impede que o clique "vaze"
-        
-        // Remove 'ativa' de todas as boxes
-        boxes.forEach(b => b.classList.remove("ativa"));
-        
-        // Adiciona 'ativa' apenas na clicada
+        event.stopPropagation(); // evita fechar ao clicar dentro
+
+        boxes.forEach(b => {
+          b.classList.remove("ativa");
+
+          const otherImg = b.querySelector(".imagem-classe");
+          otherImg.src = otherImg.dataset.original;
+        });
+
         box.classList.add("ativa");
+        img.src = img.dataset.hover;
       });
     });
 
-    // Clique em qualquer lugar fora das boxes
+    // Clicou fora de qualquer box
     document.addEventListener("click", function (event) {
-      const isClickInsideAnyBox = [...boxes].some(box => box.contains(event.target));
+      const clickedInsideBox = [...boxes].some(box => box.contains(event.target));
 
-      if (!isClickInsideAnyBox) {
-        boxes.forEach(b => b.classList.remove("ativa"));
+      if (!clickedInsideBox) {
+        boxes.forEach(box => {
+          box.classList.remove("ativa");
+
+          const img = box.querySelector(".imagem-classe");
+          img.src = img.dataset.original;
+        });
       }
     });
   });
-
 
 
   </script>
