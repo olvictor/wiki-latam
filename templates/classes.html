@@ -73,7 +73,7 @@ main {
   align-items: center;
   padding: 0 4rem;
   padding-left: 10rem;
-  margin-top: 8rem;
+  margin-top: 4rem;
 }
 
 .box-classe {
@@ -83,6 +83,10 @@ main {
     position: relative;
     text-align: center;
     cursor: pointer;
+  }
+
+  .box-classe h2{
+    font-weight: bold;
   }
 
 /* .container-classes:hover .box-classe:hover {
@@ -209,12 +213,12 @@ main {
         <div class="container-classes">
         {% for classe in class_builds %}
           <div class="box-classe">
-            <h2>{{ classe.classe }}</h2>
             <img  src="{{ url_for('static', filename=classe.imagem_sentado) }}"
             data-hover="{{ url_for('static', filename=classe.imagem_andando) }}"
             data-original="{{ url_for('static', filename=classe.imagem_sentado) }}"
             alt="Imagem de {{ classe.classe }}"
             class="imagem-classe">
+            <h2>{{ classe.classe }}</h2>
             <div class="box-informacoes">
               <ul>
                 <div class="class-builds-comuns">
@@ -254,6 +258,8 @@ main {
   </div>
  
   <script>
+    const dados = {{ class_builds | tojson | safe }};
+    console.log(dados)
     function esconderLoader() {
         setTimeout(() => {
         document.getElementById("loader").style.display = "none";

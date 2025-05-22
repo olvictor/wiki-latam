@@ -277,7 +277,7 @@ def classes_page():
                 links_classes.append(cell.value)
 
     df_guias = pd.read_excel('guias.xlsx',header=None)
-    df_guias.columns = ['alguma_coisa','id', 'channel_name', 'title', 'thumbnail', 'video_url', 'classe']
+    df_guias.columns = ['id', 'channel_name', 'title', 'thumbnail', 'video_url', 'classe']
     
     classe_map = {
     "Cavaleiros Rúnicos": "Cavaleiro Rúnico",
@@ -285,8 +285,8 @@ def classes_page():
     "Feiticeiro": "Feiticeiro",
     "Sentinela": "Sentinela",
     "Sicário": "Sicário",
-    "Arcano": "Arcano",
-    "Arcebispo": "Arcebispo",
+    "Arcanos": "Arcano",
+    "Arcebispos": "Arcebispo",
     "Renegado": "Renegado",
     "Shura": "Shura",
     "Mecânico": "Mecânico",
@@ -314,6 +314,10 @@ def classes_page():
         {"classe": classes[12], "builds": [builds[17], builds[18]], "link": links_classes[7],"imagem": "assets/classes/trovador.png","imagem_sentado": "assets/classes/sentados/trovador.gif","imagem_andando": "assets/classes/andando/trovador.gif"},# Trovadores
         {"classe": classes[13], "builds": [builds[19], builds[20]], "link": links_classes[7],"imagem": "assets/classes/musa.png","imagem_sentado": "assets/classes/sentados/musa.gif","imagem_andando": "assets/classes/andando/musa.gif"}, # Musa
     ]
+    
+    for item in class_builds:
+        if item["classe"] == "Arcano":
+            print("Encontrado Arcano em class_builds")
 
     def transformar_para_embed(url):
         if "youtube.com/watch?v=" in url:
@@ -338,14 +342,13 @@ def classes_page():
                 "video_url": row["video_url"]
             }
             lista_guias.append(guia)
-
         item["guias"] = lista_guias
 
-    
     df_guias['embed_url'] = df_guias['video_url'].apply(transformar_para_embed)
     guias_gerais = df_guias[df_guias['classe'] == 'Geral']
     guias_gerais = df_guias[df_guias['classe'] == 'Geral'].to_dict(orient='records')
-    
+
+
     links = carregar_links()
     return render_template('classes.html', 
                            class_builds=class_builds,
