@@ -5,6 +5,13 @@
   <title>Home | GUIA-ROLATAM</title>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6266174717644829"
      crossorigin="anonymous"></script>
+  <script src="https://cmp.gatekeeperconsent.com/min.js" data-cfasync="false"></script>
+  <script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
+  <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
+  <script>
+      window.ezstandalone = window.ezstandalone || {};
+      ezstandalone.cmd = ezstandalone.cmd || [];
+  </script>
   <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -746,7 +753,12 @@ table {
           </div>
         </div>
     </div>  
-
+    <div id="ezoic-pub-ad-placeholder-101"></div>
+    <script>
+        ezstandalone.cmd.push(function() {
+            ezstandalone.showAds(101)
+        });
+    </script>
     </div>
   </div>
   <script>
@@ -887,7 +899,10 @@ table {
     mostrarPagina(paginaAtual);
     iniciarAutoTroca();
   });
-
+  ezstandalone.cmd.push(function() {
+        // call new placeholders
+        ezstandalone.showAds(104, 105);
+    });
   </script>
 </body>
 </html>
