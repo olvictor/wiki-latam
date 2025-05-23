@@ -53,9 +53,9 @@
     }
 
     main {
-      margin-left: 270px;
       padding: 30px;
       width: 100%;
+      display: flex;
     }
 
     h1 {
@@ -95,6 +95,7 @@
       background-color: #333	;
     }
 
+
 .build-tag {
   background-color: #3a3a5a;
   display: inline-block;
@@ -124,93 +125,103 @@
         height: 60px;
         animation: spin 1s linear infinite;
 }
-.container-accordion{
-  width: 100vw;
-  display: flex;
-  gap: 1rem;
-  height: auto;
+.container-accordion {
+      max-width: 50vw;
+      margin: auto;
+      padding: 2rem;
+      animation: slideInLeft 0.5s ease-out forwards;
+      min-height: 40vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
 }
-.container-accordion img{
-  width: 30%;
-  height: 15rem;
-  filter: drop-shadow(0px 0px 5px orange);
 
-}
 
 .container-accordion h2{
   color: gold;
-  font-weight: bolder;
   font-size: 2rem;
+  font-weight: bolder;
 }
 
 .accordion {
-    cursor: pointer;
-    padding: 1rem;
-    width: 500px;
-    text-align: left;
-    border: none;
-    outline: none;
-    color: #E0E0E0;
-    font-size: 16px;
-    position: relative;
-    background-color: #212121;
-    border-radius: .5rem;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-.accordion:hover{
-  opacity: .8;
-}
+      width: 100%;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: none;
+      color: white;
+      cursor: pointer;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-.accordion::after {
-    content: '+';
-    font-size: 18px;
-    position: absolute;
-    right: 20px;
-    color: #FFC107;
-}
+    .accordion i {
+      transition: transform 0.3s ease;
+    }
 
-.accordion.active::after {
-    content: '−';
-}
+    .accordion.active i {
+      transform: rotate(90deg);
+    }
 
-.panel {
-    padding: 20px 10px;
-    display: none;
-    background-color: #3C3C3C;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
+    .panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      background-color: #1a1a1a;
+      /* border-left: 3px solid #555; */
+      padding: 0 1rem;
+      margin-bottom: 1rem;
+    }
 
-.panel.show {
-    display: block;
-}  
+    .panel table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
 
-.panel p{
-  border-bottom: 1px solid #555;
-  padding: .5rem;
-  color: white;
-}
-.melee{
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
-  min-height: 40vh;
-  justify-content: center;
-  align-items: center;
-  width: 35vw;
-
-}
+    .panel table th, .panel table td {
+      padding: 0.5rem;
+      border-bottom: 1px solid #333;
+    }
 .ranged{
-  display: flex;
-  flex-direction: column;
-  min-height: 40vh;
-  gap: .5rem;
-  justify-content: center;
-  align-items: center;
-  width: 35vw;
+  margin-top: 3rem;
 }
+h2 {
+      text-align: center;
+}
+
+img {
+      display: block;
+      margin: 0 auto;
+      height: 200px;
+      filter: drop-shadow(0px 0px 5px white);
+
+}
+
+.build{
+  color: #d90057;
+}
+
+.highlight {
+  color: #45ebbc; 
+  font-weight: bold;
+}
+
+
+    @keyframes slideInLeft {
+      from {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
 @keyframes spin {
       to { transform: rotate(360deg); }
     }
@@ -244,114 +255,105 @@
 
   <div class="global">
     {% include 'components/header.html' %}
-  <main>
-    <div id="loader" class="loader-container">
-        <div class="spinner"></div>
-        <p>Carregando...</p>
-    </div>
+    <main>
       <section class="section">
-            <div id="conteudo" style="display: none;">
-              <div class="container-accordion">
-                <div class="melee">
-                  <h2>Melee</h2>
-                  <img src="{{ url_for('static', filename='assets/FQtZgXE.png') }}" alt="Logo do Rag" />
-                  <div>
-                    <button class="accordion">⚔️ Rotas Melee + Dicas</button>
-                    <div class="panel">
-                      <table>
-                        <thead>
-                        <tr>
-                            <th>Nível</th>
-                            <th>Localização</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for nivel,local in rotas_melee %}
-                        <tr>
-                            <td>{{ nivel }}</td>
-                            <td>{{ local }}</td>
-                        </tr>
-                        {% endfor %}
-                        </tbody>
-                      </table>
-                      </div>
-                  </div>
-                  <div>
-                  </div>  
-                  <div> 
-                    <button class="accordion">🛠️ Builds Melee Para Up 1-99 ( Não necessariamente repetir para transclasse )</button>
-                    <div class="panel">
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Classe</th>
-                            <th>Build Sugerida</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for classe, build in array_builds_formatado %}
-                            <tr>
-                              <td>{{ classe }}</td>
-                              <td>{{ build }}</td>
-                            </tr>
-                          {% endfor %}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div> 
-                </div>
-                <div class="ranged">
-                  <h2>Ranged</h2>
-                  <img src="{{ url_for('static', filename='assets/newranged.png') }}" alt="Logo do Rag" />
-                  <div>
-                    <button class="accordion">🏹 Rotas Ranged + Dicas</button>
-                    <div class="panel">
-                      <table>
-                        <thead>
-                        <tr>
-                            <th>Nível</th>
-                            <th>Localização</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for nivel,local in rotas_ranged %}
-                        <tr>
-                            <td>{{ nivel }}</td>
-                            <td>{{ local }}</td>
-                        </tr>
-                        {% endfor %}
-                        </tbody>
-                      </table>
-                   </div>
-                  </div>
-            
-                  <div> 
-                    <button class="accordion">🛠️ Builds Ranged Para Up 1-99 ( Não necessariamente repetir para transclasse )</button>
-                    <div class="panel">
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Classe</th>
-                            <th>Build Sugerida</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for classe, build in array_builds_ranged_formatado %}
-                            <tr>
-                              <td>{{ classe }}</td>
-                              <td>{{ build }}</td>
-                            </tr>
-                          {% endfor %}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div> 
-                </div>
+        <div class="container-accordion">
+          <div class="melee">
+            <h2>Melee</h2>
+            <img src="{{ url_for('static', filename='assets/classes/cavaleiro_runico.png') }}" alt="Logo do Rag" />
+            <div class="melee-content">
+              <button class="accordion"><i class="fa-solid fa-chevron-right"></i> ⚔️ Rotas Melee + Dicas</button>
+              <div class="panel">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nível</th>
+                      <th>Localização</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for nivel,local in rotas_melee %}
+                      <tr>
+                        <td>{{ nivel }}</td>
+                        <td>{{ local | replace('(', '<span class="highlight">(') | replace(')', ')</span>') | safe }}</td>
+
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+  
+              <button class="accordion"><i class="fa-solid fa-chevron-right"></i> 🛠️ Builds Melee Para Up 1-99</button>
+              <div class="panel">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Classe</th>
+                      <th>Build Sugerida</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for classe, build in array_builds_formatado %}
+                      <tr>
+                        <td>{{ classe }}</td>
+                        <td class="build">{{ build }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
               </div>
             </div>
-          </section>
-        
-      </main>
+          </div>
+      </section>
+
+      <section>
+        <div class="container-accordion">
+        <div class="ranged">
+          <h2>Ranged</h2>
+          <img src="{{ url_for('static', filename='assets/classes/sentinela.png') }}" alt="Logo do Rag" />
+          <button class="accordion"><i class="fa-solid fa-chevron-right"></i> 🏹 Rotas Ranged + Dicas</button>
+          <div class="panel">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nível</th>
+                  <th>Localização</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for nivel,local in rotas_ranged %}
+                  <tr>
+                    <td>{{ nivel }}</td>
+                    <td>{{ local | replace('(', '<span class="highlight">(') | replace(')', ')</span>') | safe }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <button class="accordion"><i class="fa-solid fa-chevron-right"></i> 🛠️ Builds Ranged Para Up 1-99</button>
+          <div class="panel">
+            <table>
+              <thead>
+                <tr>
+                  <th>Classe</th>
+                  <th>Build Sugerida</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for classe, build in array_builds_ranged_formatado %}
+                  <tr>
+                    <td>{{ classe }}</td>
+                    <td class="build">{{ build }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      </section>
+    </main>
   <script>
     function esconderLoader() {
         setTimeout(() => {
@@ -359,17 +361,21 @@
         document.getElementById("conteudo").style.display = "block";
         }, 1000); // 1000 milissegundos = 1 segundo
     }
-    document.addEventListener("DOMContentLoaded", function () {
-    const accordions = document.querySelectorAll(".accordion");
+    const accordions = document.querySelectorAll('.accordion');
 
-    accordions.forEach((btn) => {
-        btn.addEventListener("click", function () {
-          this.classList.toggle("active");
-          const panel = this.nextElementSibling;
-          panel.classList.toggle("show");
-        });
+    accordions.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const panel = btn.nextElementSibling;
+        const isOpen = btn.classList.toggle('active');
+
+        if (isOpen) {
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        } else {
+          panel.style.maxHeight = null;
+        }
       });
-    });  
+    });
+
     const toggleButton = document.getElementById('toggle-menu');
     const sidebar = document.getElementById('sidebar');
     const toggleIcon = document.getElementById('toggle-icon');

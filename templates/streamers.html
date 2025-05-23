@@ -29,6 +29,9 @@
       flex-wrap: wrap;
       gap: 2rem;
       width: 100vw;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
     }
 
     
@@ -41,7 +44,6 @@
     }
 
     .classe-container:hover{
-      /* opacity: .7; */
       scale: 1.1;
     }
 
@@ -259,7 +261,7 @@ aside {
             {% for item in data %}
               {% if item.status != "on" %}
                 <div class="classe-container">
-                  <img class="off" src="{{ url_for('static', filename=item.imagem) }}" alt="classe" style="width: 100px;">
+                  <img class="off" src="{{ url_for('static', filename=item.imagem_sentado) }}" alt="classe" style="width: 200px;">
                   <div>
                     <h3>{{ item.dados }}</h3>
                     <p><a href="{{ item.links }}" target="_blank">Confira o canal</a></p>
