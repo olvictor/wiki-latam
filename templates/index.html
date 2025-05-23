@@ -191,6 +191,8 @@
     .card h2 {
     font-size: 1.2rem;
     color: #FFD700	;
+    font-weight: bolder;
+
     }
 
     .card ul {
@@ -338,7 +340,7 @@
 
 .ranking-item h2 {
   font-size: 1rem;
-  
+  font-weight: bolder;
   margin-bottom: 0.35rem;
 }
 
@@ -346,6 +348,8 @@
 .ranking h3{
   font-size: 1.2rem;
   color: #FFD700	;
+  font-weight: bolder;
+
 }
 
 .ranking span{
@@ -471,7 +475,7 @@ a{
 }
 
 .noticias{
-  height: 40vh;
+  height: 30vh;
   margin-top: 1rem;
 }
 
@@ -480,6 +484,7 @@ a{
 }
 
 .colunaSecundariaNoticias{
+  width: 50vw;
   display: flex;
   height: 60vh;
   gap: 1rem;
@@ -512,7 +517,52 @@ a{
   margin-top: 3.5rem;
   height: 20vh;
 }
+.tabela-sugestoes{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+}
+.tabela-sugestoes span{
+  color: rgb(30, 154, 192);
+  font-weight: bolder;
+  font-style: italic;
+}
+.tabela-sugestoes h2{
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.35rem;
+  color: #FFD700;
+  font-weight: bolder;
+}
 
+.tabela-sugestoes p{
+  color: rgba(255,255,255,0.7);
+
+}
+
+.tabela-sugestoes img{
+  align-self: center;
+  filter: drop-shadow(0px 0px 5px white);
+  vertical-align: middle;
+}
+table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+th, td {
+        border: 1px solid rgba(255,255,255,0.03);
+        padding: 8px;
+    }
+th {
+        text-align: center; 
+}
+th, td {
+    vertical-align: middle;
+}
+table {
+    margin: 0 auto;
+}
 
 @keyframes aparecer {
   to {
@@ -626,6 +676,45 @@ a{
                 <li class="paragrafo_links">Sugestões: <span>Michels #0484</span> <- Discord</li>
                 <li class="paragrafo_links">PM in game: <span>Ghostring</span></li>
               </ul>
+            </div>
+            <div class="tabela-sugestoes">
+              <h2>Sugestão de items cash!</h2>
+              <table>
+                <thead>
+                    <tr>
+                        <th>Valor</th>
+                        <th>Item</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for valor, item in sugestao_cash %}
+                    <tr>
+                        <td>{{ valor }}</td>
+                        <td>{{ item }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>             
+              </table>
+              <span>Total: <img src="{{ url_for('static', filename='assets/joypoints.png') }}" height="24px" width="24px" alt="Logo do Rag" /> 13.800</span> 
+              <h2>Sugestão de items cash para classes:</h2>
+              <p>Cavaleiro Runico, Sicário, Arcano, Arcebispo, Sentinela</p>
+              <table>
+                <thead>
+                    <tr>
+                        <th>Valor</th>
+                        <th>Item</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for valor, item in sugestao_cash_classes %}
+                    <tr>
+                        <td>{{ valor }}</td>
+                        <td>{{ item }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+              <span>total: <img src="{{ url_for('static', filename='assets/joypoints.png') }}" height="24px" width="24px" alt="Logo do Rag" /> 20.800</span> 
             </div>
             <div class="ranking-container"> 
               <div class="ranking">

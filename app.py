@@ -190,7 +190,6 @@ def info_page():
     data_publicacao = df_videos.iloc[0:,2].dropna().tolist()
     video_url = df_videos.iloc[0:,3].dropna().tolist()
     
-    print(info_essenciais)
 
     data_videos = list(zip(titulos,thumb,data_publicacao,video_url))
     videos_recentes = pd.read_excel('videos_ragnarok_unidos.xlsx',header=None)
@@ -247,6 +246,18 @@ def info_page():
 
     rank_data = list(zip(rank_tiers, rank_classes))
 
+    sugestao_cash = df_link.iloc[31:35, 3].dropna().tolist()
+    sugestao_cash_valor = df_link.iloc[31:35, 4].dropna().tolist()
+
+    sugestao_cash_classes = df_link.iloc[38:43, 3].dropna().tolist()
+    sugestao_cash_classes_valor = df_link.iloc[38:43, 4].dropna().tolist()
+
+
+
+    cash = list(zip(sugestao_cash, sugestao_cash_valor))
+    cash_para_classes = list(zip(sugestao_cash_classes, sugestao_cash_classes_valor))
+
+
 
     return render_template(
         'index.html',
@@ -256,7 +267,9 @@ def info_page():
         data_videos = data_videos,
         streamers = stream_cache,
         video_mais_recente = video_mais_recente,
-        videos_secundarios = videos_secundarios
+        videos_secundarios = videos_secundarios,
+        sugestao_cash = cash,
+        sugestao_cash_classes = cash_para_classes
         )
 
 @app.route('/classes')
