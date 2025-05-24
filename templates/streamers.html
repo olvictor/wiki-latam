@@ -246,7 +246,7 @@ aside {
             {% for item in data %}
               {% if item.status == "on" %}
                 <div class="classe-container">
-                  <img class="pulsando" src="{{ url_for('static', filename=item.imagem_gif) }}" alt="classe" style="width: 100px; height: 125px;">
+                  <img class="pulsando" src="{{ url_for('static', filename=item.imagem_gif) }}" alt="classe" style="width: 250px; height: 250px;">
                   <div>
                     <h3>{{ item.dados }}</h3>
                     <p><a href="{{ item.links }}" target="_blank"><span class="live-indicator">Live</span></a></p>
