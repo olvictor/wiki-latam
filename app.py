@@ -194,6 +194,7 @@ def info_page():
     
 
     data_videos = list(zip(titulos,thumb,data_publicacao,video_url))
+    
     videos_recentes = pd.read_excel('videos_ragnarok_unidos.xlsx',header=None)
 
     canal = videos_recentes.iloc[1:,1].dropna().tolist()
@@ -219,6 +220,21 @@ def info_page():
             mais_recentes_por_canal[canal] = v
 
     videos_secundarios = sorted(mais_recentes_por_canal.values(), key=lambda x: x[2], reverse=True)
+
+    videos_recentes_secundarios = pd.read_excel('videos_recentes.xlsx',header=None)
+
+
+    canal = videos_recentes_secundarios.iloc[1:,0].dropna().tolist()
+    titulo = videos_recentes_secundarios.iloc[1:,1].dropna().tolist()
+    thumb_recentes = videos_recentes_secundarios.iloc[1:,2].dropna().tolist()
+    data_publicacao_recentes = videos_recentes_secundarios.iloc[1:,3].dropna().tolist()
+    url = videos_recentes_secundarios.iloc[1:,4].dropna().tolist()
+
+    videos_recentes_secundarios_zip = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
+
+
+    print(videos_recentes_secundarios_zip)
+
 
     def transformar_para_embed(url):
         if "youtube.com/watch?v=" in url:
@@ -285,7 +301,7 @@ def info_page():
         data_videos = data_videos,
         streamers = stream_cache,
         video_mais_recente = video_mais_recente,
-        videos_secundarios = videos_secundarios,
+        videos_secundarios = videos_recentes_secundarios_zip,
         sugestao_cash = cash,
         sugestao_cash_classes = cash_para_classes
         )
