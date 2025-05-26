@@ -339,8 +339,8 @@
       linha.addEventListener('click', (e) => {
         const mapa = linha.getAttribute('data-mapa');
         if (mapa) {
-          navigator.clipboard.writeText(`/nav ${mapa}`).then(() => {
-            mostrarNotificacao(linha, `/nav ${mapa} copiado!`);
+          navigator.clipboard.writeText(`/navi ${mapa}`).then(() => {
+            mostrarNotificacao(linha, `/navi ${mapa} copiado!`);
           }).catch(err => {
             console.error('Erro ao copiar para o clipboard', err);
           });
