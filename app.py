@@ -220,6 +220,22 @@ def info_page():
 
     videos_secundarios = sorted(mais_recentes_por_canal.values(), key=lambda x: x[2], reverse=True)
 
+    def transformar_para_embed(url):
+        if "youtube.com/watch?v=" in url:
+            return url.replace("watch?v=", "embed/")
+        return url
+    
+    video_mais_recente = (
+    video_mais_recente[0],
+    video_mais_recente[1],
+    video_mais_recente[2],
+    transformar_para_embed(video_mais_recente[3]),
+    video_mais_recente[4]
+    )
+
+    print(video_mais_recente)
+
+
     icones = {
     'Discord': 'fa-brands fa-discord',
     'Site': 'fa-solid fa-globe',
@@ -291,7 +307,7 @@ def classes_page():
             elif cell.value:
                 links_classes.append(cell.value)
 
-    df_guias = pd.read_excel('guias.xlsx',header=None)
+    df_guias = pd.read_excel('guias_classes.xlsx',header=None)
     df_guias.columns = ['id', 'channel_name', 'title', 'thumbnail', 'video_url', 'classe']
     
     classe_map = {
@@ -303,11 +319,11 @@ def classes_page():
     "Arcanos": "Arcano",
     "Arcebispos": "Arcebispo",
     "Renegado": "Renegado",
-    "Shura": "Shura",
+    "Shura": "Sura",
     "Mecânico": "Mecânico",
     "Bioquímicos": "Bioquímico",
     "Trovadores": "Trovador",
-    "Musa": "Musa"
+    "Musa": "Trovador"
     }   
     def normalizar(texto):
         return str(texto).strip().lower()
@@ -330,9 +346,6 @@ def classes_page():
         {"classe": classes[13], "builds": [builds[19], builds[20]], "link": links_classes[7],"imagem": "assets/classes/musa.png","imagem_sentado": "assets/classes/sentados/musa.gif","imagem_andando": "assets/classes/andando/musa.gif"}, # Musa
     ]
     
-    for item in class_builds:
-        if item["classe"] == "Arcano":
-            print("Encontrado Arcano em class_builds")
 
     def transformar_para_embed(url):
         if "youtube.com/watch?v=" in url:
@@ -359,10 +372,17 @@ def classes_page():
             lista_guias.append(guia)
         item["guias"] = lista_guias
 
-    df_guias['embed_url'] = df_guias['video_url'].apply(transformar_para_embed)
-    guias_gerais = df_guias[df_guias['classe'] == 'Geral']
-    guias_gerais = df_guias[df_guias['classe'] == 'Geral'].to_dict(orient='records')
+    
+    colunas = ['channel_name', 'title', 'thumbnail', 'video_url','classe']
+    df_guias_gerais = pd.read_excel('guias_gerais.xlsx', header=None, names=colunas)
 
+
+    df_guias_gerais['embed_url'] = df_guias_gerais['video_url'].apply(transformar_para_embed)
+    guias_gerais = df_guias_gerais[df_guias_gerais['classe'] == 'Geral']
+    guias_gerais = df_guias_gerais[df_guias_gerais['classe'] == 'Geral'].to_dict(orient='records')
+
+
+    
 
     links = carregar_links()
     return render_template('classes.html', 
@@ -1082,7 +1102,7 @@ def monstros_page():
 
     links = carregar_links()
 
-    return render_template('monstros.html', data=data,links=links)
+    return render_template('monstros.html', data=data,links=links,streamers=stream_cache)
 
 @app.route("/timer")
 def timer_page():
@@ -1152,7 +1172,8 @@ def timer_page():
                             tabela_unificada_segunda_classe = tabela_unificada.to_dict(orient='records'),
                             tabela_unificada_transclasse = tabela_unificada_tranclasse.to_dict(orient='records'),
                             tabela_unificada_terceira = tabela_unificada_terceira.to_dict(orient='records'),
-                            links=links
+                            links=links,
+                            streamers =stream_cache
                             )
 @app.route('/streamers')
 def streamers_page():

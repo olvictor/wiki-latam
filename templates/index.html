@@ -609,7 +609,7 @@ table {
       <main>
       <div class="fixed-grid">
         <div class="grid-title">
-          <h3 class="title is-3">🔥Novidades</h3>
+          <h3 class="title is-3">📒 Novidades</h3>
           <div>
             <i id="seta-esquerda" class="fa-solid fa-arrow-left" onclick="mudarPagina(-1)"></i>  
             <i id="seta-direita" class="fa-solid fa-arrow-right" onclick="mudarPagina(1)"></i>
@@ -618,14 +618,22 @@ table {
         <div class="grid principal-comunidade">
           <div class="cell">
             {% if video_mais_recente %}
-            <div class="videoPrincipal">
+            <!-- <div class="videoPrincipal">
               <a href="{{ video_mais_recente[3] }}" target="_blank">
                 <img src="{{ video_mais_recente[1] }}" alt="">
                 <p>{{ video_mais_recente[0] }}</p>
-                <!-- <span>Publicado em: {{ video_mais_recente[2] }}</span> -->
+                <span>Publicado em: {{ video_mais_recente[2] }}</span>
               </a>
-            </div>
-            {% endif %}
+            </div> -->
+            <iframe width="100%" height="47%"
+            src="{{ video_mais_recente[3] }}"
+            title="{{ video_mais_recente[0] }}"
+            frameborder="0"
+            style="border: none"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+           {% endif %}
           </div>
           <div class="cell colunaSecundaria">
             <div class="videosSecundarios">
@@ -662,7 +670,7 @@ table {
           </div>
         </div>
         <div class="grid-title">
-          <h3 class="title is-3">📢Noticias</h3>
+          <h3 class="title is-3">📄 Noticias</h3>
         </div>
         <div class="grid noticias">
           <div class="cell colunaNoticias">
