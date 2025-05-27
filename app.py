@@ -232,9 +232,7 @@ def info_page():
 
     videos_recentes_secundarios_zip = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
 
-
-    print(videos_recentes_secundarios_zip)
-
+    video_encontrado = next((video for video in videos_recentes_secundarios_zip if video[4].lower() == "ragnarok online latam".lower()), None)
 
     def transformar_para_embed(url):
         if "youtube.com/watch?v=" in url:
@@ -242,14 +240,13 @@ def info_page():
         return url
     
     video_mais_recente = (
-    video_mais_recente[0],
-    video_mais_recente[1],
-    video_mais_recente[2],
-    transformar_para_embed(video_mais_recente[3]),
-    video_mais_recente[4]
+    video_encontrado[0],
+    video_encontrado[1],
+    video_encontrado[2],
+    transformar_para_embed(video_encontrado[3]),
+    video_encontrado[4]
     )
 
-    print(video_mais_recente)
 
 
     icones = {
