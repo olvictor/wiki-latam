@@ -158,6 +158,7 @@ main {
 
 .guia-classes a{
   font-size: .7rem;
+  color: rgb(94, 125, 226);
 }
 
 .guia-classes a:hover{
@@ -259,7 +260,6 @@ main {
  
   <script>
     const dados = {{ class_builds | tojson | safe }};
-    console.log(dados)
     function esconderLoader() {
         setTimeout(() => {
         document.getElementById("loader").style.display = "none";
