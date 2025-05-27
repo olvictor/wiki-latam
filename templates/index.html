@@ -3,15 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Home | GUIA-ROLATAM</title>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6266174717644829"
-     crossorigin="anonymous"></script>
-  <script src="https://cmp.gatekeeperconsent.com/min.js" data-cfasync="false"></script>
-  <script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
-  <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
-  <script>
-      window.ezstandalone = window.ezstandalone || {};
-      ezstandalone.cmd = ezstandalone.cmd || [];
-  </script>
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
+  >
   <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -147,7 +142,16 @@
 
     .principal-comunidade{
       margin-top: 1rem;
-      height: 43vh;
+      height: auto;
+    }
+
+    .principal-comunidade .cell{
+      height: 43.2vh;
+    }
+
+    .principal-comunidade iframe{
+      height: 100%;
+      width: 100%;
     }
 
     .ranking-container{
@@ -178,28 +182,42 @@
       display: block;
     }
 
-
+    .container-card{
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      width: 40%;
+      height: auto;
+      padding: 20px;
+      background-color: transparent;
+      border-radius: 8px;
+      gap: .4rem;
+      box-shadow: none;
+      text-align: center;
+    }
     .card {
       max-width: 800px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 49%;
-      height: 30vh;
+      justify-content: center;
+      width:100%;
+      height: auto;
       padding: 20px;
       background-color: transparent;
-      border: 1px solid rgba(255,255,255,0.03);
+      /* border: 1px solid rgba(255,255,255,0.03); */
       border-radius: 8px;
       box-sizing: border-box;
       gap: .4rem;
       box-shadow: none;
+      text-align: center;
     }
 
     .card h2 {
     font-size: 1.2rem;
     color: #FFD700	;
     font-weight: bolder;
-
+    width: 100%;
     }
 
     .card ul {
@@ -226,26 +244,6 @@
       color: inherit;
       font-size: .5rem;
 }
-
-.loader-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 9999;
-}
-
-.spinner {
-        border: 6px solid #ccc;
-        border-top: 6px solid #4b4b7a;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        animation: spin 1s linear infinite;
-}
-
 .conteudoImg{
   filter: drop-shadow(0px 0px 5px white);
   
@@ -262,6 +260,11 @@
   opacity: 0;
   transform: translateY(-10px);
   animation: aparecer 0.4s ease forwards;
+}
+
+.lista-noticias a:hover{
+  color: rgb(24, 168, 187);
+  text-decoration: underline;
 }
 
 .link-vertical {
@@ -299,7 +302,7 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  padding: 20px;
+  padding: 20px 10px;
   max-width: 400px;
   margin: auto;
   border: 1px solid rgba(255,255,255,0.03);
@@ -375,6 +378,14 @@ a{
   text-decoration: none;
   color: #fff
 }
+.cell{
+  height: 42vh;
+
+}
+
+.title-cash{
+  margin-top: 4.7rem;
+}
 .grid-title{
   display: flex;
   justify-content: space-between;
@@ -385,7 +396,6 @@ a{
 .grid-title div{
   display: flex;
   gap: 1rem;
-  padding-right: 1rem;
   align-self: flex-end;
 }
 
@@ -400,8 +410,7 @@ a{
 .videoPrincipal {
     position: relative;
     width: 100%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Sombra na div inteira */
-
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
 .videoPrincipal img {
@@ -428,19 +437,10 @@ a{
     text-align: center;
     word-wrap: break-word;
   }
-.colunaSecundaria{
-  max-height: 42.5vh;
-}
+
 
 .videosSecundarios{
-  max-width: 100%;
-  max-height: 100%;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 1rem;
+  display: flex;  
 }
 
 .video-page{
@@ -451,7 +451,6 @@ a{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 1rem;
 }
 
 
@@ -490,24 +489,30 @@ a{
 }
 
 .noticias{
-  height: 30vh;
-  margin-top: 1rem;
+  display: flex;
+  height: auto;
+  margin-top: 2.5rem;
 }
 
 .colunaNoticias{
   height: 60vh;
+  width: 45vw;
 }
 
 .colunaSecundariaNoticias{
-  width: 50vw;
+  width: 55vw;
   display: flex;
-  height: 60vh;
+  height: auto;
   gap: 1rem;
 }
 
 #videos-container {
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .video-page {
@@ -524,13 +529,49 @@ a{
   opacity: 1;
   pointer-events: auto;
   position: relative; 
+  display: flex;
+  width: 100%;
+  min-width: 100%;
+  align-items: center;
+  justify-content: center;
+  max-height: 100%;
+  gap: .5rem 1rem;
+}
+
+.container-card {
+  display: flex;
+
+}
+
+.container-card img{
+  filter: drop-shadow(0px 0px 5px white);
+  width: 100%;
+}
+
+.container_card h2{
+  font-size: 1.5rem;
+}
+
+.container_card span{
+  color: rgb(30, 154, 192);
+  font-weight: bolder;
+  font-style: italic;
+}
+.container-card a{
+  color:#fff ;
+  text-decoration: underline;
+  font-weight: bolder;
+}
+
+.container-card a:hover{
+  color: rgb(38, 38, 151);
 }
 
 .container-img{
-  background-color: red;
   width: 100vw;
   margin-top: 3.5rem;
   height: 20vh;
+
 }
 .tabela-sugestoes{
   display: flex;
@@ -561,6 +602,10 @@ a{
   filter: drop-shadow(0px 0px 5px white);
   vertical-align: middle;
 }
+
+.tabela-sugestoes a{
+  text-decoration: underline;
+}
 table {
         border-collapse: collapse;
         width: 100%;
@@ -588,6 +633,26 @@ table {
 
 @keyframes spin {
       to { transform: rotate(360deg); }
+}
+
+@media (max-width: 1640px) {
+  .principal-comunidade{
+    display: flex;
+    flex-direction: column;
+  }
+  .cell iframe{
+    background-color: red;
+    height: 25rem !important;
+  }
+  .colunaSecundariaNoticias{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+  .card{
+    width: 100%;
+  }
 }
 
 @media (max-width: 768px) {
@@ -626,21 +691,14 @@ table {
         <div class="grid principal-comunidade">
           <div class="cell">
             {% if video_mais_recente %}
-            <!-- <div class="videoPrincipal">
-              <a href="{{ video_mais_recente[3] }}" target="_blank">
-                <img src="{{ video_mais_recente[1] }}" alt="">
-                <p>{{ video_mais_recente[0] }}</p>
-                <span>Publicado em: {{ video_mais_recente[2] }}</span>
-              </a>
-            </div> -->
             <iframe width="100%" height="47%"
-            src="{{ video_mais_recente[3] }}"
-            title="{{ video_mais_recente[0] }}"
-            frameborder="0"
-            style="border: none"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-          </iframe>
+              src="{{ video_mais_recente[3] }}"
+              title="{{ video_mais_recente[0] }}"
+              frameborder="0"
+              style="border: none"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen>
+            </iframe>
            {% endif %}
           </div>
           <div class="cell colunaSecundaria">
@@ -663,20 +721,9 @@ table {
                     </div>
                 {% endfor %}
               </div>
-              </div>
-              <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6266174717644829"
-              crossorigin="anonymous"></script>
-             <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="fluid"
-                 data-ad-layout-key="-82+eo+1+2-5"
-                 data-ad-client="ca-pub-6266174717644829"
-                 data-ad-slot="8714932062"></ins>
-             <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-           </script>
+            </div>
           </div>
-        </div>
+          </div>
         <div class="grid-title">
           <h3 class="title is-3">📄 Noticias</h3>
         </div>
@@ -690,6 +737,7 @@ table {
             </div>
           </div>
           <div class="cell colunaSecundariaNoticias">
+          <div class="container_card">
             <div class="card" >
               <h2>📌 Informações Essenciais</h2>
               <ul>
@@ -699,9 +747,8 @@ table {
                 <li class="paragrafo_links">Sugestões: <span>Michels #0484</span> <- Discord</li>
                 <li class="paragrafo_links">PM in game: <span>Ghostring</span></li>
               </ul>
-            </div>
-            <div class="tabela-sugestoes">
-              <h2>Sugestão de items cash!</h2>
+
+              <h2 class="title-cash">Sugestão de items cash!</h2>
               <table>
                 <thead>
                     <tr>
@@ -718,7 +765,13 @@ table {
                     {% endfor %}
                 </tbody>             
               </table>
-              <span>Total: <img src="{{ url_for('static', filename='assets/joypoints.png') }}" height="24px" width="24px" alt="Logo do Rag" /> 13.800</span> 
+              <span>Total: <img src="{{ url_for('static', filename='assets/joypoints.png') }}" height="24px" width="24px" alt="Logo do Rag" /> 13.800</span>
+            </div>
+          </div> 
+            <div class="tabela-sugestoes"> 
+              <img src="{{ url_for('static', filename='assets/renfir.png') }}" alt="QRCode">
+              <a href="https://discord.com/invite/3MWZrSSXnh" target="_blank">Recrutamento Aberto</a>
+
               <h2>Sugestão de items cash para classes:</h2>
               <p>Cavaleiro Runico, Sicário, Arcano, Arcebispo, Sentinela</p>
               <table>

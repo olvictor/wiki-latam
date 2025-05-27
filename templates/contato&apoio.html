@@ -86,6 +86,10 @@
     .js-modal-trigger{
       cursor: pointer;
     }
+    .content img{
+      width: 10%;
+      height: auto;
+    }
 @keyframes spin {
       to { transform: rotate(360deg); }
 }
@@ -150,16 +154,18 @@
               </form>
             </div>  
           <p class="subtitle is-6 has-text-grey-lighter">Juntos podemos manter este guia sempre vivo e atualizado 💛</p>
-          <div class="modal">
+
+          <h3>Contribua com o projeto !</h3>
+          <img src="{{ url_for('static', filename='assets/QRCode.jpg') }}" alt="QRCode">
+          <p style="margin-top: 3rem;">Chave Pix :</p>
+          <span>b6ba72ec-122d-4993-b67d-838b8d73a4de</span>
+
+          <!-- <div class="modal">
             <div class="modal-background"></div>
             <div class="modal-content">
-               <h3>Contribua com o projeto !</h3>
-               <img src="{{ url_for('static', filename='assets/QRCode.jpg') }}" alt="QRCode">
-               <p style="margin-top: 3rem;">Chave Pix :</p>
-               <span>b6ba72ec-122d-4993-b67d-838b8d73a4de</span>
-            </div>
+             </div>
             <button class="modal-close is-large" aria-label="close"></button>
-          </div>
+          </div> -->
         </div>
     </main>
   </div>

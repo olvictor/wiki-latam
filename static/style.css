@@ -43,7 +43,9 @@ h1, h2, h3, nav a {
   background-color: transparent;
   border: 1px solid rgba(255,255,255,.5);
 }
-
+p,table,li,a,ul{
+  color: white;
+}
 .menu-link {
   position: relative;
   display: flex;
@@ -398,7 +400,7 @@ margin-top: 80px;
     font-size: 0.85em;
     white-space: nowrap;
   }
-
+  
   @keyframes blink {
     0%, 100% {
       opacity: 1;
@@ -417,5 +419,19 @@ margin-top: 80px;
     }
     100% {
       box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+    }
+  }
+
+  @media (max-width: 1024px) {
+    aside {
+      width: 100%;
+      height: auto;
+      position: static;
+      border-right: none;
+    }
+    header{
+      padding: 0px 10rem !important;
+      background-color: red;
+      margin: 0;
     }
   }
