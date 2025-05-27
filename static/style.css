@@ -333,7 +333,12 @@ margin-top: 80px;
     position: relative;
     background-color: transparent;
   }
-  
+  .dropdown-wrapper a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+  }
   .trigger {
     background-color: transparent;
     color: rgba(255, 0, 0, 1) !important;
@@ -389,7 +394,13 @@ margin-top: 80px;
     border-radius: 50%;
     border: 1px solid rgba(255, 0, 0, 1);
   }
-  
+
+  .dropdown-wrapper img{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 0, 0, 1);
+  }
   .dropdown li a div {
     flex-grow: 1;
   }
@@ -400,6 +411,14 @@ margin-top: 80px;
     font-size: 0.85em;
     white-space: nowrap;
   }
+
+  .destaque-xx {
+    margin-left: 10px;
+    color: yellow;
+    font-weight: bold;
+    animation: pulse 1.5s infinite;
+  }
+  
   
   @keyframes blink {
     0%, 100% {
@@ -431,7 +450,6 @@ margin-top: 80px;
     }
     header{
       padding: 0px 10rem !important;
-      background-color: red;
       margin: 0;
     }
   }

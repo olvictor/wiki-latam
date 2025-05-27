@@ -72,9 +72,11 @@
 
     .box-noticias{
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: flex-start;
       width: 100%;
+      margin-top: 2.2rem;
     }
 
     .box-noticias ul{
@@ -102,6 +104,12 @@
     .box-noticias span{
       font-weight: 200;
       color: #444;
+    }
+
+    .box-noticias h3{
+      color: #FFD700;
+      font-size: 1.5rem;
+      font-weight: bolder;
     }
     aside {
       width: 250px;
@@ -392,8 +400,10 @@ a{
 .grid-title{
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   text-align: end;
+  height: 100px;
+  padding: 0;
 }
 
 .grid-title div{
@@ -495,6 +505,8 @@ a{
   display: flex;
   height: auto;
   margin-top: 2.5rem;
+  border-top: 2px solid rgba(255,255,255,0.05);
+
 }
 
 .colunaNoticias{
@@ -691,7 +703,7 @@ table {
     <div>
       <main>
       <div class="fixed-grid">
-        <div class="grid-title">
+        <div class="grid-title novidades">
           <h3 class="title is-3">📒 Novidades</h3>
           <div>
             <i id="seta-esquerda" class="fa-solid fa-arrow-left" onclick="mudarPagina(-1)"></i>  
@@ -734,13 +746,11 @@ table {
             </div>
           </div>
           </div>
-        <div class="grid-title">
-          <h3 class="title is-3">📄 Noticias</h3>
-        </div>
         <div class="grid noticias">
           <div class="cell colunaNoticias">
             <div class="content container-news">
               <div class="box-noticias">
+                <h3 class="title is-3">📄 Noticias</h3>
                 <ul class="lista-noticias">
                 </ul>
               </div>

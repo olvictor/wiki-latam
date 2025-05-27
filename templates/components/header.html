@@ -10,49 +10,49 @@
         </div>          
     </div>
     <div class="liveBar">
-        <div class="live-notification">
-            <span class="live-dot"></span>
-            <ul class="listaLive">
-                <li class="dropdown-wrapper">
-                  <a href="#" class="trigger">Live On <i class="fa-solid fa-angle-down"></i></a>
-                  <ul class="dropdown">
-                    {% for item in streamers %}
-                    {% if item.status == "on" %}
-                      <li>
-                        <a href="{{ item.links }}" target="_blank">
-                          <img src="{{ item.stream_info.thumbnail_url | replace('{width}', '60') | replace('{height}', '34') }}" alt="thumbnail" />
-                  
-                          <div>
-                            <strong>{{ item.dados }}</strong>
-                            <div class="streamers-jogo">
-                              {{ item.stream_info.game_name }} 
-                            </div>
-                            <div class="streamers-viewers">
-                              👥 {{ item.stream_info.viewer_count }} viewers
-                            </div>
-                          </div>
-                  
-                          <span class="live">● Live ON </span>
-                        </a>
-                      </li>
-                    {% endif %}
-                  {% endfor %}
-                  </ul>
-                </li>
-              </ul>
-            <!-- <div class="listaLive">
-                <li class="has-dropdown">
-                    <span class="live-text">Live ON </span>
-                    <ul class="dropdown">
-                        {% for item in streamers %}
-                        {% if item.status == "on" %}
-                            <li><a href="#">{{ item.dados }} </a></li>
-                        {% endif %}
-                        {% endfor %}
-                    </ul>
-                </li>
-            </div> -->
-        </div>
+      <div class="live-notification">
+        <span class="live-dot"></span>
+        <ul class="listaLive">
+          <li class="dropdown-wrapper">
+      
+            {% set streamer_online = streamers | selectattr("status", "equalto", "on") | selectattr("dados", "equalto", "sabuconde") | list %}
+      
+            <a href="https://www.twitch.tv/sabuconde" class="trigger" target="_blank">
+              {% if streamer_online|length > 0 %}
+                <img src="{{ url_for('static', filename='assets/sabuconde.png')  | replace('{width}', '60') | replace('{height}', '34') }}" alt="thumbnail" />
+                <span style="font-weight: bold;"> Sabuconde</span>
+              {% endif %}
+              Live On
+              <i class="fa-solid fa-angle-down"></i>
+            </a>
+      
+            <ul class="dropdown">
+              {% for item in streamers %}
+                {% if item.status == "on" %}
+                  <li>
+                    <a href="{{ item.links }}" target="_blank">
+                      <img src="{{ item.stream_info.thumbnail_url | replace('{width}', '60') | replace('{height}', '34') }}" alt="thumbnail" />
+      
+                      <div>
+                        <strong>{{ item.dados }}</strong>
+                        <div class="streamers-jogo">
+                          {{ item.stream_info.game_name }}
+                        </div>
+                        <div class="streamers-viewers">
+                          👥 {{ item.stream_info.viewer_count }} viewers
+                        </div>
+                      </div>
+      
+                      <span class="live">● Live ON</span>
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+      
+          </li>
+        </ul>
+      </div>
     </div>
     
     <div class="iconBar">
