@@ -89,17 +89,17 @@ def atualizar_stream_cache():
             links.append(cell.value)
 
     dados_links_imagens = [
-         {"dados": dados[0].split(':')[0].strip(), "links": links[0],"imagem": "assets/classes/feiticeiro.png","imagem_gif": "assets/classes/gifs/feiticeiro.gif","status": "off","imagem_sentado": "assets/classes/sentados/feiticeiro.gif"},
-         {"dados": dados[1].split(':')[0].strip(), "links": links[1],"imagem": "assets/classes/sura.png","imagem_gif": "assets/classes/gifs/sura.gif","status": "off","imagem_sentado": "assets/classes/sentados/shura.gif"},
+         {"dados": dados[0].split(':')[0].strip(), "links": links[0],"imagem": "assets/classes/feiticeiro.png","imagem_gif": "assets/classes/andando/feiticeiro.gif","status": "off","imagem_sentado": "assets/classes/sentados/feiticeiro.gif"},
+         {"dados": dados[1].split(':')[0].strip(), "links": links[1],"imagem": "assets/classes/sura.png","imagem_gif": "assets/classes/andando/sura.gif","status": "off","imagem_sentado": "assets/classes/sentados/shura.gif"},
         #  {"dados": dados[2].split(':')[0].strip(), "links": links[2],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
         #  {"dados": dados[3].split(':')[0].strip(), "links": links[3],"imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
          {"dados": dados[4].split(':')[0].strip(), "links": links[4],"imagem": "assets/classes/arcebispo.png","imagem_gif": "assets/classes/andando/arcebispo.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcebispo.gif"},   
-         {"dados": dados[5].split(':')[0].strip(), "links": links[5],"imagem": "assets/classes/trovador.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "off","imagem_sentado": "assets/classes/sentados/trovador.gif"},    # lyelz
-         {"dados": dados[6].split(':')[0].strip(), "links": links[6],"imagem": "assets/classes/guardioes_reais.png","imagem_gif": "assets/classes/gifs/guardiao_real.gif","status": "off","imagem_sentado": "assets/classes/sentados/guardiao_real.gif"}, 
+         {"dados": dados[5].split(':')[0].strip(), "links": links[5],"imagem": "assets/classes/trovador.png","imagem_gif": "assets/classes/andando/trovador.gif","status": "off","imagem_sentado": "assets/classes/sentados/trovador.gif"},    # lyelz
+         {"dados": dados[6].split(':')[0].strip(), "links": links[6],"imagem": "assets/classes/guardioes_reais.png","imagem_gif": "assets/classes/andando/guardiao_real.gif","status": "off","imagem_sentado": "assets/classes/sentados/guardiao_real.gif"}, 
          {"dados": dados[7].split(':')[0].strip(), "links": links[7],"imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/andando/cavaleiro_runico.gif","status": "off","imagem_sentado": "assets/classes/sentados/cavaleiro_runico.gif"},  #Asbrun 
          {"dados": dados[8].split(':')[0].strip(), "links": links[8],"imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/andando/cavaleiro_runico.gif","status": "off","imagem_sentado": "assets/classes/sentados/renegado.gif"},   
          {"dados": dados[9].split(':')[0].strip(), "links": links[9],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/andando/arcano.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcano.gif"},
-         {"dados": dados[10].split(':')[0].strip(), "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/gifs/trovador.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif"}, 
+         {"dados": dados[10].split(':')[0].strip(), "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/andando/trovador.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif"}, 
          {"dados": "Alvaro TV", "links": "https://www.twitch.tv/alvarotv23","imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/andando/sicario.gif","status": "off","imagem_sentado": "assets/classes/sentados/sicario.gif"},   
 
     ]
