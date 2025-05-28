@@ -15,7 +15,7 @@
         <ul class="listaLive">
           <li class="dropdown-wrapper">
       
-            {% set streamer_online = streamers | selectattr("status", "equalto", "on") | selectattr("dados", "equalto", "sabuconde") | list %}
+            {% set streamer_online = streamers | selectattr("status", "equalto", "on") | selectattr("dados", "equalto", "Sabuconde") | list %}
       
             <a href="https://www.twitch.tv/sabuconde" class="trigger" target="_blank">
               {% if streamer_online|length > 0 %}
