@@ -1,6 +1,6 @@
 from collections import defaultdict
 import os
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 import pandas as pd
 import re
 import unicodedata
@@ -1274,6 +1274,13 @@ def melhores_spots_page():
         links=carregar_links(),
         streamers = stream_cache
 )
+
+
+@app.route('/ads.txt')
+def render_ads():
+ 
+    return send_from_directory(directory=os.path.abspath("."), path="ads.txt", mimetype='text/plain')
+
 
 if __name__ == '__main__':
  app.run(debug=True)
