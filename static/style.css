@@ -191,7 +191,6 @@ margin-top: 80px;
   }
 
   header{
-    background-color: black;
     position: fixed;
     width: 100%;
     z-index: 1;
@@ -200,6 +199,8 @@ margin-top: 80px;
     align-items: center;
     justify-content: space-between;
     padding: 0px 15rem;
+    background-color: hsl(0, 0%, 0%);
+    box-shadow: 0 2px 16px hsla(220, 32%, 8%, .3);
   }
 
   .live-notification {
@@ -419,7 +420,10 @@ margin-top: 80px;
     animation: pulse 1.5s infinite;
   }
   
-  
+  aside{
+    background-color: hsl(0, 0%, 0%);
+    box-shadow: 0 2px 16px hsla(220, 32%, 8%, .3) !important;
+  }
   @keyframes blink {
     0%, 100% {
       opacity: 1;
