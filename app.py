@@ -306,8 +306,10 @@ def info_page():
 @app.route('/classes')
 def classes_page():
     df = pd.read_excel('rola.xlsx', header=None)
-    classes = df.iloc[1:27, 3].dropna().tolist()
-    builds = df.iloc[1:29, 4].dropna().tolist()
+    classes = df.iloc[1:27, 4].dropna().tolist()
+    builds = df.iloc[1:29, 5].dropna().tolist()
+    print(classes)
+    print(builds)
 
     wb = load_workbook('rola.xlsx')
     ws = wb["INFORMAÇÕES"]
