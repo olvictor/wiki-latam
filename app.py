@@ -270,8 +270,8 @@ def info_page():
                 'icone': icone
             })
 
-    rank_tiers = df_link.iloc[3:, 8].dropna().tolist()
-    rank_classes = df_link.iloc[3:, 9].dropna().tolist()
+    rank_tiers = df_link.iloc[3:, 9].dropna().tolist()
+    rank_classes = df_link.iloc[3:, 10].dropna().tolist()
 
     links = carregar_links()
 
