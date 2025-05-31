@@ -101,6 +101,8 @@ def atualizar_stream_cache():
          {"dados": dados[9].split(':')[0].strip(), "links": links[9],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/andando/arcano.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcano.gif"},
          {"dados": dados[10].split(':')[0].strip(), "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/andando/trovador.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif"}, 
          {"dados": "Alvaro TV", "links": "https://www.twitch.tv/alvarotv23","imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/andando/sicario.gif","status": "off","imagem_sentado": "assets/classes/sentados/sicario.gif"},   
+         {"dados": "Cabana do Sentinela", "links": "https://www.twitch.tv/cabanadosentinela","imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/andando/sentinela.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif"}, 
+
 
     ]
 
