@@ -277,12 +277,11 @@ def info_page():
 
     rank_data = list(zip(rank_tiers, rank_classes))
 
-    sugestao_cash = df_link.iloc[31:35, 3].dropna().tolist()
-    sugestao_cash_valor = df_link.iloc[31:35, 4].dropna().tolist()
+    sugestao_cash = df_link.iloc[31:35, 4].dropna().tolist()
+    sugestao_cash_valor = df_link.iloc[31:35, 5].dropna().tolist()
 
-    sugestao_cash_classes = df_link.iloc[38:43, 3].dropna().tolist()
-    sugestao_cash_classes_valor = df_link.iloc[38:43, 4].dropna().tolist()
-
+    sugestao_cash_classes = df_link.iloc[38:43, 4].dropna().tolist()
+    sugestao_cash_classes_valor = df_link.iloc[38:43, 5].dropna().tolist()
 
 
     cash = list(zip(sugestao_cash, sugestao_cash_valor))
