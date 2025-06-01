@@ -428,12 +428,14 @@ def rotas_page():
     df_melee = pd.read_excel('rola.xlsx', sheet_name='ROTAS MELEE + DICAS', header=None)
     melee_raw = df_melee.iloc[2:,1].dropna().tolist()
     quest_melee =  df_melee.iloc[1:,3].dropna().tolist() 
-    builds_melee = df_melee.iloc[:,4].dropna().tolist() 
+    builds_melee = df_melee.iloc[1:,4].dropna().tolist() 
+
+    print(builds_melee)
 
     df_ranged = pd.read_excel('rola.xlsx', sheet_name='ROTAS RANGED + DICAS', header=None)
     ranged_raw = df_ranged.iloc[2:,1].dropna().tolist()
     quest_ranged =  df_ranged.iloc[1:,3].dropna().tolist() 
-    builds_ranged = df_ranged.iloc[:,4].dropna().tolist() 
+    builds_ranged = df_ranged.iloc[1:,4].dropna().tolist() 
 
     #ROTAS MELEE
     rotas_melee = []
@@ -455,10 +457,10 @@ def rotas_page():
 
     for nivel, local in rotas_melee:
         if "Dano AoE:" in local:
-            continue  # ignora essa linha completamente
+            continue 
 
         if "Quests Éden para UP" in local:
-            break  # para o loop, removendo também a linha que contém "Quests Éden para UP"
+            break 
 
         rotas_melee_filtrado.append((nivel, local))
 
@@ -475,31 +477,26 @@ def rotas_page():
     ]
 
     array_builds_melee = [
-         (quest_melee[13], builds_melee[4]),
-         (quest_melee[14], builds_melee[5]),
-         (quest_melee[15], builds_melee[6]),
-         (quest_melee[16], builds_melee[7]),
-         (quest_melee[17], builds_melee[8]),
-         (quest_melee[18], builds_melee[9]),
-         (quest_melee[19], builds_melee[10]),
+         (quest_melee[14], builds_melee[4]),
+         (quest_melee[15], builds_melee[5]),
+         (quest_melee[16], builds_melee[6]),
+         (quest_melee[17], builds_melee[7]),
+         (quest_melee[18], builds_melee[8]),
+         (quest_melee[19], builds_melee[9]),
+         (quest_melee[20], builds_melee[10]),
     ]
 
     array_builds_formatado =[]
    
     for quest, build in array_builds_melee:
-    # Converte para string e remove espaços
         quest = str(quest).strip()
         build = str(build).strip()
 
-    # Remove parênteses e aspas se houver
         quest = re.sub(r"^[('\"\s]+|[)'\"]+$", "", quest)
         build = re.sub(r"^[('\"\s]+|[)'\"]+$", "", build)
 
-    # Adiciona como tupla limpa
         array_builds_formatado.append((quest, build))
     
-
-    ########### ROTAS RANGED
     rotas_ranged = []
     for linha in ranged_raw:
         linha = str(linha).strip()
@@ -519,10 +516,10 @@ def rotas_page():
 
     for nivel, local in rotas_ranged:
         if "Dano AoE:" in local:
-            continue  # ignora essa linha completamente
+            continue  
 
         if "Quests Éden para UP" in local:
-            break  # para o loop, removendo também a linha que contém "Quests Éden para UP"
+            break  
         rotas_ranged_filtrado.append((nivel, local))   
 
     array_quest_ranged = [
@@ -538,11 +535,11 @@ def rotas_page():
     ]
 
     array_builds_ranged = [
-         (quest_ranged[13], builds_ranged[4]),
-         (quest_ranged[14], builds_ranged[5]),
-         (quest_ranged[15], builds_ranged[6]),
-         (quest_ranged[16], builds_ranged[7]),
-         (quest_ranged[17], builds_ranged[8]),
+         (quest_ranged[14], builds_ranged[4]),
+         (quest_ranged[15], builds_ranged[5]),
+         (quest_ranged[16], builds_ranged[6]),
+         (quest_ranged[17], builds_ranged[7]),
+         (quest_ranged[18], builds_ranged[8]),
     ]
     array_builds_ranged_formatado =[]
    
