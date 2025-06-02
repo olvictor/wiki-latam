@@ -234,7 +234,7 @@ def info_page():
 
     videos_recentes_secundarios_zip = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
 
-    video_encontrado = next((video for video in videos_recentes_secundarios_zip if video[4].lower() == "ragnarok online latam".lower()), None)
+    # video_encontrado = next((video for video in videos_recentes_secundarios_zip if video[4].lower() == "ragnarok online latam".lower()), None)
 
     def transformar_para_embed(url):
         if "youtube.com/watch?v=" in url:
@@ -242,11 +242,11 @@ def info_page():
         return url
     
     video_mais_recente = (
-    video_encontrado[0],
-    video_encontrado[1],
-    video_encontrado[2],
-    transformar_para_embed(video_encontrado[3]),
-    video_encontrado[4]
+    "Ragnarok Online LATAM",
+    "Is It Worth Using the Izlude Valkyrie for Class Change?",
+    "https://i.ytimg.com/vi/wPwLgkwJwRM/maxresdefault.jpg",
+    transformar_para_embed("https://www.youtube.com/watch?v=wPwLgkwJwRM"),
+    "2025-05-29T21:01:05Z"
     )
 
 
@@ -288,6 +288,7 @@ def info_page():
 
     cash = list(zip(sugestao_cash, sugestao_cash_valor))
     cash_para_classes = list(zip(sugestao_cash_classes, sugestao_cash_classes_valor))
+
 
 
 
