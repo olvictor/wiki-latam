@@ -1,0 +1,88 @@
+<navbar class="mobile-header">
+    <div class="logo">
+      <a href="/"></a>
+    </div>
+    <button class="hamburger-menu" aria-label="Abrir menu">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <nav class="mobile-nav">
+      <ul class="menu-list">
+          <li>
+            <a href="{{ url_for('info_page') }}"
+                class="menu-link {% if request.path == url_for('info_page') %}is-active{% endif %}"
+                data-label="Novidades">
+                <p class="icon">📰</p>
+                <p class="label">Novidades</p>
+              </a>
+          </li>
+          <li>
+              <a href="{{ url_for('classes_page') }}"
+              class="menu-link {% if request.path == url_for('classes_page') %}is-active{% endif %}""
+              data-label="Classes & Builds">
+              <span class="icon">📘</span>
+              <span class="label">Guias</span>
+             </a>
+          </li>
+          <li>
+            <a href="{{ url_for('rotas_page') }}"
+            class="menu-link {% if request.path == url_for('rotas_page') %}is-active{% endif %}"
+            data-label="Rotas de UP + Dicas">               
+            <span class="icon">⚔️</span>
+            <span class="label">Rotas de UP + Dicas</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('melhores_spots_page') }}"
+              class="menu-link {% if request.path == url_for('melhores_spots_page') %}is-active{% endif %}"
+              data-label="Melhores SPOTS">
+              <span class="icon">👣</span>
+              <span class="label">Melhores SPOTS</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('items_page') }}"
+              class="menu-link {% if request.path == url_for('items_page') %}is-active{% endif %}"
+              data-label="Items Importantes">
+              <span class="icon">🧈</span>
+              <span class="label">Items Importantes</span>
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('monstros_page') }}"
+              class="menu-link {% if request.path == url_for('monstros_page') %}is-active{% endif %}"
+              data-label="Monstros">
+              <span class="icon">🐺</span>
+              <span class="label">Monstros</span>
+            </a>
+          </li>
+         <li>
+          <a href="{{ url_for('timer_page') }}"
+              class="menu-link {% if request.path == url_for('timer_page') %}is-active{% endif %}"
+              data-label="Calc de EXP">
+              <span class="icon">⏱️</span>
+              <span class="label">Calc de EXP</span>
+          </a>
+         </li>
+
+         <li>
+          <a href="{{ url_for('streamers_page') }}"
+              class="menu-link {% if request.path == url_for('streamers_page') %}is-active{% endif %}"
+              data-label="Streamers">
+              <span class="icon">🎥</span>
+              <span class="label">Streamers</span>
+          </a>
+         </li>
+
+         <li>
+          <a href="{{ url_for('contato_page') }}"
+              class="menu-link {% if request.path == url_for('contato_page') %}is-active{% endif %}"
+              data-label="Contato & Apoio">
+              <span class="icon">❤️</span>
+              <span class="label">Contato & Apoio</span>
+          </a>
+         </li>
+      </ul>
+    </nav>
+</navbar>
