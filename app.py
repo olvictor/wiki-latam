@@ -9,6 +9,10 @@ from flask import Flask, render_template, jsonify
 from openpyxl import load_workbook
 from apscheduler.schedulers.background import BackgroundScheduler
 
+import os
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+
 import urllib.request
 import urllib.parse
 import json
@@ -20,7 +24,71 @@ CORS(app)
 
 CLIENT_ID = 'qdn4nkcag974fxftx5xwfs5goddqx6'
 CLIENT_SECRET = 'l0a2yo19o38jl7luid7nu0xerz38m1'
+YOUTUBE_API_KEY = 'AIzaSyBjK1M3gsWEZCA75qYeIXBFzgoVu7vKcqY'
+API_SERVICE_NAME = 'youtube'
+API_VERSION = 'v3'
+
 stream_cache = []
+
+CHANNEL_IDS = [
+    {"dados": "Cabana do Sentinela", "links": "https://www.twitch.tv/cabanadosentinela","imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/andando/sentinela.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif","plataforma" :"youtube","channel_id":"UCyrRWvII61mthxZlbK3OFJQ"},
+    {"dados": "Estudo arcano", "links": "https://www.youtube.com/@estudoarcano","imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/andando/arcano.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcano.gif","plataforma" :"youtube","channel_id":"UCyCkaDZmkJdOcfwtQSYJ5OQ"},
+    {"dados": "Jeff da Gaita", "links": "https://www.youtube.com/@JeffodaGaita","imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/andando/renegado.gif","status": "off","imagem_sentado": "assets/classes/sentados/renegado.gif","plataforma" :"youtube","channel_id":"UC4B7uZNcTQG2iJkSrYVztQg"},
+    {"dados": "Joga Junto Ragnarok", "links": "https://www.youtube.com/@JogaJuntoRagnarok","imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/andando/cavaleiro_runico.gif","status": "off","imagem_sentado": "assets/classes/sentados/cavaleiro_runico.gif","plataforma" :"youtube","channel_id":"UCmLixl7G_IxDo6nl4vYCHjA"},
+]
+
+
+def get_youtube_service():
+    return build(API_SERVICE_NAME, API_VERSION, developerKey=YOUTUBE_API_KEY)
+
+
+def check_channel_live_status(youtube_service, channel_id):
+    """Verifica se um canal do YouTube está transmitindo ao vivo e retorna dados da live."""
+    print(f"\nVerificando o canal com ID: {channel_id}...")
+    try:
+        search_response = youtube_service.search().list(
+            channelId=channel_id,
+            eventType='live',
+            type='video',
+            part='id,snippet',
+            maxResults=1
+        ).execute()
+
+        if search_response.get('items'):
+            item = search_response['items'][0]
+            video_id = item['id']['videoId']
+            title = item['snippet']['title']
+            thumbnail_url = item['snippet']['thumbnails']['high']['url']
+            category = item['snippet'].get('categoryId', 'Live') 
+
+            video_response = youtube_service.videos().list(
+                part="liveStreamingDetails,statistics",
+                id=video_id
+            ).execute()
+
+            video_info = video_response['items'][0]
+            viewer_count = video_info.get('liveStreamingDetails', {}).get('concurrentViewers', 'N/A')
+            started_at = video_info.get('liveStreamingDetails', {}).get('actualStartTime')
+
+            return True, {
+                'title': title,
+                'category': category,
+                'viewer_count': viewer_count,
+                'started_at': started_at,
+                'thumbnail_url': thumbnail_url
+            }
+
+        else:
+            print(f"❌ O canal {channel_id} não está ao vivo.")
+            return False, {}
+
+    except HttpError as e:
+        print(f"Erro HTTP ao acessar API para o canal {channel_id}: {e}")
+        return False, {}
+    except Exception as e:
+        print(f"Erro inesperado para o canal {channel_id}: {e}")
+        return False, {}
+
 
 def get_access_token():
     url = 'https://id.twitch.tv/oauth2/token'
@@ -89,49 +157,75 @@ def atualizar_stream_cache():
             links.append(cell.value)
 
     dados_links_imagens = [
-         {"dados": dados[0].split(':')[0].strip(), "links": links[0],"imagem": "assets/classes/feiticeiro.png","imagem_gif": "assets/classes/andando/feiticeiro.gif","status": "off","imagem_sentado": "assets/classes/sentados/feiticeiro.gif"},
-         {"dados": dados[1].split(':')[0].strip(), "links": links[1],"imagem": "assets/classes/sura.png","imagem_gif": "assets/classes/andando/sura.gif","status": "off","imagem_sentado": "assets/classes/sentados/shura.gif"},
+         {"dados": dados[0].split(':')[0].strip(), "links": links[0],"imagem": "assets/classes/feiticeiro.png","imagem_gif": "assets/classes/andando/feiticeiro.gif","status": "off","imagem_sentado": "assets/classes/sentados/feiticeiro.gif","plataforma" :"twitch"},
+         {"dados": dados[1].split(':')[0].strip(), "links": links[1],"imagem": "assets/classes/sura.png","imagem_gif": "assets/classes/andando/sura.gif","status": "off","imagem_sentado": "assets/classes/sentados/shura.gif","plataforma" :"twitch"},
         #  {"dados": dados[2].split(':')[0].strip(), "links": links[2],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},
         #  {"dados": dados[3].split(':')[0].strip(), "links": links[3],"imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/gifs/cavaleiro_runico.gif","status": "off"},   
-         {"dados": dados[4].split(':')[0].strip(), "links": links[4],"imagem": "assets/classes/arcebispo.png","imagem_gif": "assets/classes/andando/arcebispo.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcebispo.gif"},   
-         {"dados": dados[5].split(':')[0].strip(), "links": links[5],"imagem": "assets/classes/trovador.png","imagem_gif": "assets/classes/andando/trovador.gif","status": "off","imagem_sentado": "assets/classes/sentados/trovador.gif"},    # lyelz
-         {"dados": dados[6].split(':')[0].strip(), "links": links[6],"imagem": "assets/classes/guardioes_reais.png","imagem_gif": "assets/classes/andando/guardiao_real.gif","status": "off","imagem_sentado": "assets/classes/sentados/guardiao_real.gif"}, 
-         {"dados": dados[7].split(':')[0].strip(), "links": links[7],"imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/andando/cavaleiro_runico.gif","status": "off","imagem_sentado": "assets/classes/sentados/cavaleiro_runico.gif"},  #Asbrun 
-         {"dados": dados[8].split(':')[0].strip(), "links": links[8],"imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/andando/cavaleiro_runico.gif","status": "off","imagem_sentado": "assets/classes/sentados/renegado.gif"},   
-         {"dados": dados[9].split(':')[0].strip(), "links": links[9],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/andando/arcano.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcano.gif"},
-         {"dados": dados[10].split(':')[0].strip(), "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/andando/trovador.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif"}, 
-         {"dados": "Alvaro TV", "links": "https://www.twitch.tv/alvarotv23","imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/andando/sicario.gif","status": "off","imagem_sentado": "assets/classes/sentados/sicario.gif"},   
-         {"dados": "Cabana do Sentinela", "links": "https://www.twitch.tv/cabanadosentinela","imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/andando/sentinela.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif"}, 
-
+         {"dados": dados[4].split(':')[0].strip(), "links": links[4],"imagem": "assets/classes/arcebispo.png","imagem_gif": "assets/classes/andando/arcebispo.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcebispo.gif","plataforma" :"twitch"},   
+         {"dados": dados[5].split(':')[0].strip(), "links": links[5],"imagem": "assets/classes/trovador.png","imagem_gif": "assets/classes/andando/trovador.gif","status": "off","imagem_sentado": "assets/classes/sentados/trovador.gif","plataforma" :"twitch"},    # lyelz
+         {"dados": dados[6].split(':')[0].strip(), "links": links[6],"imagem": "assets/classes/guardioes_reais.png","imagem_gif": "assets/classes/andando/guardiao_real.gif","status": "off","imagem_sentado": "assets/classes/sentados/guardiao_real.gif","plataforma" :"twitch"}, 
+         {"dados": dados[7].split(':')[0].strip(), "links": links[7],"imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/andando/cavaleiro_runico.gif","status": "off","imagem_sentado": "assets/classes/sentados/cavaleiro_runico.gif","plataforma" :"twitch"},  #Asbrun 
+         {"dados": dados[8].split(':')[0].strip(), "links": links[8],"imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/andando/cavaleiro_runico.gif","status": "off","imagem_sentado": "assets/classes/sentados/renegado.gif","plataforma" :"twitch"},   
+         {"dados": dados[9].split(':')[0].strip(), "links": links[9],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/andando/arcano.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcano.gif","plataforma" :"twitch"},
+         {"dados": dados[10].split(':')[0].strip(), "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/andando/trovador.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif","plataforma" :"twitch"}, 
+         {"dados": "Alvaro TV", "links": "https://www.twitch.tv/alvarotv23","imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/andando/sicario.gif","status": "off","imagem_sentado": "assets/classes/sentados/sicario.gif","plataforma" :"twitch"},   
+          {"dados": "Cabana do Sentinela", "links": "https://www.twitch.tv/cabanadosentinela","imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/andando/sentinela.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif","plataforma" :"youtube","channel_id":"UCyrRWvII61mthxZlbK3OFJQ"},
+    {"dados": "Estudo arcano", "links": "https://www.youtube.com/@estudoarcano","imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/andando/arcano.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcano.gif","plataforma" :"youtube","channel_id":"UCyCkaDZmkJdOcfwtQSYJ5OQ"},
+    {"dados": "Jeff da Gaita", "links": "https://www.youtube.com/@JeffodaGaita","imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/andando/renegado.gif","status": "off","imagem_sentado": "assets/classes/sentados/renegado.gif","plataforma" :"youtube","channel_id":"UC4B7uZNcTQG2iJkSrYVztQg"},
+    {"dados": "Joga Junto Ragnarok", "links": "https://www.youtube.com/@JogaJuntoRagnarok","imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/andando/cavaleiro_runico.gif","status": "off","imagem_sentado": "assets/classes/sentados/cavaleiro_runico.gif","plataforma" :"youtube","channel_id":"UCmLixl7G_IxDo6nl4vYCHjA"},
 
     ]
-
+    youtube_service = get_youtube_service()
     for item in dados_links_imagens:
-        username = extrair_nome_usuario(item['links'])
-        if username:
-            try:
-                stream_data = get_stream_data(username)
-                if stream_data:
-                    item['status'] = 'on'
-                    item['stream_info'] = {
-                        'title': stream_data.get('title'),
-                        'game_name': stream_data.get('game_name'),
-                        'viewer_count': stream_data.get('viewer_count'),
-                        'started_at': stream_data.get('started_at'),
-                        'language': stream_data.get('language'),
-                        'thumbnail_url': stream_data.get('thumbnail_url')
-                    }
-                else:
+        plataforma = item.get('plataforma')
+
+        if plataforma == 'twitch':
+            username = extrair_nome_usuario(item['links'])
+
+            if username:
+                try:
+                    stream_data = get_stream_data(username)
+                    if stream_data:
+                        item['status'] = 'on'
+                        item['stream_info'] = {
+                            'title': stream_data.get('title'),
+                            'game_name': stream_data.get('game_name'),
+                            'viewer_count': stream_data.get('viewer_count'),
+                            'started_at': stream_data.get('started_at'),
+                            'language': stream_data.get('language'),
+                            'thumbnail_url': stream_data.get('thumbnail_url')
+                        }
+                    else:
+                        item['status'] = 'off'
+                except Exception as e:
+                    print(f"Erro ao verificar status de {username} na Twitch: {e}")
                     item['status'] = 'off'
-            except Exception as e:
-                print(f"Erro ao verificar status de {username}: {e}")
-                item['status'] = 'off'
-        else:
-            print(f"Nome de usuário não encontrado na URL: {item['links']}")
+            else:
+                print(f"Nome de usuário Twitch não encontrado na URL: {item['links']}")
 
-    stream_cache = dados_links_imagens
-    print("Cache atualizado com sucesso.")
+        elif plataforma == 'youtube':
+            channel_id = item['channel_id']
 
+            if channel_id:
+                try:
+                    is_live, video_data = check_channel_live_status(youtube_service, channel_id)  
+                    if is_live:
+                        item['status'] = 'on'
+                        item['stream_info'] = {
+                            'title': video_data.get('title'),
+                            'game_name': video_data.get('category', 'Live'),  
+                            'viewer_count': video_data.get('viewer_count', 'N/A'),
+                            'started_at': video_data.get('started_at'),
+                            'thumbnail_url': video_data.get('thumbnail_url')
+                        }
+                    else:
+                        item['status'] = 'off'
+                except Exception as e:
+                    print(f"Erro ao verificar status de {channel_id} no YouTube: {e}")
+                    item['status'] = 'off'
+            else:
+                print(f"Channel ID do YouTube não encontrado na URL: {item['links']}")
+    stream_cache =dados_links_imagens
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=atualizar_stream_cache, trigger="interval", seconds=1800)
 scheduler.start()

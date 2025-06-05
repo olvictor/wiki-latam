@@ -42,8 +42,14 @@
                           👥 {{ item.stream_info.viewer_count }} viewers
                         </div>
                       </div>
-      
-                      <span class="live">● Live ON</span>
+                      <div class="liveon_span">
+                        <span class="live">● Live ON</span>
+                        {% if item.plataforma == "twitch" %}
+                          <img class="off" src="{{ url_for('static', filename='assets/twitch.png') }}" alt="Twitch" style="width: 25px;">
+                        {% elif item.plataforma == "youtube" %}
+                          <img class="off" src="{{ url_for('static', filename='assets/youtube.png') }}" alt="YouTube" style="width: 25px;">
+                        {% endif %}
+                      </div>
                     </a>
                   </li>
                 {% endif %}

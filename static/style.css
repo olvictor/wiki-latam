@@ -393,7 +393,7 @@ margin-top: 80px;
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    border: 1px solid rgba(255, 0, 0, 1);
+    /* border: 1px solid rgba(255, 0, 0, 1); */
   }
 
   .dropdown-wrapper img{
@@ -440,6 +440,16 @@ margin-top: 80px;
     height: 4rem;
   }
   
+  .liveon_span{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .liveon_span img{
+    border: none;
+  }
   .mobile-header .logo a {
     text-decoration: none;
     color: #333;
@@ -569,7 +579,7 @@ margin-top: 80px;
     }
 
     .principal-comunidade{
-      height: 40vh !important;
+      height: 50vh !important;
     }
 
     .video-page{
@@ -577,17 +587,17 @@ margin-top: 80px;
     }
 
   
-     .noticias{
+    .noticias{
       display: flex;
       flex-direction: column;
       height: auto;
-      min-height: 100vh;
+      min-height: 100vh !important;
+      margin-top: 1rem;
     } 
-
 
     .colunaNoticias{
       height: auto;
-      min-height: 60vh;
+      min-height: 85vh;
       width: 90vw !important;
     }
 
