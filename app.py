@@ -169,6 +169,7 @@ def atualizar_stream_cache():
          {"dados": dados[9].split(':')[0].strip(), "links": links[9],"imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/andando/arcano.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcano.gif","plataforma" :"twitch"},
          {"dados": dados[10].split(':')[0].strip(), "links": links[10],"imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/andando/trovador.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif","plataforma" :"twitch"}, 
          {"dados": "Alvaro TV", "links": "https://www.twitch.tv/alvarotv23","imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/andando/sicario.gif","status": "off","imagem_sentado": "assets/classes/sentados/sicario.gif","plataforma" :"twitch"},   
+         {"dados": "Slash", "links": "https://www.twitch.tv/slashvidal","imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/andando/sicario.gif","status": "off","imagem_sentado": "assets/classes/sentados/sicario.gif","plataforma" :"twitch"},   
           {"dados": "Cabana do Sentinela", "links": "https://www.twitch.tv/cabanadosentinela","imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/andando/sentinela.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif","plataforma" :"youtube","channel_id":"UCyrRWvII61mthxZlbK3OFJQ"},
     {"dados": "Estudo arcano", "links": "https://www.youtube.com/@estudoarcano","imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/andando/arcano.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcano.gif","plataforma" :"youtube","channel_id":"UCyCkaDZmkJdOcfwtQSYJ5OQ"},
     {"dados": "Jeff da Gaita", "links": "https://www.youtube.com/@JeffodaGaita","imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/andando/renegado.gif","status": "off","imagem_sentado": "assets/classes/sentados/renegado.gif","plataforma" :"youtube","channel_id":"UC4B7uZNcTQG2iJkSrYVztQg"},
@@ -328,19 +329,19 @@ def info_page():
 
     videos_recentes_secundarios_zip = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
 
-    # video_encontrado = next((video for video in videos_recentes_secundarios_zip if video[4].lower() == "ragnarok online latam".lower()), None)
-
+    video_encontrado = next((video for video in videos_recentes_secundarios_zip if video[4].lower() == "ragnarok online latam".lower()), None)
+    
     def transformar_para_embed(url):
         if "youtube.com/watch?v=" in url:
             return url.replace("watch?v=", "embed/")
         return url
     
     video_mais_recente = (
-    "Ragnarok Online LATAM",
-    "Is It Worth Using the Izlude Valkyrie for Class Change?",
-    "https://i.ytimg.com/vi/wPwLgkwJwRM/maxresdefault.jpg",
-    transformar_para_embed("https://www.youtube.com/watch?v=wPwLgkwJwRM"),
-    "2025-05-29T21:01:05Z"
+    video_encontrado[4],
+    video_encontrado[0],
+    video_encontrado[1],
+    transformar_para_embed(video_encontrado[3]),
+    video_encontrado[2]
     )
 
 
