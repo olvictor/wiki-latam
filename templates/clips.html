@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Clipes | GUIA-ROLATAM</title>
+  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://go.ezoic.net/ezoic.js" data-ez-domain="rolaguiada.com.br"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?display=swap&family=Newsreader:wght@400;500;700;800&family=Noto+Sans:wght@400;500;700;900');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+    }
+
+    aside {
+      width: 250px;
+      background-color: #1e1e1e;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      overflow-y: auto;
+    }
+
+    aside h2 {
+      color: #ffc107;
+      margin-bottom: 20px;
+    }
+
+    aside nav a {
+      display: block;
+      color: #bbb;
+      text-decoration: none;
+      margin-bottom: 10px;
+      padding: 5px;
+      border-radius: 4px;
+    }
+
+    aside nav a:hover {
+      background-color: #292929;
+      color: #fff;
+    }
+
+    main {
+      padding: 12rem 15rem;
+      margin-top: 3.7rem;
+      width: 100%;
+      height: auto;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3 {
+     font-family: 'Newsreader', serif !important;
+     font-size: 1.5rem;
+    }
+
+    form{
+        height: 20vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        width: 20%;
+    }
+
+    form input{ 
+        margin-top: 2rem;
+        border-radius: 6px;
+        width: 100%;
+        height: 2rem;
+        outline: none;
+        border: none;
+        padding: 12px;
+    }
+
+    form button{
+        background-color: rgb(0, 204, 255);
+        margin-top: 1rem;
+        align-self: flex-end;
+        padding: 6px 1rem;
+        border-radius: 6px;
+        font-weight: bolder;
+        text-transform: uppercase;
+    }
+
+    form button:hover{
+      border: 1px solid white;
+    }
+.loader-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+    }
+    .msg_acerto{
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bolder;
+      font-size: 1rem;
+      width: 20rem;
+      height: 5rem;
+      border-radius: 6px;
+      position: absolute;
+      right: -100%;
+      top: -30%;
+      display: flex;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid white;
+      transition: opacity 1s ease-out;
+      animation: fadeInUp 0.6s ease-out;
+    }
+    .msg_erro{
+      background-color: red;
+      color: white;
+      font-weight: bolder;
+      font-size: 1rem;
+      width: 20rem;
+      height: 5rem;
+      border-radius: 6px;
+      position: absolute;
+      right: -100%;
+      top: -30%;
+      display: flex;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid white;
+      transition: opacity 1s ease-out;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    
+.spinner {
+        border: 6px solid #ccc;
+        border-top: 6px solid #4b4b7a;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      aside {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+      }
+
+      main {
+        margin-left: 0;
+        padding: 20px;
+      }
+      
+  
+  }
+  </style>
+</head>
+<body onload=esconderLoader()>
+
+  {% include 'components/links.html' %}
+
+  <div class="global">
+    {% include 'components/header.html' %}
+      <main>
+            <div class="container-form">
+                <form method="POST">
+                    <h2>Compartilhe seu clipe !</h2>
+                    <input type="text" name="url" placeholder="Cole seu link aqui" required>
+                    <button type="submit"><i class="fa-solid fa-upload"></i> Enviar</button>
+                    {% with mensagens = get_flashed_messages(with_categories=true) %}
+                    {% if mensagens %}
+                      {% for categoria, msg in mensagens %}
+                        {% if categoria == 'sucesso' %}
+                          <div class="msg_acerto">{{ msg }}</div>
+                        {% elif categoria == 'erro' %}
+                          <div class="msg_erro">{{ msg }}</div>
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  {% endwith %}
+                </form>
+            </div>
+            <div class="container-clipes">
+              <h2>Em alta</h2>
+            </div>
+            {% for clip in links_clipes %}
+            <iframe
+              src="https://clips.twitch.tv/embed?clip={{ clip.slug }}&parent=localhost&parent=rolaguiada.com.br&parent=127.0.0.1"
+              height="250"
+              width="450"
+              style="border-radius: 12px; border: none;"
+              allowfullscreen>
+            </iframe>
+            {% endfor %}
+    </main>
+  </div>
+ 
+    
+
+    <script >
+      function esconderLoader() {
+            setTimeout(() => {
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("conteudo").style.display = "flex";
+            }, 1000); 
+      
+      }
+      window.addEventListener("DOMContentLoaded", () => {
+        const mensagens = document.querySelectorAll(".msg_acerto, .msg_erro");
+        mensagens.forEach(msg => {
+          setTimeout(() => {
+            msg.style.opacity = "0";  
+            setTimeout(() => msg.remove(), 1000); 
+          }, 3000);  
+        });
+      });
+    </script>
+</body>
+</html>

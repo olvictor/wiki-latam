@@ -6,3 +6,4 @@ pyyaml
 gunicorn
 APScheduler
 google-api-python-client
+flask_sqlalchemy

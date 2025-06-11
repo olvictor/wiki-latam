@@ -5,21 +5,35 @@ import pandas as pd
 import re
 import unicodedata
 from flask_cors import CORS
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request, redirect, flash, get_flashed_messages
 from openpyxl import load_workbook
 from apscheduler.schedulers.background import BackgroundScheduler
-
+from flask_sqlalchemy import SQLAlchemy
 import os
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-
+from datetime import datetime
 import urllib.request
-import urllib.parse
+import urllib.parse 
+from urllib.parse import urlparse
 import json
 
 
 app = Flask(__name__)
 CORS(app)
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key= "#aSDa32#"
+db = SQLAlchemy(app)
+
+class Link(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String(500), nullable=False)
+    aprovado = db.Column(db.Boolean, default=False)
+    data = db.Column(db.DateTime, default=datetime.utcnow)
+
 
 
 CLIENT_ID = 'qdn4nkcag974fxftx5xwfs5goddqx6'
@@ -1372,6 +1386,92 @@ def melhores_spots_page():
 )
 
 
+@app.route('/clips', methods=['GET', 'POST'])
+def clips_page():
+    if request.method == 'POST':
+        url = request.form.get('url')
+        if url:
+            url_existente = Link.query.filter_by(url=url).first()
+            if url_existente:
+                flash("Esse link já foi enviado anteriormente.","erro")
+            else:
+                novo_link = Link(url=url)
+                db.session.add(novo_link)
+                db.session.commit()
+                flash("Obrigado por compartilhar o clipe, em breve ele será aprovado!","sucesso")
+            return redirect('/clips')
+    
+    links_clipes = Link.query.filter_by(aprovado=True).order_by(Link.data.desc()).all()
+
+    clips_embed = []
+    def extrair_slug_twitch(url):
+        try:
+            if not url:
+                return None
+
+            if not url.startswith("http"):
+                url = "https://" + url
+
+            parsed = urlparse(url)
+            partes = parsed.path.strip("/").split("/")
+
+            if parsed.netloc == "clips.twitch.tv" and len(partes) == 1:
+                return partes[0]
+
+            if "clip" in partes:
+                idx = partes.index("clip")
+                if idx + 1 < len(partes):
+                    return partes[idx + 1]
+
+        except Exception as e:
+            print(f"Erro ao extrair slug: {e}")
+        
+        return None
+
+    for link in links_clipes:
+        slug = extrair_slug_twitch(link.url)
+        print(f"[DEBUG] URL: {link.url} → Slug extraído: {slug}")
+        if slug:
+            clips_embed.append({
+                'slug': slug,
+                'id': link.id
+            })
+        else:
+            print(f"[!] URL inválida ignorada: {link.url}")
+
+    print(clips_embed)
+    return render_template(
+        'clips.html',
+        links_clipes=clips_embed,
+        links=carregar_links(),
+        streamers=stream_cache
+    )
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin_page():
+    if request.method == 'POST':
+        link_id = request.form.get('link_id')
+        action = request.form.get('action')
+
+        link = Link.query.get(link_id)
+        if not link:
+            flash("Link não encontrado.", "erro")
+            return redirect('/admin')
+
+        if action == 'aprovar':
+            aprovado_val = request.form.get('aprovado')
+            link.aprovado = True if aprovado_val == 'true' else False
+            db.session.commit()
+            flash("Status atualizado com sucesso.", "sucesso")
+        elif action == 'deletar':
+            db.session.delete(link)
+            db.session.commit()
+            flash("Link deletado.", "sucesso")
+        return redirect('/admin')
+
+    links = Link.query.order_by(Link.data.desc()).all()
+    return render_template('admin.html', links=links)
+
 @app.route('/ads.txt')
 def render_ads():
  
@@ -1379,5 +1479,7 @@ def render_ads():
 
 
 if __name__ == '__main__':
+ with app.app_context():
+        db.create_all()
  app.run(debug=True)
 

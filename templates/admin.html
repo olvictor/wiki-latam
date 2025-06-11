@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gerenciar Clipes</h1>
+
+{% with mensagens = get_flashed_messages(with_categories=true) %}
+  {% for categoria, msg in mensagens %}
+    <div class="msg_{{ categoria }}">{{ msg }}</div>
+  {% endfor %}
+{% endwith %}
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>URL</th>
+    <th>Aprovado?</th>
+    <th>Ações</th>
+  </tr>
+  {% for link in links %}
+    <tr>
+      <td>{{ link.id }}</td>
+      <td><a href="{{ link.url }}" target="_blank">{{ link.url }}</a></td>
+      <td>{{ 'Sim' if link.aprovado else 'Não' }}</td>
+      <td>
+        <!-- Formulário para alterar aprovação -->
+        <form method="POST" style="display:inline;">
+          <input type="hidden" name="link_id" value="{{ link.id }}">
+          <input type="hidden" name="action" value="aprovar">
+          <select name="aprovado" onchange="this.form.submit()">
+            <option value="true" {% if link.aprovado %}selected{% endif %}>Sim</option>
+            <option value="false" {% if not link.aprovado %}selected{% endif %}>Não</option>
+          </select>
+        </form>
+
+        <!-- Formulário para deletar -->
+        <form method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja deletar?');">
+          <input type="hidden" name="link_id" value="{{ link.id }}">
+          <input type="hidden" name="action" value="deletar">
+          <button type="submit">Deletar</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+</body>
+</html>
