@@ -188,6 +188,8 @@ def atualizar_stream_cache():
     {"dados": "Estudo arcano", "links": "https://www.youtube.com/@estudoarcano","imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/andando/arcano.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcano.gif","plataforma" :"youtube","channel_id":"UCyCkaDZmkJdOcfwtQSYJ5OQ"},
     {"dados": "Jeff da Gaita", "links": "https://www.youtube.com/@JeffodaGaita","imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/andando/renegado.gif","status": "off","imagem_sentado": "assets/classes/sentados/renegado.gif","plataforma" :"youtube","channel_id":"UC4B7uZNcTQG2iJkSrYVztQg"},
     {"dados": "Joga Junto Ragnarok", "links": "https://www.youtube.com/@JogaJuntoRagnarok","imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/andando/cavaleiro_runico.gif","status": "off","imagem_sentado": "assets/classes/sentados/cavaleiro_runico.gif","plataforma" :"youtube","channel_id":"UCmLixl7G_IxDo6nl4vYCHjA"},
+    {"dados": "Asenhorita_any", "links": "https://www.twitch.tv/asenhorita_any","imagem": "assets/classes/musa.png","imagem_gif": "assets/classes/andando/musa.gif","status": "off","imagem_sentado": "assets/classes/sentados/musa.gif","plataforma" :"twitch"},
+
 
     ]
     youtube_service = get_youtube_service()
