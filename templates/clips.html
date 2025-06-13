@@ -295,9 +295,11 @@ button.toggle-btn:active {
             <div class="container-clipes">
               {% for clip in links_clipes %}
               <iframe
-                src="https://clips.twitch.tv/embed?clip={{ clip.slug }}&parent=localhost&parent=rolaguiada.com.br&parent=rolaguiada.com.br"
-                style="border-radius: 12px; border: none;"
-                allowfullscreen>
+              src="https://clips.twitch.tv/embed?clip={{ clip.slug }}&parent=rolaguiada.com.br&parent=www.rolaguiada.com.br"
+              width="100%"
+              height="315"
+              allowfullscreen
+              style="border-radius: 12px; border: none;">
               </iframe>
               {% endfor %}
             </div>
