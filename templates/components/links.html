@@ -1,7 +1,9 @@
 <button id="toggle-menu" class="button is-small is-light" style="position: fixed; top: 1rem; left: 13rem; z-index: 1000;">
-      <i id="toggle-icon" class="fas fa-chevron-right"></i>
+   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+    </svg>   
 </button>
-<aside id="sidebar" class="menu-sidebar collapsed">
+<aside id="sidebar" class="menu-sidebar">
         <nav>
              <a href="{{ url_for('info_page') }}"
                 class="menu-link {% if request.path == url_for('info_page') %}is-active{% endif %}"
@@ -51,6 +53,12 @@
                 data-label="Streamers">
                 <span class="icon">🎥</span>
                 <span class="label">Streamers</span>
+             </a>
+             <a href="{{ url_for('clips_page') }}"
+               class="menu-link {% if request.path == url_for('clips_page') %}is-active{% endif %}"
+               data-label="Novidades">
+               <span class="icon">🎬</span>
+               <span class="label">Clipes</span>
              </a>
              <a href="{{ url_for('contato_page') }}"
                 class="menu-link {% if request.path == url_for('contato_page') %}is-active{% endif %}"

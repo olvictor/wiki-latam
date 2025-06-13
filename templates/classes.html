@@ -2,10 +2,12 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
   <title>Builds | GUIA-ROLATAM</title>
   <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script src="https://go.ezoic.net/ezoic.js" data-ez-domain="rolaguiada.com.br"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6266174717644829"
+     crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
@@ -285,19 +287,30 @@ main {
 
     const toggleButton = document.getElementById('toggle-menu');
     const sidebar = document.getElementById('sidebar');
-    const icon = document.getElementById('toggle-icon');
+
+    const chevronLeftSVG = `
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          stroke-width="1.5" stroke="currentColor" class="icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+    `;
+
+    const chevronRightSVG = `
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          stroke-width="1.5" stroke="currentColor" class="icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+      </svg>
+    `;
 
     toggleButton.addEventListener('click', () => {
       sidebar.classList.toggle('collapsed');
       toggleButton.classList.toggle('collapsed');
 
       if (sidebar.classList.contains('collapsed')) {
-        icon.classList.remove('fa-chevron-left');
-        icon.classList.add('fa-chevron-right');
+        toggleButton.innerHTML = chevronRightSVG;
         toggleButton.style.left = '1rem'; 
       } else {
-        icon.classList.remove('fa-chevron-right');
-        icon.classList.add('fa-chevron-left');
+        toggleButton.innerHTML = chevronLeftSVG;
         toggleButton.style.left = '13rem';
       }
     });

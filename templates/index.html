@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
   <title>Home | GUIA-ROLATAM</title>
   <link
   rel="stylesheet"
@@ -10,18 +11,10 @@
   >
   <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
-  <script>
-      window.ezstandalone = window.ezstandalone || {};
-      ezstandalone.cmd = ezstandalone.cmd || [];
-  </script>
-
-  <script src="https://cmp.gatekeeperconsent.com/min.js" data-cfasync="false"></script>
-  <script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
-
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6266174717644829"
+  crossorigin="anonymous"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
-  <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
   <style>
     * {
       margin: 0;
@@ -655,6 +648,58 @@ table {
     margin: 0 auto;
 }
 
+.modal {
+  display: none; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8); 
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content a{
+  position: relative;
+  font-size: 2rem;
+  font-weight: bolder;
+  color: #ffdc71;
+}
+.modal-content a:hover{
+  text-decoration: underline;
+}
+.modal-content video {
+  max-width: 90%;
+  max-height: 80%;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #000;
+}
+
+.close-button {
+  position: absolute;
+  top: -30px;
+  right: 0px;
+  font-size: 4rem;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+.close-button:hover {
+  color: #ff4d4d;
+}
+
 @keyframes aparecer {
   to {
     opacity: 1;
@@ -710,13 +755,38 @@ table {
     {% include 'components/header.html' %}
     {% include 'components/header_mobile.html' %}
     <div>
+      <div id="video-modal" class="modal">
+        <div class="modal-content">
+          <button class="close-button" id="close-modal">&times;</button>
+          <video autoplay muted>
+            <source src="{{ url_for('static', filename='assets/video-novidade.mp4') }}" type="video/mp4">
+            Seu navegador não suporta vídeo.
+          </video>
+          <a href="{{ url_for('clips_page') }}">
+              Conferir novidade
+          </a>
+
+          <span></span>
+        </div>
+      </div>
+
       <main>
       <div class="fixed-grid">
         <div class="grid-title novidades">
           <h3 class="title is-3">📒 Novidades</h3>
           <div>
-            <i id="seta-esquerda" class="fa-solid fa-arrow-left" onclick="mudarPagina(-1)"></i>  
-            <i id="seta-direita" class="fa-solid fa-arrow-right" onclick="mudarPagina(1)"></i>
+            <button id="seta-esquerda" onclick="mudarPagina(-1)">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.5" stroke="currentColor" width="24" height="24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+            </button> 
+            <button id="seta-direita" onclick="mudarPagina(1)">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.5" stroke="currentColor" width="24" height="24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            </button>
           </div>
         </div>
         <div class="grid principal-comunidade">
@@ -856,52 +926,64 @@ table {
           </div>
         </div>
     </div>  
-    <div id="ezoic-pub-ad-placeholder-101"></div>
-    <script>
-        ezstandalone.cmd.push(function() {
-            ezstandalone.showAds(101)
-        });
-    </script>
     </div>
   </div>
   <script>
     const data = {{ videos_secundarios | tojson | safe }};
     
 
-    
+    window.onload = () => {
+        const modal = document.getElementById("video-modal");
+        const closeBtn = document.getElementById("close-modal");
+        const videoContent = document.querySelector(".modal-content");
 
-    function esconderLoader() {
-        setTimeout(() => {
-        document.getElementById("loader").style.display = "none";
-        document.getElementById("conteudo").style.display = "flex";
-        }, 1000); 
-    }
+        modal.style.display = "flex";
 
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        closeBtn.onclick = () => {
+          modal.style.display = "none";
+        };
 
-    gtag('config', 'G-K3HW966K67');
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            modal.style.display = "none";
+          }
+        });
 
+        modal.addEventListener("click", (e) => {
+        if (!videoContent.contains(e.target)) {
+          modal.style.display = "none";
+        }
+        });
+    };
 
-    const toggleButton = document.getElementById('toggle-menu');
-    const sidebar = document.getElementById('sidebar');
-    const icon = document.getElementById('toggle-icon');
     const setaEsquerda = document.getElementById('seta-esquerda');
     const setaDireita = document.getElementById('seta-direita');
+    const toggleButton = document.getElementById('toggle-menu');
+    const sidebar = document.getElementById('sidebar');
 
+    const chevronLeftSVG = `
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          stroke-width="1.5" stroke="currentColor" class="icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+      </svg>
+    `;
+
+    const chevronRightSVG = `
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          stroke-width="1.5" stroke="currentColor" class="icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+      </svg>
+    `;
 
     toggleButton.addEventListener('click', () => {
       sidebar.classList.toggle('collapsed');
       toggleButton.classList.toggle('collapsed');
 
       if (sidebar.classList.contains('collapsed')) {
-        icon.classList.remove('fa-chevron-left');
-        icon.classList.add('fa-chevron-right');
+        toggleButton.innerHTML = chevronRightSVG;
         toggleButton.style.left = '1rem'; 
       } else {
-        icon.classList.remove('fa-chevron-right');
-        icon.classList.add('fa-chevron-left');
+        toggleButton.innerHTML = chevronLeftSVG;
         toggleButton.style.left = '13rem';
       }
     });
@@ -963,7 +1045,7 @@ table {
   }
 
   function mudarPagina(direcao) {
-    pausarAutoTrocaTemporariamente(); // pausa em interação manual
+    pausarAutoTrocaTemporariamente();
 
     paginaAtual += direcao;
     if (paginaAtual >= totalPaginas) paginaAtual = 0;
@@ -1024,6 +1106,7 @@ table {
       mobileNav.classList.remove('active');
     }
   });
+  
 });
 
 

@@ -29,10 +29,14 @@ h1, h2, h3, nav a {
   overflow: visible;
   z-index: 1;
   height: 100%;
+  width: 14rem;
+  margin-top: 1rem;
 }
 .menu-sidebar h3{
   margin-top: 25px;
 }
+
+
 #toggle-menu{
   position: fixed;
   margin-top: 3rem;
@@ -43,6 +47,14 @@ h1, h2, h3, nav a {
   background-color: transparent;
   border: 1px solid rgba(255,255,255,.5);
 }
+
+.icon{
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  color: white;
+}
+
 p,table,li,a,ul{
   color: inherit;
 }
@@ -145,7 +157,14 @@ margin-top: 80px;
 .menu-sidebar.collapsed .menu-link:hover::after {
   opacity: 1;
 }
-
+.searchBar svg{
+  color: white;
+  height: 16px;
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  opacity: .6;
+}
 .lista-links{
     display: flex ;
     gap: .5rem;
@@ -238,7 +257,6 @@ margin-top: 80px;
   .field .input {
     width: 200px;      
     font-size: .7rem; 
-    padding: 0.75rem 1.5rem; 
     border-radius: 6px;
     background-color: #121212;
     position: relative;
@@ -247,14 +265,6 @@ margin-top: 80px;
 
   .field .input:hover{
     opacity: 1;
-  }
-
-  .field i{
-    position: absolute;
-    top: 6px;
-    left: 8px;
-    font-size: 1rem;
-    opacity: .6;
   }
   .iconBar ul{
     display: flex;

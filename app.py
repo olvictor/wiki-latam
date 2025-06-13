@@ -267,25 +267,47 @@ def carregar_links():
     links = df.iloc[10:14, 1].dropna().tolist()
 
     icones = {
-    'Discord': 'fa-brands fa-discord',
-    'Site': 'fa-solid fa-globe',
-    'Calculadora': 'fa-solid fa-calculator',
-    'Skill Simulator': 'fa-solid fa-wand-magic-sparkles'
+        'Site': '''
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m6.115 5.19.319 1.913A6 6 0 0 0 8.11 10.36L9.75 12l-.387.775c-.217.433-.132.956.21 1.298l1.348 1.348c.21.21.329.497.329.795v1.089c0 .426.24.815.622 1.006l.153.076c.433.217.956.132 1.298-.21l.723-.723a8.7 8.7 0 0 0 2.288-4.042 1.087 1.087 0 0 0-.358-1.099l-1.33-1.108c-.251-.21-.582-.299-.905-.245l-1.17.195a1.125 1.125 0 0 1-.98-.314l-.295-.295a1.125 1.125 0 0 1 0-1.591l.13-.132a1.125 1.125 0 0 1 1.3-.21l.603.302a.809.809 0 0 0 1.086-1.086L14.25 7.5l1.256-.837a4.5 4.5 0 0 0 1.528-1.732l.146-.292M6.115 5.19A9 9 0 1 0 17.18 4.64M6.115 5.19A8.965 8.965 0 0 1 12 3c1.929 0 3.716.607 5.18 1.64" />
+            </svg>
+
+        ''',
+        'Discord': '''
+           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+           </svg>
+
+        ''',
+        'Calculadora': '''
+           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0 0 12 2.25Z" />
+           </svg>
+
+        ''',
+        'Skill Simulator': '''
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
+            </svg>
+
+        '''
     }
+    icone_padrao = '''
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M13.5 10.5L12 12m0 0-1.5 1.5m1.5-1.5 1.5-1.5M12 12l-1.5-1.5m-1.5-1.5a3.75 3.75 0 115.303 5.303l-.978.977a3.75 3.75 0 11-5.303-5.303l.978-.977z"/>
+        </svg>
+    '''
 
 
     links_formatados = []
     for item in links:
-     if ':' in item:
+        if ':' in item:
             nome, link = item.split(':', 1)
             nome = nome.strip()
             link = link.strip()
-            icone = icones.get(nome, 'fa-solid fa-link') 
-            links_formatados.append({
-                'nome': nome,
-                'link': link,
-                'icone': icone
-            })
+            icone = icones.get(nome, icone_padrao)
+            links_formatados.append({'nome': nome, 'link': link, 'icone': icone})
 
     return links_formatados
 
@@ -360,33 +382,8 @@ def info_page():
     video_encontrado[2]
     )
 
-
-
-    icones = {
-    'Discord': 'fa-brands fa-discord',
-    'Site': 'fa-solid fa-globe',
-    'Calculadora': 'fa-solid fa-calculator',
-    'Skill Simulator': 'fa-solid fa-wand-magic-sparkles'
-    }
-
-
-    links_formatados = []
-    for item in links:
-     if ':' in item:
-            nome, link = item.split(':', 1)
-            nome = nome.strip()
-            link = link.strip()
-            icone = icones.get(nome, 'fa-solid fa-link') 
-            links_formatados.append({
-                'nome': nome,
-                'link': link,
-                'icone': icone
-            })
-
     rank_tiers = df_link.iloc[3:, 9].dropna().tolist()
     rank_classes = df_link.iloc[3:, 10].dropna().tolist()
-
-    links = carregar_links()
 
     rank_data = list(zip(rank_tiers, rank_classes))
 
@@ -406,7 +403,7 @@ def info_page():
     return render_template(
         'index.html',
         info=info_essenciais,
-        links=links_formatados,
+        links=carregar_links(),
         rank_data = rank_data,
         data_videos = data_videos,
         streamers = stream_cache,
