@@ -375,11 +375,11 @@ def info_page():
         return url
     
     video_mais_recente = (
-    video_encontrado[4],
-    video_encontrado[0],
-    video_encontrado[1],
-    transformar_para_embed(video_encontrado[3]),
-    video_encontrado[2]
+    "Ragnarok Online LATAM",
+    "New exclusive costumes now available in the shop!",
+    "https://i.ytimg.com/vi/kyl_YyzXXtU/maxresdefault.jpg",
+    "https://www.youtube.com/embed/kyl_YyzXXtU",
+    "2025-06-06T00:00:52Z"
     )
 
     rank_tiers = df_link.iloc[3:, 9].dropna().tolist()
