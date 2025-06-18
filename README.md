@@ -42,7 +42,6 @@ wiki-latam/
 │
 ├── app.py                  # Arquivo principal com as rotas e lógica do Flask
 ├── templates/              # Templates HTML com Jinja
-│   ├── base.html
 │   ├── index.html
 │   └── ...
 ├── static/                 # CSS, imagens e scripts
