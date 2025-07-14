@@ -326,10 +326,10 @@ def info_page():
     thumb = df_videos.iloc[0:,1].dropna().tolist()
     data_publicacao = df_videos.iloc[0:,2].dropna().tolist()
     video_url = df_videos.iloc[0:,3].dropna().tolist()
-    
+
 
     data_videos = list(zip(titulos,thumb,data_publicacao,video_url))
-    
+
     videos_recentes = pd.read_excel('videos_ragnarok_unidos.xlsx',header=None)
 
     canal = videos_recentes.iloc[1:,1].dropna().tolist()
@@ -368,18 +368,18 @@ def info_page():
     videos_recentes_secundarios_zip = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
 
     video_encontrado = next((video for video in videos_recentes_secundarios_zip if video[4].lower() == "ragnarok online latam".lower()), None)
-    
+
     def transformar_para_embed(url):
         if "youtube.com/watch?v=" in url:
             return url.replace("watch?v=", "embed/")
         return url
-    
+
     video_mais_recente = (
     "Ragnarok Online LATAM",
-    "New exclusive costumes now available in the shop!",
-    "https://i.ytimg.com/vi/kyl_YyzXXtU/maxresdefault.jpg",
-    "https://www.youtube.com/embed/kyl_YyzXXtU",
-    "2025-06-06T00:00:52Z"
+    "A Rebelião que mudou Einbech para sempre | Ragnarok Online LATAM",
+    "https://i.ytimg.com/vi/g6IxUSTnxSg/maxresdefault.jpg",
+    "https://www.youtube.com/embed/g6IxUSTnxSg",
+    "2025-07-14T00:00:52Z"
     )
 
     rank_tiers = df_link.iloc[3:, 9].dropna().tolist()
@@ -412,7 +412,6 @@ def info_page():
         sugestao_cash = cash,
         sugestao_cash_classes = cash_para_classes
         )
-
 @app.route('/classes')
 def classes_page():
     df = pd.read_excel('rola.xlsx', header=None)
