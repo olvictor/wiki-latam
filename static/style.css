@@ -79,7 +79,9 @@ margin-top: 80px;
 display: flex;
 flex-direction: column;
 }
-
+.classe{
+  background-color: red;
+}
 .label{
   font-weight: 100;
   color: rgba(255,255,255,0.6);
