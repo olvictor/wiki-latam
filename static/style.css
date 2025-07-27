@@ -31,22 +31,14 @@ h1, h2, h3, nav a {
   height: 100%;
   width: 14rem;
   margin-top: 1rem;
+  transition: width 0.3s ease-in-out;
 }
+
 .menu-sidebar h3{
   margin-top: 25px;
 }
 
 
-#toggle-menu{
-  position: fixed;
-  margin-top: 3rem;
-  top: 1rem;
-  left: 5rem; 
-  z-index: 1000;
-  transition: left 0.3s ease;
-  background-color: transparent;
-  border: 1px solid rgba(255,255,255,.5);
-}
 
 .icon{
   width: 16px;
@@ -58,26 +50,41 @@ h1, h2, h3, nav a {
 p,table,li,a,ul{
   color: inherit;
 }
+
 .menu-link {
-  position: relative;
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  gap: 0.5rem;
-  color: white;
-  text-decoration: none;
+  gap: 0px .6rem;
+  height: 37px;
 }
 
 .menu-sidebar.collapsed .menu-link {
   position: relative;
-  justify-content: center;
 }
+
+.menu-sidebar{
+    width: 220px;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+}
+
+
 .menu-sidebar nav{
 margin-top: 80px;
+display: flex;
+flex-direction: column;
 }
 
 .label{
   font-weight: 100;
   color: rgba(255,255,255,0.6);
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
 }
 .menu-sidebar.collapsed .label {
   display: none;
@@ -88,10 +95,8 @@ margin-top: 80px;
 }
 .menu-sidebar.collapsed {
   width: 65px; 
-}
+  transition: width 0.3s ease-in-out;
 
-#toggle-menu.collapsed {
-  left: 4rem; 
 }
 
 .menu-sidebar.collapsed a{
@@ -125,7 +130,8 @@ margin-top: 80px;
 }
 
 .menu-sidebar.collapsed .menu-link .label {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .menu-sidebar.collapsed .menu-link {
@@ -219,7 +225,6 @@ margin-top: 80px;
     justify-content: space-between;
     padding: 0px 15rem;
     background-color: hsl(0, 0%, 0%);
-    box-shadow: 0 2px 16px hsla(220, 32%, 8%, .3);
   }
 
   .live-notification {
@@ -248,9 +253,11 @@ margin-top: 80px;
     position: fixed;
     margin-top: 2.7rem;
     top: 1rem;
-    left: 1.3rem !important;
+    left: 10rem;
     z-index: 1000;
     transition: left 0.3s ease;
+    background-color: transparent;
+    border: 1px solid rgba(255,255,255,.5);
   }
 
 
@@ -430,10 +437,10 @@ margin-top: 80px;
     animation: pulse 1.5s infinite;
   }
   
-  aside{
+  /* aside{
     background-color: hsl(0, 0%, 0%);
     box-shadow: 0 2px 16px hsla(220, 32%, 8%, .3) !important;
-  }
+  } */
 
 
   .mobile-header {

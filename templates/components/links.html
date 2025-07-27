@@ -1,4 +1,4 @@
-<button id="toggle-menu" class="button is-small is-light" style="position: fixed; top: 1rem; left: 13rem; z-index: 1000;">
+<button id="toggle-menu" class="button is-small is-light" style="position: fixed; top: 1rem; left: 10rem; z-index: 1000;">
    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
       <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
     </svg>   
@@ -56,7 +56,7 @@
              </a>
              <a href="{{ url_for('clips_page') }}"
                class="menu-link {% if request.path == url_for('clips_page') %}is-active{% endif %}"
-               data-label="Novidades">
+               data-label="Clipes">
                <span class="icon">🎬</span>
                <span class="label">Clipes</span>
              </a>
