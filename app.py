@@ -376,11 +376,14 @@ def info_page():
 
     video_mais_recente = (
     "Ragnarok Online LATAM",
-    "A Rebelião que mudou Einbech para sempre | Ragnarok Online LATAM",
-    "https://i.ytimg.com/vi/g6IxUSTnxSg/maxresdefault.jpg",
-    "https://www.youtube.com/embed/g6IxUSTnxSg",
+    "Você está usando RODEX do jeito certo? Dicas ESSENCIAIS no Ragnarok!",
+    "https://i.ytimg.com/vi/uAowGoFwt0k/maxresdefault.jpg",
+    "https://www.youtube.com/embed/uAowGoFwt0k",
     "2025-07-14T00:00:52Z"
     )
+
+
+
 
     rank_tiers = df_link.iloc[3:, 9].dropna().tolist()
     rank_classes = df_link.iloc[3:, 10].dropna().tolist()
