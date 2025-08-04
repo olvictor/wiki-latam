@@ -1,6 +1,5 @@
 const express = require('express');
 const User = require('../models/Users');
-const auth = express.Router();
 const bcrypt = require('bcrypt');
 const Role = require('../models/Roles');
 const {validarUsuarioCadastrado} = require('../validacoes/user.validacoes');
@@ -57,7 +56,12 @@ const loginUsuario = async(req,res)=>{
         var token = jwt.sign({ username }, private_key,{ algorithm: 'HS256', expiresIn: '24h' });
 
         return res.json({
-            token
+            usuario: {
+                username:usuarioCadastrado.dataValues.username,
+                email:usuarioCadastrado.dataValues.email,
+                role_id:usuarioCadastrado.dataValues.role_id,
+            },
+            token: token
     });
     }catch(err){
         res.status(500).json({
