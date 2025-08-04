@@ -3,8 +3,9 @@ const User = require('../models/Users');
 const auth = express.Router();
 const bcrypt = require('bcrypt');
 const Role = require('../models/Roles');
-const {validarUsuarioCadastrado} = require('../validacoes/user.validacoes')
-
+const {validarUsuarioCadastrado} = require('../validacoes/user.validacoes');
+const private_key = process.env.PRIVATE_kEY;
+const jwt = require('jsonwebtoken')
 
 
 const cadastrarUsuario = async(req,res)=>{
@@ -31,7 +32,26 @@ const cadastrarUsuario = async(req,res)=>{
     })
 }
 
+const loginUsuario = async(req,res)=>{
+    const { username, password} = req.body
+
+    const usuarioCadastrado = await User.findOne({username});
+
+    const validarSenha = await bcrypt.compare(password,usuarioCadastrado.dataValues.password_hash)
+
+    if(!usuarioCadastrado || !validarSenha){
+        return res.status(400).json({
+            mensagem:"usário ou senha inválidos."
+        })
+    }
+    var token = jwt.sign({ username }, private_key,{ algorithm: 'HS256', expiresIn: '24h' });
+
+    return res.json({
+        token
+    });
+};
 
 module.exports = {
-    cadastrarUsuario
+    cadastrarUsuario,
+    loginUsuario
 }
