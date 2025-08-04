@@ -17,41 +17,67 @@ const cadastrarUsuario = async(req,res)=>{
         })
     }
 
-    const senhaCriptografada = await bcrypt.hash(password,10)
-    
-    const cadastrarUsuario = await User.create({ username, password_hash: senhaCriptografada,email,role_id});
-    const usuario = cadastrarUsuario.get({ plain: true });
+    try{
+        const senhaCriptografada = await bcrypt.hash(password,10)
+        
+        const cadastrarUsuario = await User.create({ username, password_hash: senhaCriptografada,email,role_id});
+        const usuario = cadastrarUsuario.get({ plain: true });
 
-    return res.status(201).json({
-        mensagem:"Usuário cadastrado com sucesso.",
-        usuario: {
-            id: usuario.id,
-            username: usuario.username,
-            email: usuario.email
-        }
-    })
+        return res.status(201).json({
+            mensagem:"Usuário cadastrado com sucesso.",
+            usuario: {
+                id: usuario.id,
+                username: usuario.username,
+                email: usuario.email
+            }
+        })
+    }catch(err){
+          res.status(500).json({
+            mensagem:"Erro interno do servidor."
+        })
+    }
+
+
 }
 
 const loginUsuario = async(req,res)=>{
     const { username, password} = req.body
 
-    const usuarioCadastrado = await User.findOne({username});
+    try{
+        const usuarioCadastrado = await User.findOne({username});
 
-    const validarSenha = await bcrypt.compare(password,usuarioCadastrado.dataValues.password_hash)
+        const validarSenha = await bcrypt.compare(password,usuarioCadastrado.dataValues.password_hash)
 
-    if(!usuarioCadastrado || !validarSenha){
-        return res.status(400).json({
-            mensagem:"usário ou senha inválidos."
+        if(!usuarioCadastrado || !validarSenha){
+            return res.status(400).json({
+                mensagem:"usário ou senha inválidos."
+            })
+        }
+        
+        var token = jwt.sign({ username }, private_key,{ algorithm: 'HS256', expiresIn: '24h' });
+
+        return res.json({
+            token
+    });
+    }catch(err){
+        res.status(500).json({
+            mensagem:"Erro interno do servidor."
         })
     }
-    var token = jwt.sign({ username }, private_key,{ algorithm: 'HS256', expiresIn: '24h' });
 
-    return res.json({
-        token
-    });
+    
 };
+
+
+
+const detalharUsuario = async(req,res) =>{
+    return res.status(201).json({
+        usuario: req.usuario
+    })
+}
 
 module.exports = {
     cadastrarUsuario,
-    loginUsuario
+    loginUsuario,
+    detalharUsuario
 }

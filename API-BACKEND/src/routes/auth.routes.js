@@ -1,10 +1,14 @@
 const express = require('express');
 const auth = express.Router();
-const { cadastrarUsuario,loginUsuario } = require('../controller/User');
+const { cadastrarUsuario,loginUsuario, detalharUsuario } = require('../controller/User');
+const { validarLogin } = require('../middleware/auth');
 
 
 auth.post('/register',cadastrarUsuario);
 auth.post('/login',loginUsuario)
 
 
+auth.use(validarLogin)
+
+auth.get('/user',detalharUsuario)
 module.exports = auth
