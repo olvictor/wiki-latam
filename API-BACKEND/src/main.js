@@ -1,8 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const db_connection = require('./config/db_connection');
-const auth = require('./routes/post.routes');
-const role = require('./routes/role.routes');
+const router = require('./routes/index');
 
 const app = express();
 require("../src/models/Roles");
@@ -20,10 +19,4 @@ app.listen(process.env.PORT || 3000, () => {
 });
 
 
-app.use(auth)
-app.use(role)
-app.get('/',async(req,res)=>{
-    console.log(db_connection)
-
-    res.json({messagem:"testando"})
-}) 
+app.use(router)
