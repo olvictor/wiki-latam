@@ -13,13 +13,15 @@ const Post = sequelize.define(
     title: {
       type: DataTypes.STRING,
       allowNull:false,
-      unique:true
     },
     content: {
       type: DataTypes.TEXT,
       allowNull:false,
-      unique:true
-    },
+    }, 
+    user_id: {               
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   },
   {
     timestamps: true,

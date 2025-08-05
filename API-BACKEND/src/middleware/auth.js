@@ -26,7 +26,6 @@ const validarLogin = async (req,res,next)=>{
             email: usuario.dataValues.email,
             role_id: usuario.dataValues.role_id
         } 
-        console.log(req.usuario)
         next();
     } catch (err) {
         console.log(err.message)
