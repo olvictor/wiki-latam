@@ -1,4 +1,5 @@
 const Post = require('../models/Posts')
+const { post } = require('../routes')
 
 
 const cadastrarPost = async (req,res) =>{
@@ -22,7 +23,22 @@ const cadastrarPost = async (req,res) =>{
     }
 }
 
+const buscarPosts = async(req,res)=>{
+    const posts = await Post.findAll();
 
+    res.status(200).json(posts);
+
+}
+
+
+const buscarPostsPorId = async(req,res) =>{
+    const {id} = req.params
+    const post = await Post.findByPk(id)
+
+    return res.status(200).json(post)
+}
 module.exports = {
-    cadastrarPost
+    cadastrarPost,
+    buscarPosts,
+    buscarPostsPorId
 }

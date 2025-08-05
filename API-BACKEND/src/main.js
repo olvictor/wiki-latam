@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express');
+const cors = require('cors')
 const db_connection = require('./config/db_connection');
 const router = require('./routes/index');
 
@@ -8,6 +9,7 @@ require("../src/models/Roles");
 require("../src/models/Users");
 require("../src/models/Posts");
 
+app.use(cors())
 app.use(express.json())
 
 db_connection.sync({ alter: true })

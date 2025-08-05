@@ -590,10 +590,6 @@ flex-direction: column;
   }
 
    
-aside{
-    z-index: 9999;
-    background-color: red;
-}
   
   @media (min-width: 768px) {
     .mobile-header {

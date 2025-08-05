@@ -376,9 +376,9 @@ def info_page():
 
     video_mais_recente = (
     "Ragnarok Online LATAM",
-    "Você está usando RODEX do jeito certo? Dicas ESSENCIAIS no Ragnarok!",
-    "https://i.ytimg.com/vi/uAowGoFwt0k/maxresdefault.jpg",
-    "https://www.youtube.com/embed/uAowGoFwt0k",
+    "Personalize seu personagem como nunca antes! Estilistas em Ragnarok LATAM",
+    "https://i.ytimg.com/vi/muwNm1AsT8U/maxresdefault.jpg",
+    "https://www.youtube.com/embed/muwNm1AsT8U",
     "2025-07-14T00:00:52Z"
     )
 
