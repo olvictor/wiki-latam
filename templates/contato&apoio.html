@@ -25,29 +25,6 @@
       display: flex;
     }
 
-    aside {
-      width: 250px;
-      background-color: #1e1e1e;
-      padding: 20px;
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      overflow-y: auto;
-    }
-    aside nav a {
-      display: block;
-      color: #bbb;
-      text-decoration: none;
-      margin-bottom: 10px;
-      padding: 5px;
-      border-radius: 4px;
-    }
-
-    aside nav a:hover {
-      background-color: #292929;
-      color: #fff;
-    }
 
     main {
       margin-left: 270px;
@@ -116,7 +93,7 @@
   </style>
 </head>
 <body>
-  {% include 'components/links.html' %}
+ {% include 'components/novoheader.html' %}
   <div class="global">
     {% include 'components/header.html' %}
     <main>
@@ -173,6 +150,35 @@
     </main>
   </div>
   <script>
+     document.addEventListener('DOMContentLoaded', () => {
+        const expand_btn = document.querySelector(".expand-btn");
+
+        let activeIndex;
+
+        expand_btn.addEventListener("click", () => {
+          console.log("aaa")
+          document.body.classList.toggle("collapsed");
+        });
+
+        const current = window.location.href;
+        const allLinks = document.querySelectorAll(".sidebar-links a");
+
+        allLinks.forEach((elem) => {
+          elem.addEventListener("click", function () {
+            const hrefLinkClick = elem.href;
+
+            allLinks.forEach((link) => {
+              if (link.href == hrefLinkClick) {
+                link.classList.add("active");
+              } else {
+                link.classList.remove("active");
+              }
+            });
+          });
+        });
+      });
+
+
     document.querySelectorAll(".clickable-row").forEach(row => {
     const link = row.dataset.link;
     if (link) {

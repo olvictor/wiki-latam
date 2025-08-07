@@ -189,7 +189,7 @@ main {
   </style>
 </head>
 <body onload=esconderLoader()>
-  {% include 'components/links.html' %}
+  {% include 'components/novoheader.html' %}
 
   <div class="global">
     {% include 'components/header.html' %}
@@ -245,6 +245,36 @@ main {
  
   <script>
     const dados = {{ class_builds | tojson | safe }};
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const expand_btn = document.querySelector(".expand-btn");
+
+        let activeIndex;
+
+        expand_btn.addEventListener("click", () => {
+          console.log("aaa")
+          document.body.classList.toggle("collapsed");
+        });
+
+        const current = window.location.href;
+        const allLinks = document.querySelectorAll(".sidebar-links a");
+
+        allLinks.forEach((elem) => {
+          elem.addEventListener("click", function () {
+            const hrefLinkClick = elem.href;
+
+            allLinks.forEach((link) => {
+              if (link.href == hrefLinkClick) {
+                link.classList.add("active");
+              } else {
+                link.classList.remove("active");
+              }
+            });
+          });
+        });
+      });
+
+
     function esconderLoader() {
         setTimeout(() => {
         document.getElementById("loader").style.display = "none";

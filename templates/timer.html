@@ -25,35 +25,6 @@
       display: flex;
     }
 
-    aside {
-      width: 250px;
-      background-color: #1e1e1e;
-      padding: 20px;
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      overflow-y: auto;
-    }
-
-    aside h2 {
-      color: #ffc107;
-      margin-bottom: 20px;
-    }
-
-    aside nav a {
-      display: block;
-      color: #bbb;
-      text-decoration: none;
-      margin-bottom: 10px;
-      padding: 5px;
-      border-radius: 4px;
-    }
-
-    aside nav a:hover {
-      background-color: #292929;
-      color: #fff;
-    }
 
     main {
       padding: 30px;
@@ -371,8 +342,8 @@ aside {
   </style>
 </head>
 <body onload=esconderLoader()>
-  {% include 'components/links.html' %}
-  <div class="global">
+{% include 'components/novoheader.html' %}  
+<div class="global">
     {% include 'components/header.html' %}
     <main>
       <section id="rank" class="section">
@@ -516,6 +487,36 @@ aside {
       const tabelaXP = {{ tabela_unificada_segunda_classe | tojson | safe }};
       const tabelaXP_transclasse = {{ tabela_unificada_transclasse | tojson | safe }};
       const tabelaXP_terceira = {{ tabela_unificada_terceira| tojson | safe }};
+
+
+       document.addEventListener('DOMContentLoaded', () => {
+        const expand_btn = document.querySelector(".expand-btn");
+
+        let activeIndex;
+
+        expand_btn.addEventListener("click", () => {
+          console.log("aaa")
+          document.body.classList.toggle("collapsed");
+        });
+
+        const current = window.location.href;
+        const allLinks = document.querySelectorAll(".sidebar-links a");
+
+        allLinks.forEach((elem) => {
+          elem.addEventListener("click", function () {
+            const hrefLinkClick = elem.href;
+
+            allLinks.forEach((link) => {
+              if (link.href == hrefLinkClick) {
+                link.classList.add("active");
+              } else {
+                link.classList.remove("active");
+              }
+            });
+          });
+        });
+      });
+
 
       const tabelas = [tabelaXP,tabelaXP_transclasse,tabelaXP_terceira]
 

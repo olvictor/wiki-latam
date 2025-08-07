@@ -726,8 +726,8 @@ table {
     }
   </style>
 </head>
-<body onload=esconderLoader()>
-  {% include 'components/links.html' %}
+<body>
+  {% include 'components/novoheader.html' %}
   <div class="global">
     {% include 'components/header.html' %}
     {% include 'components/header_mobile.html' %}
@@ -901,7 +901,6 @@ table {
   </div>
   <script>
     const data = {{ videos_secundarios | tojson | safe }};
-    
 
     window.onload = () => {
         const modal = document.getElementById("video-modal");
@@ -946,18 +945,18 @@ table {
       </svg>
     `;
 
-    toggleButton.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      toggleButton.classList.toggle('collapsed');
+    // toggleButton.addEventListener('click', () => {
+    //   sidebar.classList.toggle('collapsed');
+    //   toggleButton.classList.toggle('collapsed');
 
-      if (sidebar.classList.contains('collapsed')) {
-        toggleButton.innerHTML = chevronRightSVG;
-        toggleButton.style.left = '1rem'; 
-      } else {
-        toggleButton.innerHTML = chevronLeftSVG;
-        toggleButton.style.left = '10rem';
-      }
-    });
+    //   if (sidebar.classList.contains('collapsed')) {
+    //     toggleButton.innerHTML = chevronRightSVG;
+    //     toggleButton.style.left = '1rem'; 
+    //   } else {
+    //     toggleButton.innerHTML = chevronLeftSVG;
+    //     toggleButton.style.left = '10rem';
+    //   }
+    // });
 
     const noticias = [
       {
@@ -1013,7 +1012,7 @@ table {
     function mostrarPagina(index) {
     paginas.forEach((p) => p.classList.remove('ativa'));
     paginas[index].classList.add('ativa');
-  }
+    }
 
   function mudarPagina(direcao) {
     pausarAutoTrocaTemporariamente();
@@ -1055,6 +1054,36 @@ table {
   });
 
   document.addEventListener('DOMContentLoaded', function() {
+     const expand_btn = document.querySelector(".expand-btn");
+
+  let activeIndex;
+
+  expand_btn.addEventListener("click", () => {
+    console.log("teste")
+    document.body.classList.toggle("collapsed");
+  });
+
+const current = window.location.href;
+const allLinks = document.querySelectorAll(".sidebar-links a");
+
+allLinks.forEach((elem) => {
+  elem.addEventListener("click", function () {
+    const hrefLinkClick = elem.href;
+
+    allLinks.forEach((link) => {
+      if (link.href == hrefLinkClick) {
+        link.classList.add("active");
+      } else {
+        link.classList.remove("active");
+      }
+    });
+  });
+});
+
+
+
+
+
   const hamburgerButton = document.querySelector('.hamburger-menu');
   const mobileNav = document.querySelector('.mobile-nav');
   const menuLinks = document.querySelectorAll('.mobile-nav .menu-list a');
@@ -1077,9 +1106,9 @@ table {
       mobileNav.classList.remove('active');
     }
   });
-  
-});
 
+
+});
 
 
   </script>

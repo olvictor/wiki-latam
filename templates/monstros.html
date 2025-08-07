@@ -25,36 +25,6 @@
       display: flex;
     }
 
-    aside {
-      width: 250px;
-      background-color: #1e1e1e;
-      padding: 20px;
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      overflow-y: auto;
-    }
-
-    aside h2 {
-      color: #ffc107;
-      margin-bottom: 20px;
-    }
-
-    aside nav a {
-      display: block;
-      color: #bbb;
-      text-decoration: none;
-      margin-bottom: 10px;
-      padding: 5px;
-      border-radius: 4px;
-    }
-
-    aside nav a:hover {
-      background-color: #292929;
-      color: #fff;
-    }
-
     main {
       padding: 30px;
       width: 100%;
@@ -299,11 +269,10 @@ h3{
   font-size: 1.3rem;
   margin-bottom: 1rem;
 }
-    @keyframes spin {
+@keyframes spin {
       to { transform: rotate(360deg); }
     }
-
-    @media (max-width: 768px) {
+@media (max-width: 768px) {
       body {
         flex-direction: column;
       }
@@ -320,9 +289,9 @@ h3{
         padding: 20px;
       }
   
-      .tooltip-copiado {
+  .tooltip-copiado {
   position: absolute;
-  bottom: 100%; /* aparece acima do elemento */
+  bottom: 100%; 
   left: 50%;
   transform: translateX(-50%) translateY(-8px);
   background-color: #222;
@@ -345,7 +314,7 @@ h3{
 </head>
 <body onload=esconderLoader()>
 
-  {% include 'components/links.html' %}
+  {% include 'components/novoheader.html' %}
 
   <div class="global">
     {% include 'components/header.html' %}
@@ -391,13 +360,41 @@ h3{
     
 
     <script >
-      const dados = {{ data | tojson | safe }};
+        const dados = {{ data | tojson | safe }};
+
+        document.addEventListener('DOMContentLoaded', () => {
+        const expand_btn = document.querySelector(".expand-btn");
+
+        let activeIndex;
+
+        expand_btn.addEventListener("click", () => {
+          console.log("aaa")
+          document.body.classList.toggle("collapsed");
+        });
+
+        const current = window.location.href;
+        const allLinks = document.querySelectorAll(".sidebar-links a");
+
+        allLinks.forEach((elem) => {
+          elem.addEventListener("click", function () {
+            const hrefLinkClick = elem.href;
+
+            allLinks.forEach((link) => {
+              if (link.href == hrefLinkClick) {
+                link.classList.add("active");
+              } else {
+                link.classList.remove("active");
+              }
+            });
+          });
+        });
+      });
 
       function esconderLoader() {
             setTimeout(() => {
             document.getElementById("loader").style.display = "none";
             document.getElementById("conteudo").style.display = "flex";
-            }, 1000); // 1000 milissegundos = 1 segundo
+            }, 1000); 
       }
 
 
@@ -527,7 +524,7 @@ h3{
         toggleButton.innerHTML = chevronLeftSVG;
         toggleButton.style.left = '10rem';
       }
-    });
+    });    
 
     </script>
 </body>
