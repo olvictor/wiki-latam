@@ -1,22 +1,47 @@
 const Role = require("../models/Roles");
 
-
 const createRole = async(req,res)=>{
    const {name} = req.body
-   if(!name) {
-     return res.status(400).json({mensagem:"O campo name é obrigatório."})
-   }
 
    try{
       const role = await Role.create({ name: name });
-      return  res.status(201).json({
-         mensagem: "Role criada com sucesso.",
-         role
+      return res.status(201).json({
+         success: true,
+         message: "Role criada com sucesso.",
+         data: role
       })
-   }catch(error){
+   } catch(error) {
       console.log(error)
+      
+      if (error.name === 'SequelizeValidationError') {
+         const validationErrors = error.errors.map(err => ({
+            field: err.path,
+            message: err.message
+         }));
+         
+         return res.status(400).json({
+            success: false,
+            message: "Erro de validação",
+            errors: validationErrors
+         });
+      }
+      
+      if (error.name === 'SequelizeUniqueConstraintError') {
+         const validationErrors = error.errors.map(err => ({
+            field: err.path,
+            message: err.message
+         }));
+         
+         return res.status(400).json({
+            success: false,
+            message: "Erro de validação",
+            errors: validationErrors
+         });
+      }
+      
       return res.status(500).json({
-         mensagem: "Problema interno do servidor.",
+         success: false,
+         message: "Problema interno do servidor."
       })
    }   
 }
