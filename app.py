@@ -413,7 +413,8 @@ def info_page():
         video_mais_recente = video_mais_recente,
         videos_secundarios = videos_recentes_secundarios_zip,
         sugestao_cash = cash,
-        sugestao_cash_classes = cash_para_classes
+        sugestao_cash_classes = cash_para_classes,
+        last_update=datetime.now().strftime("%d/%m/%Y")
         )
 @app.route('/classes')
 def classes_page():
@@ -1473,10 +1474,33 @@ def admin_page():
     links = Link.query.order_by(Link.data.desc()).all()
     return render_template('admin.html', links=links)
 
+
+
+@app.route('/login')
+def login_page():
+   
+    return render_template('login.html', links=carregar_links())
+
+
 @app.route('/ads.txt')
 def render_ads():
- 
     return send_from_directory(directory=os.path.abspath("."), path="ads.txt", mimetype='text/plain')
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory(directory=os.path.abspath("."), path="robots.txt", mimetype='text/plain')
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory(directory=os.path.abspath("."), path="sitemap.xml", mimetype='application/xml')
+
+@app.route('/privacy-policy')
+def privacy_policy():
+    return render_template('privacy-policy.html', streamers=stream_cache, links=carregar_links(),last_update=datetime.now().strftime("%d/%m/%Y"))
+
+@app.route('/terms')
+def terms_of_service():
+    return render_template('terms.html', streamers=stream_cache, links=carregar_links(), last_update=datetime.now().strftime("%d/%m/%Y"))
 
 
 if __name__ == '__main__':

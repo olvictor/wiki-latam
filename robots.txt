@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Sitemap: https://guia-rolatam.com/sitemap.xml
+
+# Permitir que o Googlebot acesse o arquivo ads.txt
+User-agent: Googlebot
+Allow: /ads.txt

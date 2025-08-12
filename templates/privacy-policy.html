@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
+  <title>Política de Privacidade | GUIA-ROLATAM</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-K3HW966K67');
+  </script>
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"
+  >
+  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6266174717644829"
+  crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+      
+    }
+    .global{
+      width: 100vw;
+    }
+    .container{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      height: 100vh;
+    }
+ 
+    .privacy-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .privacy-content h1 {
+      color: #FFD700;
+      margin-bottom: 20px;
+    }
+
+    .privacy-content h2 {
+      color: #FFD700;
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+
+    .privacy-content p {
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    .privacy-content ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+
+    .privacy-content li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="global">
+    {% include 'components/novoheader.html' %}
+    <div class="container">
+      <div class="privacy-content">
+        <h1>Política de Privacidade</h1>
+        <!-- Substituir esta linha: -->
+        <p>Última atualização: {{ last_update }}</p>
+        
+        <!-- Por esta: -->
+        <p>Última atualização: 01/06/2023</p>
+        
+        <p>Bem-vindo ao GUIA-ROLATAM. Esta Política de Privacidade explica como coletamos, usamos, divulgamos e protegemos suas informações quando você visita nosso site.</p>
+        
+        <h2>1. Informações que Coletamos</h2>
+        <p>Coletamos os seguintes tipos de informações:</p>
+        <ul>
+          <li><strong>Informações de Uso:</strong> Coletamos informações sobre como você interage com nosso site, incluindo páginas visitadas, tempo gasto no site e outros dados de análise.</li>
+          <li><strong>Cookies e Tecnologias Semelhantes:</strong> Utilizamos cookies e tecnologias similares para melhorar sua experiência, analisar o tráfego e personalizar conteúdo.</li>
+        </ul>
+        
+        <h2>2. Como Usamos Suas Informações</h2>
+        <p>Utilizamos as informações coletadas para:</p>
+        <ul>
+          <li>Fornecer, manter e melhorar nosso site;</li>
+          <li>Analisar como os usuários utilizam nosso site;</li>
+          <li>Personalizar sua experiência;</li>
+          <li>Exibir anúncios relevantes através do Google AdSense;</li>
+          <li>Detectar, prevenir e resolver problemas técnicos.</li>
+        </ul>
+        
+        <h2>3. Compartilhamento de Informações</h2>
+        <p>Podemos compartilhar suas informações com:</p>
+        <ul>
+          <li><strong>Provedores de Serviços:</strong> Empresas que nos ajudam a fornecer e melhorar nossos serviços (como análise de dados e exibição de anúncios);</li>
+          <li><strong>Parceiros de Publicidade:</strong> Utilizamos o Google AdSense para exibir anúncios. O Google pode usar cookies para personalizar anúncios com base em suas visitas a este e outros sites.</li>
+        </ul>
+        
+        <h2>4. Google AdSense</h2>
+        <p>Utilizamos o Google AdSense para exibir anúncios em nosso site. O Google AdSense usa cookies para personalizar os anúncios exibidos para você com base em suas visitas anteriores a este e outros sites. Você pode optar por não usar o cookie do Google AdSense visitando a <a href="https://www.google.com/settings/ads" style="color: #FFD700;">página de configurações de anúncios do Google</a>.</p>
+        
+        <h2>5. Seus Direitos</h2>
+        <p>Dependendo da sua localização, você pode ter certos direitos relacionados às suas informações pessoais, incluindo:</p>
+        <ul>
+          <li>Acessar as informações que temos sobre você;</li>
+          <li>Corrigir informações imprecisas;</li>
+          <li>Excluir suas informações;</li>
+          <li>Opor-se ao processamento de suas informações;</li>
+          <li>Retirar seu consentimento a qualquer momento.</li>
+        </ul>
+        
+        <h2>6. Segurança</h2>
+        <p>Implementamos medidas de segurança para proteger suas informações contra acesso não autorizado, alteração, divulgação ou destruição.</p>
+        
+        <h2>7. Alterações nesta Política</h2>
+        <p>Podemos atualizar nossa Política de Privacidade periodicamente. Notificaremos sobre quaisquer alterações publicando a nova Política de Privacidade nesta página.</p>
+        
+        <h2>8. Contato</h2>
+        <p>Se você tiver dúvidas sobre esta Política de Privacidade, entre em contato conosco através da página de contato do nosso site.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Código JavaScript aqui, se necessário
+    });
+  </script>
+</body>
+</html>

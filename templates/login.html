@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | GUIA-ROLATAM</title>
+  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto:wght@400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #141414;
+  color: #ffcc00;
+  font-family: 'Roboto', sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container {
+  background-color: #1a1a1a;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #ffcc00;
+  box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+  width: 320px;
+  text-align: center;
+}
+
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #ffcc00;
+  text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+}
+
+label {
+  display: block;
+  text-align: left;
+  font-size: 0.9rem;
+  margin: 10px 0 5px;
+  color: #ffcc00;
+}
+
+.input-box {
+  display: flex;
+  align-items: center;
+  background-color: #262626;
+  border: 1px solid #ffcc00;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 15px;
+  box-shadow: inset 0 0 5px rgba(255, 204, 0, 0.2);
+}
+
+.input-box .icon {
+  margin-right: 8px;
+  font-size: 1.1rem;
+}
+
+.input-box input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffcc00;
+  flex: 1;
+  font-size: 1rem;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ffcc00;
+  border: none;
+  color: #141414;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #e6b800;
+  box-shadow: 0 0 15px rgba(255, 204, 0, 0.9);
+}
+
+.forgot {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: #ffcc00;
+  transition: 0.2s;
+}
+
+.forgot:hover {
+  text-decoration: underline;
+}
+
+#msgerro{
+    display: none;
+    margin-bottom: .8rem;
+    color: red;
+}
+  </style>
+
+</head>
+<body>
+  <div class="login-container">
+    <h1>LOGIN</h1>
+    <form id="formulario">
+      <label for="username">Usuário</label>
+      <div class="input-box">
+        <span class="icon">👤</span>
+        <input type="text" id="username" placeholder="Digite seu usuário">
+      </div>
+
+      <label for="password">Senha</label>
+      <div class="input-box">
+        <span class="icon">🔒</span>
+        <input type="password" id="password" placeholder="Digite sua senha">
+      </div>
+      <span id="msgerro"></span>
+      <button type="submit">Entrar</button>
+      <a href="#" class="forgot">Esqueceu a senha?</a>
+    </form>
+  </div>
+
+  <script>
+    const username = document.getElementById("username");
+    const password = document.getElementById("password");
+    const formulario = document.getElementById("formulario");
+    const error = document.getElementById("msgerro");
+    const inputs = document.querySelectorAll('input');
+
+    console.log(inputs)
+
+   inputs.forEach(input => {
+    input.addEventListener('input', () => {
+        if (error.innerText !=="") {
+            error.innerText = '';
+        }
+        });
+    });
+
+    const efetuarLogin = async () =>{
+        const usuario = {
+           username:username.value,
+           password:password.value
+        }
+
+       const url = 'http://localhost:3000/auth/login';
+
+       const result = await fetch(url,{
+            method:"POST",
+            body: JSON.stringify(usuario),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+
+        const json = await result.json();
+        if(!json.success){
+            error.innerText = json.message
+            error.style.display = "block";
+            return
+        }
+
+        const {data} = json;
+        localStorage.setItem('token', data.token);
+    }
+    
+
+    formulario.addEventListener("submit",(e)=>{
+        e.preventDefault();
+        efetuarLogin();
+    })
+  </script>
+</body>
+</html>
