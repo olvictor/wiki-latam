@@ -40,7 +40,7 @@ const Post = sequelize.define(
           msg: "O campo user_id é obrigatório."
         }
       }
-    }
+    },
   },
   {
     timestamps: true,

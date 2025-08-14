@@ -158,8 +158,58 @@ const detalharUsuario = async(req,res) =>{
     })
 }
 
+const editarUsuario = async(req,res) =>{
+        const {id} = req.params
+        const dados = req.body   
+    
+
+        const usuario = await User.findByPk(id);
+ 
+        if(!usuario){
+            return res.status(400).json({
+        success: false,
+        message: "Acesso negado.",
+        })
+        }
+
+        if(usuario.dataValues.id != req.usuario.id){
+            return res.status(400).json({
+        success: false,
+        message: "Acesso negado.",
+        })
+        }
+
+
+        try{
+            if(dados.password){
+                const senhaCriptografada = await bcrypt.hash(dados.password,10)
+                dados.password_hash = senhaCriptografada;
+                delete dados.senha;
+            }
+
+            const userUpdate =  await User.update(
+                dados,
+                  {
+                    where: {
+                    id: usuario.dataValues.id,
+                    },
+                },
+            );
+            return res.status(200).json({
+            success: true,
+            message: "Dados atualizados com sucesso",
+    })
+        }catch(error){
+            console.log(error.message)
+            res.status(500).json({
+            success: false,
+            message: "Erro interno do servidor."
+            })
+        }
+}
 module.exports = {
     cadastrarUsuario,
     loginUsuario,
-    detalharUsuario
+    detalharUsuario,
+    editarUsuario
 }

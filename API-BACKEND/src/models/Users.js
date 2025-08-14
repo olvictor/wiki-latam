@@ -58,7 +58,24 @@ const User = sequelize.define(
           msg: "O campo role_id é obrigatório."
         }
       }
-    }
+    },
+    img_url: {
+      type: DataTypes.STRING,
+      allowNull:false,
+      defaultValue: "https://eaavatarservice.akamaized.net/production/avatar/prod/1/599/416x416.JPEG"
+    },
+    rede_twitter: {               
+      type: DataTypes.STRING,
+    },
+    rede_instagram: {               
+      type: DataTypes.STRING,
+    },
+    rede_youtube: {               
+      type: DataTypes.STRING,
+    },
+    rede_twitch: {               
+      type: DataTypes.STRING,
+    },
   },
   {
     timestamps: true,
