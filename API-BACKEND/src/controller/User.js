@@ -81,7 +81,7 @@ const cadastrarUsuario = async(req,res)=>{
             });
         }
         
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "Erro interno do servidor."
         })
@@ -139,7 +139,7 @@ const loginUsuario = async(req,res)=>{
         });
     }catch(err){
         console.log(err.message);
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "Erro interno do servidor."
         })
@@ -201,7 +201,7 @@ const editarUsuario = async(req,res) =>{
     })
         }catch(error){
             console.log(error.message)
-            res.status(500).json({
+            return res.status(500).json({
             success: false,
             message: "Erro interno do servidor."
             })
