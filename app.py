@@ -44,65 +44,6 @@ API_VERSION = 'v3'
 
 stream_cache = []
 
-CHANNEL_IDS = [
-    {"dados": "Cabana do Sentinela", "links": "https://www.twitch.tv/cabanadosentinela","imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/andando/sentinela.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif","plataforma" :"youtube","channel_id":"UCyrRWvII61mthxZlbK3OFJQ"},
-    {"dados": "Estudo arcano", "links": "https://www.youtube.com/@estudoarcano","imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/andando/arcano.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcano.gif","plataforma" :"youtube","channel_id":"UCyCkaDZmkJdOcfwtQSYJ5OQ"},
-    {"dados": "Jeff da Gaita", "links": "https://www.youtube.com/@JeffodaGaita","imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/andando/renegado.gif","status": "off","imagem_sentado": "assets/classes/sentados/renegado.gif","plataforma" :"youtube","channel_id":"UC4B7uZNcTQG2iJkSrYVztQg"},
-    {"dados": "Joga Junto Ragnarok", "links": "https://www.youtube.com/@JogaJuntoRagnarok","imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/andando/cavaleiro_runico.gif","status": "off","imagem_sentado": "assets/classes/sentados/cavaleiro_runico.gif","plataforma" :"youtube","channel_id":"UCmLixl7G_IxDo6nl4vYCHjA"},
-]
-
-
-def get_youtube_service():
-    return build(API_SERVICE_NAME, API_VERSION, developerKey=YOUTUBE_API_KEY)
-
-
-def check_channel_live_status(youtube_service, channel_id):
-    """Verifica se um canal do YouTube está transmitindo ao vivo e retorna dados da live."""
-    print(f"\nVerificando o canal com ID: {channel_id}...")
-    try:
-        search_response = youtube_service.search().list(
-            channelId=channel_id,
-            eventType='live',
-            type='video',
-            part='id,snippet',
-            maxResults=1
-        ).execute()
-
-        if search_response.get('items'):
-            item = search_response['items'][0]
-            video_id = item['id']['videoId']
-            title = item['snippet']['title']
-            thumbnail_url = item['snippet']['thumbnails']['high']['url']
-            category = item['snippet'].get('categoryId', 'Live') 
-
-            video_response = youtube_service.videos().list(
-                part="liveStreamingDetails,statistics",
-                id=video_id
-            ).execute()
-
-            video_info = video_response['items'][0]
-            viewer_count = video_info.get('liveStreamingDetails', {}).get('concurrentViewers', 'N/A')
-            started_at = video_info.get('liveStreamingDetails', {}).get('actualStartTime')
-
-            return True, {
-                'title': title,
-                'category': category,
-                'viewer_count': viewer_count,
-                'started_at': started_at,
-                'thumbnail_url': thumbnail_url
-            }
-
-        else:
-            print(f"❌ O canal {channel_id} não está ao vivo.")
-            return False, {}
-
-    except HttpError as e:
-        print(f"Erro HTTP ao acessar API para o canal {channel_id}: {e}")
-        return False, {}
-    except Exception as e:
-        print(f"Erro inesperado para o canal {channel_id}: {e}")
-        return False, {}
-
 
 def get_access_token():
     url = 'https://id.twitch.tv/oauth2/token'
@@ -185,14 +126,7 @@ def atualizar_stream_cache():
          {"dados": "Alvaro TV", "links": "https://www.twitch.tv/alvarotv23","imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/andando/sicario.gif","status": "off","imagem_sentado": "assets/classes/sentados/sicario.gif","plataforma" :"twitch"},   
          {"dados": "Slash", "links": "https://www.twitch.tv/slashvidal","imagem": "assets/classes/sicario.png","imagem_gif": "assets/classes/andando/sicario.gif","status": "off","imagem_sentado": "assets/classes/sentados/sicario.gif","plataforma" :"twitch"},   
           {"dados": "Cabana do Sentinela", "links": "https://www.twitch.tv/cabanadosentinela","imagem": "assets/classes/sentinela.png","imagem_gif": "assets/classes/andando/sentinela.gif","status": "off","imagem_sentado": "assets/classes/sentados/sentinela.gif","plataforma" :"youtube","channel_id":"UCyrRWvII61mthxZlbK3OFJQ"},
-    {"dados": "Estudo arcano", "links": "https://www.youtube.com/@estudoarcano","imagem": "assets/classes/arcano.png","imagem_gif": "assets/classes/andando/arcano.gif","status": "off","imagem_sentado": "assets/classes/sentados/arcano.gif","plataforma" :"youtube","channel_id":"UCyCkaDZmkJdOcfwtQSYJ5OQ"},
-    {"dados": "Jeff da Gaita", "links": "https://www.youtube.com/@JeffodaGaita","imagem": "assets/classes/renegado.png","imagem_gif": "assets/classes/andando/renegado.gif","status": "off","imagem_sentado": "assets/classes/sentados/renegado.gif","plataforma" :"youtube","channel_id":"UC4B7uZNcTQG2iJkSrYVztQg"},
-    {"dados": "Joga Junto Ragnarok", "links": "https://www.youtube.com/@JogaJuntoRagnarok","imagem": "assets/classes/cavaleiro_runico.png","imagem_gif": "assets/classes/andando/cavaleiro_runico.gif","status": "off","imagem_sentado": "assets/classes/sentados/cavaleiro_runico.gif","plataforma" :"youtube","channel_id":"UCmLixl7G_IxDo6nl4vYCHjA"},
-    {"dados": "Asenhorita_any", "links": "https://www.twitch.tv/asenhorita_any","imagem": "assets/classes/musa.png","imagem_gif": "assets/classes/andando/musa.gif","status": "off","imagem_sentado": "assets/classes/sentados/musa.gif","plataforma" :"twitch"},
-
-
     ]
-    youtube_service = get_youtube_service()
     for item in dados_links_imagens:
         plataforma = item.get('plataforma')
 
@@ -220,28 +154,6 @@ def atualizar_stream_cache():
             else:
                 print(f"Nome de usuário Twitch não encontrado na URL: {item['links']}")
 
-        elif plataforma == 'youtube':
-            channel_id = item['channel_id']
-
-            if channel_id:
-                try:
-                    is_live, video_data = check_channel_live_status(youtube_service, channel_id)  
-                    if is_live:
-                        item['status'] = 'on'
-                        item['stream_info'] = {
-                            'title': video_data.get('title'),
-                            'game_name': video_data.get('category', 'Live'),  
-                            'viewer_count': video_data.get('viewer_count', 'N/A'),
-                            'started_at': video_data.get('started_at'),
-                            'thumbnail_url': video_data.get('thumbnail_url')
-                        }
-                    else:
-                        item['status'] = 'off'
-                except Exception as e:
-                    print(f"Erro ao verificar status de {channel_id} no YouTube: {e}")
-                    item['status'] = 'off'
-            else:
-                print(f"Channel ID do YouTube não encontrado na URL: {item['links']}")
     stream_cache =dados_links_imagens
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=atualizar_stream_cache, trigger="interval", seconds=1800)
@@ -1480,6 +1392,11 @@ def admin_page():
 def login_page():
    
     return render_template('login.html', links=carregar_links())
+
+@app.route('/perfil')
+def perfil_page():
+   
+    return render_template('perfil.html', links=carregar_links())
 
 
 @app.route('/ads.txt')

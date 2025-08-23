@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db_connection');
-const Role = require('../models/Roles')
+const Role = require('../models/Roles');
+const Post = require('./Posts');
 
 const User = sequelize.define(
   'User',
@@ -57,7 +58,9 @@ const User = sequelize.define(
         notNull: {
           msg: "O campo role_id é obrigatório."
         }
-      }
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE"
     },
     img_url: {
       type: DataTypes.STRING,
@@ -83,7 +86,5 @@ const User = sequelize.define(
   {
   },
 );
-
-User.belongsTo(Role, { foreignKey: "role_id" });
 
 module.exports = User;

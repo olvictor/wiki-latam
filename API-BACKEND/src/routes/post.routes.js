@@ -14,4 +14,5 @@ app.use(validarLogin)
 posts = app.post('/create',cadastrarPost)
 
 
+
 module.exports = posts;

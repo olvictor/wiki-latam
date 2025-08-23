@@ -112,11 +112,55 @@ button:hover {
     margin-bottom: .8rem;
     color: red;
 }
+
+#loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex; 
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      z-index: 9999;
+      gap: .6rem;
+    }
+
+#loading h2{
+      opacity: 1;
+      color: white;
+    }
+
+.spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #ffcc00;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+
+@keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+}
+
   </style>
 
 </head>
 <body>
   <div class="login-container">
+      <div id="loading">
+        <div class="spinner">
+        </div>
+          <h2>Carregando...</h2>
+      </div>
     <h1>LOGIN</h1>
     <form id="formulario">
       <label for="username">Usuário</label>
@@ -143,7 +187,36 @@ button:hover {
     const error = document.getElementById("msgerro");
     const inputs = document.querySelectorAll('input');
 
-    console.log(inputs)
+    window.addEventListener("DOMContentLoaded", async() => {
+      loading.style.display = "flex";
+      const token = localStorage.getItem("token");
+
+      if (token) {
+      try {
+      const response = await fetch("http://localhost:3000/auth/user", {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json"
+      }
+      });
+
+      if(!response.ok){
+        return localStorage.removeItem("token");
+      }
+      window.location.href = "perfil";
+      } catch (error) {
+        console.error("Erro ao buscar usuário:", error);
+      } finally {
+        loading.style.display = "none";
+      }
+
+
+
+      }
+    });
+
+
 
    inputs.forEach(input => {
     input.addEventListener('input', () => {
@@ -170,6 +243,7 @@ button:hover {
         })
 
         const json = await result.json();
+
         if(!json.success){
             error.innerText = json.message
             error.style.display = "block";
@@ -178,6 +252,8 @@ button:hover {
 
         const {data} = json;
         localStorage.setItem('token', data.token);
+        window.location.href = "perfil";
+
     }
     
 

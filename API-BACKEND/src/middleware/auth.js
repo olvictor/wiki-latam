@@ -24,7 +24,8 @@ const validarLogin = async (req,res,next)=>{
             id: usuario.dataValues.id,
             username: usuario.dataValues.username,
             email: usuario.dataValues.email,
-            role_id: usuario.dataValues.role_id
+            role_id: usuario.dataValues.role_id,
+            img_url: usuario.dataValues.img_url
         } 
         next();
     } catch (err) {

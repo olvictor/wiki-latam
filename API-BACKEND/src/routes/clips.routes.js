@@ -1,10 +1,10 @@
 const express = require('express');
-const { cadastrarClipes } = require('../controller/Clipes');
+const { cadastrarClipes, buscarClipes } = require('../controller/Clipes');
 const app = express.Router();
 
 
 
 clipes = app.post('/create',cadastrarClipes)
-
+clipes = app.get('/find',buscarClipes)
 
 module.exports = clipes

@@ -1,5 +1,5 @@
-const Post = require('../models/Posts')
-const { post } = require('../routes')
+// const Post = require('../models/Posts')
+const { Post, User } = require("../models/index");
 
 const cadastrarPost = async (req,res) =>{
     const {title,content} = req.body
@@ -8,11 +8,11 @@ const cadastrarPost = async (req,res) =>{
     try{
         const novoPost = await Post.create({
             title,
-            content: JSON.stringify(content),
+            content,
             user_id: user.id
         })
     
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             data: {
                 id: novoPost.id,
@@ -48,16 +48,38 @@ const cadastrarPost = async (req,res) =>{
 }
 
 const buscarPosts = async(req,res)=>{
+    const { user_id } = req.query;
+
+    console.log(user_id)
     try {
-        const posts = await Post.findAll();
-        res.status(200).json({
+        if(user_id){
+        const posts = await Post.findAll({
+        where: { user_id },
+        include: {
+            model: User,
+            attributes: ["id", "username", "email","img_url"]
+        }
+        });
+        return res.status(200).json({
+            success: true,
+            data: posts,
+            message: "Posts recuperados com sucesso"
+        });
+        }
+
+
+        const posts = await Post.findAll({include: {
+            model: User,
+            attributes: ["id", "username", "email"]
+        }});
+        return res.status(200).json({
             success: true,
             data: posts,
             message: "Posts recuperados com sucesso"
         });
     } catch (err) {
         console.log(err.message);
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "Erro interno do servidor."
         });
@@ -102,8 +124,10 @@ const buscarPostsPorId = async(req,res) =>{
         })
     }
 }
+
 module.exports = {
     cadastrarPost,
     buscarPosts,
-    buscarPostsPorId
+    buscarPostsPorId,
+    
 }
