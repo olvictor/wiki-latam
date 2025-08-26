@@ -21,6 +21,9 @@ const User = sequelize.define(
         notEmpty: {
           msg: "O campo username não pode estar vazio."
         },
+        notNull: {
+          msg: "O campo username é obrigatório."
+        },
         len: {
           args: [3, 50],
           msg: "O nome de usuário deve ter entre 3 e 50 caracteres."
@@ -33,7 +36,7 @@ const User = sequelize.define(
       validate: {
         notEmpty: {
           msg: "O campo password não pode estar vazio."
-        }
+        },
       }
     },
     email:{
@@ -45,6 +48,9 @@ const User = sequelize.define(
       validate: {
         notEmpty: {
           msg: "O campo email não pode estar vazio."
+        },
+        notNull: {
+          msg: "O campo email é obrigatório."
         },
         isEmail: {
           msg: "O email fornecido não é válido."

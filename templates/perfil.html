@@ -191,11 +191,24 @@ input:focus {
     justify-content: center;
     align-items: center;
   }
+
+.modal .close{
+  font-size: 2rem;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.modal input{
+  margin: .6rem 0px;
+  border: none;
+  outline: none;
+}
+
 .modal-content {
-    background: #fff; 
-    padding: 20px; 
-    border-radius: 10px; 
-    width: 600px;
+  background: radial-gradient(circle, #2a2a2a, #1f1f1f);
+  padding: 20px; 
+  border-radius: 10px; 
+  width: 600px;
   }
 #savePost{
   background: linear-gradient(135deg, #ff416c, #ff4b2b);
@@ -211,9 +224,32 @@ input:focus {
   margin-top: 1rem;
 }  
 #editor {
-    height: 200px;
-    background: #fff;
+    min-height: 200px;
+    height: auto;
+    color: white;
+    overflow-y: scroll;
 }
+
+.ql-toolbar {
+  background-color: white; /* cor de fundo */
+  border: 1px solid #444;   /* borda */
+}
+
+/* Muda a cor dos ícones e botões */
+.ql-toolbar button svg {
+  stroke: #ff416c; /* cor dos ícones */
+}
+
+/* Muda a cor do select (Normal, Header, etc) */
+.ql-toolbar .ql-picker {
+  color: #ff416c; /* cor do texto */
+}
+
+/* Quando passar o mouse */
+.ql-toolbar button:hover svg {
+  stroke: #ffffff; /* cor no hover */
+}
+
 
 .container-posts{
   display: flex;
@@ -415,34 +451,44 @@ input:focus {
           <h2>Carregando...</h2>
     </div>
     <div id="modal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
+<div class="modal-content">
+  <span class="close">&times;</span>
 
-    <h2>Novo Post</h2>
+  <h2>Novo Post</h2>
 
-    <!-- Editor -->
-    <div id="editor-toolbar">
-      <span class="ql-formats">
-        <select class="ql-header">
-          <option value="1"></option>
-          <option value="2"></option>
-          <option selected></option>
-        </select>
-        <button class="ql-bold"></button>
-        <button class="ql-italic"></button>
-        <button class="ql-underline"></button>
-      </span>
-      <span class="ql-formats">
-        <button class="ql-list" value="ordered"></button>
-        <button class="ql-list" value="bullet"></button>
-      </span>
-      <span class="ql-formats">
-        <button class="ql-color"></button>
-        <button class="ql-background"></button>
-      </span>
-      <span class="ql-formats">
-        <button class="ql-image"></button>
-      </span>
+    <div id="create-post">
+      <input 
+        type="text" 
+        id="postTitle" 
+        placeholder="Digite o título do post" 
+        style="width:100%; padding:10px; margin-bottom:10px; font-size:18px;"
+      />
+
+      <!-- Toolbar do Quill -->
+      <div id="editor-toolbar">
+        <span class="ql-formats">
+          <select class="ql-header">
+            <option value="1"></option>
+            <option value="2"></option>
+            <option selected></option>
+          </select>
+          <button class="ql-bold"></button>
+          <button class="ql-italic"></button>
+          <button class="ql-underline"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-list" value="ordered"></button>
+          <button class="ql-list" value="bullet"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-color"></button>
+          <button class="ql-background"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-image"></button>
+        </span>
+      </div>
+
     </div>
 
     <div id="editor"></div>
@@ -520,12 +566,13 @@ input:focus {
   </div>
 </section>
   <script>
+   const token = localStorage.getItem("token");
    window.addEventListener("DOMContentLoaded", async () => {
-  loading.style.display = "flex";
-  const token = localStorage.getItem("token");
+     
+     if (token) {
+       try {
+      loading.style.display = "flex";
 
-  if (token) {
-    try {
       const response = await fetch("http://localhost:3000/auth/user", {
         method: "GET",
         headers: {
@@ -533,6 +580,10 @@ input:focus {
           "Content-Type": "application/json"
         }
       });
+
+      if(!response.ok){
+        return window.location.href = "login";
+      }
       const json = await response.json();
       const {usuario} = json.data;
       const usernameInput = document.querySelector('.username');
@@ -549,6 +600,8 @@ input:focus {
     } finally {
       loading.style.display = "none";
     }
+  }else{
+    return window.location.href = "login";
   }
 });
 
@@ -617,7 +670,7 @@ async function carregarPosts(userId) {
     console.error("Erro ao carregar posts:", error);
   }
 }
-const modal = document.getElementById("modal");
+  const modal = document.getElementById("modal");
   const btn = document.querySelector(".btn-add-post");
   const closeBtn = document.querySelector(".close");
 
@@ -625,17 +678,36 @@ const modal = document.getElementById("modal");
   closeBtn.onclick = () => modal.style.display = "none";
   window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; };
 
-  // editor
   const quill = new Quill('#editor', {
     modules: { toolbar: '#editor-toolbar' },
     theme: 'snow'
   });
 
-  document.getElementById("savePost").onclick = () => {
+  document.getElementById("savePost").onclick = async () => {
     const content = quill.root.innerHTML; 
-    console.log("Novo Post:", content);
-    // aqui você faria um fetch/axios POST para salvar no backend
+    const title = document.getElementById("postTitle").value;
     modal.style.display = "none";
+
+    const post = {
+      title,
+      content,
+    };
+
+    try{
+      const response = await fetch("http://localhost:3000/posts/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` 
+      },
+      body: JSON.stringify(post)
+      });
+      if(response.ok){
+        window.location.reload();
+      }
+    }catch(err){
+      console.log(err)
+    }
   };
   </script>
 </body>

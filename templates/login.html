@@ -120,7 +120,7 @@ button:hover {
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.8);
-      display: flex; 
+      display: none; 
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -188,33 +188,30 @@ button:hover {
     const inputs = document.querySelectorAll('input');
 
     window.addEventListener("DOMContentLoaded", async() => {
-      loading.style.display = "flex";
       const token = localStorage.getItem("token");
-
+      
       if (token) {
-      try {
-      const response = await fetch("http://localhost:3000/auth/user", {
-        method: "GET",
-        headers: {
-          "Authorization": "Bearer " + token,
-          "Content-Type": "application/json"
-      }
+        loading.style.display = "flex";
+          try {
+          const response = await fetch("http://localhost:3000/auth/user", {
+            method: "GET",
+            headers: {
+              "Authorization": "Bearer " + token,
+              "Content-Type": "application/json"
+          }
+          });
+
+          if(!response.ok){
+            return localStorage.removeItem("token");
+          }
+          window.location.href = "perfil";
+          } catch (error) {
+            console.error("Erro ao buscar usuário:", error);
+          } finally {
+            loading.style.display = "none";
+          }
+          }
       });
-
-      if(!response.ok){
-        return localStorage.removeItem("token");
-      }
-      window.location.href = "perfil";
-      } catch (error) {
-        console.error("Erro ao buscar usuário:", error);
-      } finally {
-        loading.style.display = "none";
-      }
-
-
-
-      }
-    });
 
 
 
@@ -231,28 +228,36 @@ button:hover {
            username:username.value,
            password:password.value
         }
+       loading.style.display = "flex";
 
        const url = 'http://localhost:3000/auth/login';
 
-       const result = await fetch(url,{
-            method:"POST",
-            body: JSON.stringify(usuario),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        })
+       try{
+         const result = await fetch(url,{
+              method:"POST",
+              body: JSON.stringify(usuario),
+              headers: {
+                  "Content-type": "application/json; charset=UTF-8"
+              }
+          })
+  
+          const json = await result.json();
+  
+          if(!json.success){
+              error.innerText = json.message
+              error.style.display = "block";
+              return
+          }
+  
+          const {data} = json;
+          localStorage.setItem('token', data.token);
+          window.location.href = "perfil";
+       }catch(err){
+        console.log(err)
+       }finally{
+        loading.style.display = "none";
+       }
 
-        const json = await result.json();
-
-        if(!json.success){
-            error.innerText = json.message
-            error.style.display = "block";
-            return
-        }
-
-        const {data} = json;
-        localStorage.setItem('token', data.token);
-        window.location.href = "perfil";
 
     }
     

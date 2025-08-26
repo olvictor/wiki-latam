@@ -10,7 +10,14 @@ const jwt = require('jsonwebtoken')
 const cadastrarUsuario = async(req,res)=>{
     const { username, password, email, role_id } = req.body
 
-    if( await validarUsuarioCadastrado(email,username)){
+    if(!password){ 
+        return res.status(400).json({
+            success: false,
+            message: "O campo password é obrigatório.",
+        })
+    }
+
+    if(await validarUsuarioCadastrado(email,username)){
         return res.status(400).json({
             success: false,
             message: "Usuário ou Email já cadastrado no sistema.",

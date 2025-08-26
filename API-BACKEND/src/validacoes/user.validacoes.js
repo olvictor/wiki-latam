@@ -16,9 +16,10 @@ const { Op } = require("sequelize");
 
 // -----  FUNCAO Não PERFORMATICA ----- 
 
-
-
 const validarUsuarioCadastrado = async (email, username) =>{
+
+    if (!email || !username) return false;
+
     const usuario = await User.findOne({
         where: {
         [Op.or]: [

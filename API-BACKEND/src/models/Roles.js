@@ -12,6 +12,9 @@ const Role = sequelize.define("Role", {
       notEmpty: {
         msg: "O campo name não pode estar vazio."
       },
+      notNull: {
+      msg: "O campo name é obrigatório."
+      },
       len: {
         args: [2, 50],
         msg: "O nome da role deve ter entre 2 e 50 caracteres."
