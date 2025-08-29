@@ -1,5 +1,5 @@
-// const Post = require('../models/Posts')
 const { Post, User } = require("../models/index");
+const { post } = require("../routes");
 
 const cadastrarPost = async (req,res) =>{
     const {title,content} = req.body
@@ -125,9 +125,97 @@ const buscarPostsPorId = async(req,res) =>{
     }
 }
 
+
+const deletarPost = async(req,res)=>{
+    const user = req.usuario;
+    const {id} = req.params;
+
+    try {
+        const post = await Post.findByPk(id)
+        
+        if(post.user_id != user.id){
+            return res.status(400).json({
+                success: false,
+                message: "Acesso negado."
+            })
+        }
+
+        if (!post) {
+            return res.status(400).json({
+                success: false,
+                message: "Post não encontrado"
+            })
+        }
+
+        const postDeletado = await Post.destroy({
+            where: {id}
+        })
+
+        console.log(postDeletado)
+        return res.status(200).json({
+            success: true,
+            message: "Post Deletado com sucesso."
+        })
+    } catch (err) {
+        console.log(err.message)
+        return res.status(500).json({
+            success: false,
+            message: "Erro interno do servidor."
+        })
+    }
+    
+
+
+}
+
+
+const editarPost = async(req,res)=>{
+    const user = req.usuario;
+    const {id} = req.params;
+    const dados = req.body;
+
+    try {       
+        const post = await Post.findByPk(id)
+
+        if (!post) {
+            return res.status(400).json({
+                success: false,
+                message: "Post não encontrado"
+            })
+        }
+        if(post.dataValues.user_id != user.id){
+            return res.status(400).json({
+                success: false,
+                message: "Acesso negado."
+            })
+        }
+
+        const postUpdate = await Post.update(
+           dados,
+             {
+                where: {
+                id,
+                },
+        })
+        
+
+        return res.status(200).json({
+            success: true,
+            message: "Post atualizado com sucesso."
+        })
+    } catch (err) {
+        console.log(err.message)
+        return res.status(500).json({
+            success: false,
+            message: "Erro interno do servidor."
+        })
+    }
+    
+}
 module.exports = {
     cadastrarPost,
     buscarPosts,
     buscarPostsPorId,
-    
+    deletarPost,
+    editarPost
 }
