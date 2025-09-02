@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken')
 
 
 const cadastrarUsuario = async(req,res)=>{
-    const { username, password, email, role_id } = req.body
+    const { username, password, descricao, email, role_id } = req.body
 
     if(!password){ 
         return res.status(400).json({
@@ -33,6 +33,7 @@ const cadastrarUsuario = async(req,res)=>{
         const cadastrarUsuario = await User.create({ 
             username, 
             password_hash: senhaCriptografada,
+            descricao,
             email,
             role_id
         });
