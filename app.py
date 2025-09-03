@@ -44,6 +44,26 @@ API_VERSION = 'v3'
 
 stream_cache = []
 
+file_path = 'rola.xlsx'
+df_link = pd.read_excel(file_path, header=None)
+info_essenciais = df_link.iloc[4:9, 1].dropna().tolist()
+links = df_link.iloc[10:14, 1].dropna().tolist()
+df_videos = pd.read_excel('videos_ragnarok.xlsx')
+titulos = df_videos.iloc[0:,0].dropna().tolist()
+thumb = df_videos.iloc[0:,1].dropna().tolist()
+data_publicacao = df_videos.iloc[0:,2].dropna().tolist()
+video_url = df_videos.iloc[0:,3].dropna().tolist()
+data_videos = list(zip(titulos,thumb,data_publicacao,video_url))
+videos_recentes = pd.read_excel('videos_ragnarok_unidos.xlsx',header=None)
+canal = videos_recentes.iloc[1:,1].dropna().tolist()
+titulo = videos_recentes.iloc[1:,2].dropna().tolist()
+thumb_recentes = videos_recentes.iloc[1:,3].dropna().tolist()
+data_publicacao_recentes = videos_recentes.iloc[1:,4].dropna().tolist()
+url = videos_recentes.iloc[1:,5].dropna().tolist()
+
+data_videos_recentes = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
+
+
 
 def get_access_token():
     url = 'https://id.twitch.tv/oauth2/token'
@@ -229,29 +249,7 @@ def inject_request():
 
 @app.route('/')
 def info_page():
-    file_path = 'rola.xlsx'
-    df_link = pd.read_excel(file_path, header=None)
-    info_essenciais = df_link.iloc[4:9, 1].dropna().tolist()
-    links = df_link.iloc[10:14, 1].dropna().tolist()
-    df_videos = pd.read_excel('videos_ragnarok.xlsx')
-    titulos = df_videos.iloc[0:,0].dropna().tolist()
-    thumb = df_videos.iloc[0:,1].dropna().tolist()
-    data_publicacao = df_videos.iloc[0:,2].dropna().tolist()
-    video_url = df_videos.iloc[0:,3].dropna().tolist()
-
-
-    data_videos = list(zip(titulos,thumb,data_publicacao,video_url))
-
-    videos_recentes = pd.read_excel('videos_ragnarok_unidos.xlsx',header=None)
-
-    canal = videos_recentes.iloc[1:,1].dropna().tolist()
-    titulo = videos_recentes.iloc[1:,2].dropna().tolist()
-    thumb_recentes = videos_recentes.iloc[1:,3].dropna().tolist()
-    data_publicacao_recentes = videos_recentes.iloc[1:,4].dropna().tolist()
-    url = videos_recentes.iloc[1:,5].dropna().tolist()
-
-    data_videos_recentes = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
-
+   
     video_mais_recente = max(
     (item for item in data_videos_recentes if item[4] == "Ragnarokonlineoficial"),
     key=lambda x: x[2],
@@ -1385,7 +1383,6 @@ def admin_page():
 
     links = Link.query.order_by(Link.data.desc()).all()
     return render_template('admin.html', links=links)
-
 
 
 @app.route('/login')
