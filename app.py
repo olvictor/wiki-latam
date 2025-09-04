@@ -64,6 +64,18 @@ url = videos_recentes.iloc[1:,5].dropna().tolist()
 data_videos_recentes = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
 
 
+videos_recentes_secundarios = pd.read_excel('videos_recentes.xlsx',header=None)
+
+
+canal = videos_recentes_secundarios.iloc[1:,0].dropna().tolist()
+titulo = videos_recentes_secundarios.iloc[1:,1].dropna().tolist()
+thumb_recentes = videos_recentes_secundarios.iloc[1:,2].dropna().tolist()
+data_publicacao_recentes = videos_recentes_secundarios.iloc[1:,3].dropna().tolist()
+url = videos_recentes_secundarios.iloc[1:,4].dropna().tolist()
+
+videos_recentes_secundarios_zip = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
+
+
 
 def get_access_token():
     url = 'https://id.twitch.tv/oauth2/token'
@@ -266,17 +278,7 @@ def info_page():
 
     videos_secundarios = sorted(mais_recentes_por_canal.values(), key=lambda x: x[2], reverse=True)
 
-    videos_recentes_secundarios = pd.read_excel('videos_recentes.xlsx',header=None)
-
-
-    canal = videos_recentes_secundarios.iloc[1:,0].dropna().tolist()
-    titulo = videos_recentes_secundarios.iloc[1:,1].dropna().tolist()
-    thumb_recentes = videos_recentes_secundarios.iloc[1:,2].dropna().tolist()
-    data_publicacao_recentes = videos_recentes_secundarios.iloc[1:,3].dropna().tolist()
-    url = videos_recentes_secundarios.iloc[1:,4].dropna().tolist()
-
-    videos_recentes_secundarios_zip = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
-
+    
     video_encontrado = next((video for video in videos_recentes_secundarios_zip if video[4].lower() == "ragnarok online latam".lower()), None)
 
     def transformar_para_embed(url):
