@@ -75,6 +75,22 @@ url = videos_recentes_secundarios.iloc[1:,4].dropna().tolist()
 
 videos_recentes_secundarios_zip = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
 
+rank_tiers = df_link.iloc[3:, 9].dropna().tolist()
+rank_classes = df_link.iloc[3:, 10].dropna().tolist()
+
+rank_data = list(zip(rank_tiers, rank_classes))
+
+sugestao_cash = df_link.iloc[31:35, 4].dropna().tolist()
+sugestao_cash_valor = df_link.iloc[31:35, 5].dropna().tolist()
+
+sugestao_cash_classes = df_link.iloc[38:43, 4].dropna().tolist()
+sugestao_cash_classes_valor = df_link.iloc[38:43, 5].dropna().tolist()
+
+
+cash = list(zip(sugestao_cash, sugestao_cash_valor))
+cash_para_classes = list(zip(sugestao_cash_classes, sugestao_cash_classes_valor))
+
+
 
 
 def get_access_token():
@@ -294,23 +310,6 @@ def info_page():
     "2025-07-14T00:00:52Z"
     )
 
-
-
-
-    rank_tiers = df_link.iloc[3:, 9].dropna().tolist()
-    rank_classes = df_link.iloc[3:, 10].dropna().tolist()
-
-    rank_data = list(zip(rank_tiers, rank_classes))
-
-    sugestao_cash = df_link.iloc[31:35, 4].dropna().tolist()
-    sugestao_cash_valor = df_link.iloc[31:35, 5].dropna().tolist()
-
-    sugestao_cash_classes = df_link.iloc[38:43, 4].dropna().tolist()
-    sugestao_cash_classes_valor = df_link.iloc[38:43, 5].dropna().tolist()
-
-
-    cash = list(zip(sugestao_cash, sugestao_cash_valor))
-    cash_para_classes = list(zip(sugestao_cash_classes, sugestao_cash_classes_valor))
 
 
 
