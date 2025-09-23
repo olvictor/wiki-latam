@@ -203,6 +203,23 @@ def atualizar_stream_cache():
                 print(f"Nome de usuário Twitch não encontrado na URL: {item['links']}")
 
     stream_cache =dados_links_imagens
+
+    video_mais_recente = max(
+    (item for item in data_videos_recentes if item[4] == "Ragnarokonlineoficial"),
+    key=lambda x: x[2],
+    default=None  
+    )
+
+    videos_outros_canais = [v for v in data_videos_recentes if v[4] != "Ragnarokonlineoficial"]
+
+    mais_recentes_por_canal = {}
+    for v in videos_outros_canais:
+        canal = v[4]
+        if canal not in mais_recentes_por_canal or v[2] > mais_recentes_por_canal[canal][2]:
+            mais_recentes_por_canal[canal] = v
+
+
+
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=atualizar_stream_cache, trigger="interval", seconds=1800)
 scheduler.start()
@@ -278,29 +295,15 @@ def inject_request():
 @app.route('/')
 def info_page():
    
-    video_mais_recente = max(
-    (item for item in data_videos_recentes if item[4] == "Ragnarokonlineoficial"),
-    key=lambda x: x[2],
-    default=None  
-    )
-
-    videos_outros_canais = [v for v in data_videos_recentes if v[4] != "Ragnarokonlineoficial"]
-
-    mais_recentes_por_canal = {}
-    for v in videos_outros_canais:
-        canal = v[4]
-        if canal not in mais_recentes_por_canal or v[2] > mais_recentes_por_canal[canal][2]:
-            mais_recentes_por_canal[canal] = v
-
-    videos_secundarios = sorted(mais_recentes_por_canal.values(), key=lambda x: x[2], reverse=True)
+    # videos_secundarios = sorted(mais_recentes_por_canal.values(), key=lambda x: x[2], reverse=True)
 
     
-    video_encontrado = next((video for video in videos_recentes_secundarios_zip if video[4].lower() == "ragnarok online latam".lower()), None)
+    # video_encontrado = next((video for video in videos_recentes_secundarios_zip if video[4].lower() == "ragnarok online latam".lower()), None)
 
-    def transformar_para_embed(url):
-        if "youtube.com/watch?v=" in url:
-            return url.replace("watch?v=", "embed/")
-        return url
+    # def transformar_para_embed(url):
+    #     if "youtube.com/watch?v=" in url:
+    #         return url.replace("watch?v=", "embed/")
+    #     return url
 
     video_mais_recente = (
     "Ragnarok Online LATAM",
