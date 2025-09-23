@@ -70,10 +70,12 @@ videos_recentes_secundarios = pd.read_excel('videos_recentes.xlsx',header=None)
 canal = videos_recentes_secundarios.iloc[1:,0].dropna().tolist()
 titulo = videos_recentes_secundarios.iloc[1:,1].dropna().tolist()
 thumb_recentes = videos_recentes_secundarios.iloc[1:,2].dropna().tolist()
+thumb_recentes_otimizadas = [
+    url.replace("maxresdefault.jpg", "sddefault.jpg") for url in thumb_recentes
+]
 data_publicacao_recentes = videos_recentes_secundarios.iloc[1:,3].dropna().tolist()
 url = videos_recentes_secundarios.iloc[1:,4].dropna().tolist()
-
-videos_recentes_secundarios_zip = list(zip(titulo,thumb_recentes,data_publicacao_recentes,url,canal))
+videos_recentes_secundarios_zip = list(zip(titulo,thumb_recentes_otimizadas,data_publicacao_recentes,url,canal))
 
 rank_tiers = df_link.iloc[3:, 9].dropna().tolist()
 rank_classes = df_link.iloc[3:, 10].dropna().tolist()
