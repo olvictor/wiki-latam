@@ -219,31 +219,14 @@ def atualizar_stream_cache():
             mais_recentes_por_canal[canal] = v
 
 
+# LINKS DO HEADER --------------------------------------------
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=atualizar_stream_cache, trigger="interval", seconds=1800)
-scheduler.start()
+file_path = 'rola.xlsx'
+df = pd.read_excel(file_path, header=None)
 
-atualizar_stream_cache() 
+links = df.iloc[10:14, 1].dropna().tolist()
 
-def check_live(username):
-        try:
-            live, data = is_stream_live(username)
-            return jsonify({
-                'username': username,
-                'live': live,
-                'stream_data': data
-            })
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
-
-def carregar_links():
-    file_path = 'rola.xlsx'
-    df = pd.read_excel(file_path, header=None)
-
-    links = df.iloc[10:14, 1].dropna().tolist()
-
-    icones = {
+icones = {
         'Site': '''
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m6.115 5.19.319 1.913A6 6 0 0 0 8.11 10.36L9.75 12l-.387.775c-.217.433-.132.956.21 1.298l1.348 1.348c.21.21.329.497.329.795v1.089c0 .426.24.815.622 1.006l.153.076c.433.217.956.132 1.298-.21l.723-.723a8.7 8.7 0 0 0 2.288-4.042 1.087 1.087 0 0 0-.358-1.099l-1.33-1.108c-.251-.21-.582-.299-.905-.245l-1.17.195a1.125 1.125 0 0 1-.98-.314l-.295-.295a1.125 1.125 0 0 1 0-1.591l.13-.132a1.125 1.125 0 0 1 1.3-.21l.603.302a.809.809 0 0 0 1.086-1.086L14.25 7.5l1.256-.837a4.5 4.5 0 0 0 1.528-1.732l.146-.292M6.115 5.19A9 9 0 1 0 17.18 4.64M6.115 5.19A8.965 8.965 0 0 1 12 3c1.929 0 3.716.607 5.18 1.64" />
@@ -269,7 +252,7 @@ def carregar_links():
 
         '''
     }
-    icone_padrao = '''
+icone_padrao = '''
         <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path stroke-linecap="round" stroke-linejoin="round"
                 d="M13.5 10.5L12 12m0 0-1.5 1.5m1.5-1.5 1.5-1.5M12 12l-1.5-1.5m-1.5-1.5a3.75 3.75 0 115.303 5.303l-.978.977a3.75 3.75 0 11-5.303-5.303l.978-.977z"/>
@@ -277,8 +260,8 @@ def carregar_links():
     '''
 
 
-    links_formatados = []
-    for item in links:
+links_formatados = []
+for item in links:
         if ':' in item:
             nome, link = item.split(':', 1)
             nome = nome.strip()
@@ -286,7 +269,24 @@ def carregar_links():
             icone = icones.get(nome, icone_padrao)
             links_formatados.append({'nome': nome, 'link': link, 'icone': icone})
 
-    return links_formatados
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=atualizar_stream_cache, trigger="interval", seconds=1800)
+scheduler.start()
+
+atualizar_stream_cache() 
+
+# def check_live(username):
+#         try:
+#             live, data = is_stream_live(username)
+#             return jsonify({
+#                 'username': username,
+#                 'live': live,
+#                 'stream_data': data
+#             })
+#         except Exception as e:
+#             return jsonify({'error': str(e)}), 500
+
 
 @app.context_processor
 def inject_request():
@@ -294,16 +294,6 @@ def inject_request():
 
 @app.route('/')
 def info_page():
-   
-    # videos_secundarios = sorted(mais_recentes_por_canal.values(), key=lambda x: x[2], reverse=True)
-
-    
-    # video_encontrado = next((video for video in videos_recentes_secundarios_zip if video[4].lower() == "ragnarok online latam".lower()), None)
-
-    # def transformar_para_embed(url):
-    #     if "youtube.com/watch?v=" in url:
-    #         return url.replace("watch?v=", "embed/")
-    #     return url
 
     video_mais_recente = (
     "Ragnarok Online LATAM",
@@ -320,7 +310,7 @@ def info_page():
     return render_template(
         'index.html',
         info=info_essenciais,
-        links=carregar_links(),
+        links=links_formatados,
         rank_data = rank_data,
         data_videos = data_videos,
         streamers = stream_cache,
@@ -426,10 +416,10 @@ def classes_page():
 
     
 
-    links = carregar_links()
+  
     return render_template('classes.html', 
                            class_builds=class_builds,
-                           links = links,
+                           links = links_formatados,
                            streamers = stream_cache,
                            guias_gerais  = guias_gerais
                            )
@@ -440,12 +430,12 @@ def rank_page():
     rank_tiers = df.iloc[3:, 8].dropna().tolist()
     rank_classes = df.iloc[3:, 9].dropna().tolist()
 
-    links = carregar_links()
+  
 
     rank_data = list(zip(rank_tiers, rank_classes))
     return render_template('rank.html', 
                            rank_data=rank_data,
-                           links= links,
+                           links= links_formatados,
                            streamers = stream_cache
                            )
 
@@ -581,7 +571,6 @@ def rotas_page():
     # Adiciona como tupla limpa
         array_builds_ranged_formatado.append((quest, build))
    
-    links = carregar_links()
 
     return render_template(
         'rotas.html',
@@ -591,7 +580,7 @@ def rotas_page():
         rotas_ranged=rotas_ranged_filtrado,
         array_quest_ranged=array_quest_ranged,
         array_builds_ranged_formatado = array_builds_ranged_formatado,
-        links=links,
+        links=links_formatados,
         streamers = stream_cache
     )
 
@@ -1058,13 +1047,12 @@ def items_page():
     {"classe": items_n_vender_raw_9[15].replace(" Nada", "").strip(), "items": [],"imagem": "assets/classes/musa.png"}#Musa
 ]
     
-    links = carregar_links()
     return render_template('items.html', 
                            tabela_items=tabela_items,
                            tabela_items_importantes=tabela_items_importantes,
                            array_items_guardar=dados_com_links,
                            array_items_n_vender=array_items_n_vender,
-                           links=links,
+                           links=links_formatados,
                            streamers = stream_cache
                            )
 
@@ -1139,9 +1127,8 @@ def monstros_page():
     
     data = df_agrupado.to_dict(orient='records')
 
-    links = carregar_links()
 
-    return render_template('monstros.html', data=data,links=links,streamers=stream_cache)
+    return render_template('monstros.html', data=data,links=links_formatados,streamers=stream_cache)
 
 @app.route("/timer")
 def timer_page():
@@ -1205,13 +1192,12 @@ def timer_page():
     tabela_unificada_terceira =  tabela_unificada_terceira.dropna(subset=['Level'])
     tabela_unificada_terceira['Level'] =  tabela_unificada_terceira['Level'].astype(int)
 
-    links= carregar_links()
 
     return render_template('timer.html', data=data,
                             tabela_unificada_segunda_classe = tabela_unificada.to_dict(orient='records'),
                             tabela_unificada_transclasse = tabela_unificada_tranclasse.to_dict(orient='records'),
                             tabela_unificada_terceira = tabela_unificada_terceira.to_dict(orient='records'),
-                            links=links,
+                            links=links_formatados,
                             streamers =stream_cache
                             )
 @app.route('/streamers')
@@ -1221,9 +1207,8 @@ def streamers_page():
     df = pd.read_excel(file_path, sheet_name='INFORMAÇÕES', header=None)
 
 
-    links = carregar_links()
     return render_template('streamers.html', data=stream_cache,
-                            links=links,
+                            links=links_formatados,
                             streamers = stream_cache
                             )
 
@@ -1232,13 +1217,13 @@ def streamers_page():
 @app.route('/utilitarios')
 def utilitarios_page():
 
-   return render_template('utilitarios.html',links=carregar_links(),
+   return render_template('utilitarios.html',links=links_formatados,
 )
 
 @app.route('/contato&apoio')
 def contato_page():
 
-   return render_template('contato&apoio.html',links=carregar_links(),streamers = stream_cache
+   return render_template('contato&apoio.html',links=links_formatados,streamers = stream_cache
 )
 
 
@@ -1297,7 +1282,7 @@ def melhores_spots_page():
     return render_template(
         'spots.html',
         dados = data,
-        links=carregar_links(),
+        links=links_formatados,
         streamers = stream_cache
 )
 
@@ -1359,7 +1344,7 @@ def clips_page():
     return render_template(
         'clips.html',
         links_clipes=clips_embed,
-        links=carregar_links(),
+        links=links_formatados,
         streamers=stream_cache
     )
 
@@ -1392,12 +1377,12 @@ def admin_page():
 @app.route('/login')
 def login_page():
    
-    return render_template('login.html', links=carregar_links())
+    return render_template('login.html', links=links_formatados)
 
 @app.route('/perfil')
 def perfil_page():
    
-    return render_template('perfil.html', links=carregar_links())
+    return render_template('perfil.html', links=links_formatados)
 
 
 @app.route('/ads.txt')
@@ -1414,11 +1399,11 @@ def sitemap():
 
 @app.route('/privacy-policy')
 def privacy_policy():
-    return render_template('privacy-policy.html', streamers=stream_cache, links=carregar_links(),last_update=datetime.now().strftime("%d/%m/%Y"))
+    return render_template('privacy-policy.html', streamers=stream_cache, links=links_formatados,last_update=datetime.now().strftime("%d/%m/%Y"))
 
 @app.route('/terms')
 def terms_of_service():
-    return render_template('terms.html', streamers=stream_cache, links=carregar_links(), last_update=datetime.now().strftime("%d/%m/%Y"))
+    return render_template('terms.html', streamers=stream_cache, links=links_formatados, last_update=datetime.now().strftime("%d/%m/%Y"))
 
 
 if __name__ == '__main__':
