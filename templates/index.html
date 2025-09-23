@@ -712,7 +712,7 @@ table {
     {% include 'components/header.html' %}
     {% include 'components/header_mobile.html' %}
     <div>
-      <div id="video-modal" class="modal">
+      <!-- <div id="video-modal" class="modal">
         <div class="modal-content">
           <button class="close-button" id="close-modal">&times;</button>
           <video autoplay muted>
@@ -725,7 +725,7 @@ table {
 
           <span></span>
         </div>
-      </div>
+      </div> -->
 
       <main>
       <div class="fixed-grid">
@@ -883,29 +883,29 @@ table {
   <script>
     const data = {{ videos_secundarios | tojson | safe }};
 
-    window.onload = () => {
-        const modal = document.getElementById("video-modal");
-        const closeBtn = document.getElementById("close-modal");
-        const videoContent = document.querySelector(".modal-content");
+    // window.onload = () => {
+    //     const modal = document.getElementById("video-modal");
+    //     const closeBtn = document.getElementById("close-modal");
+    //     const videoContent = document.querySelector(".modal-content");
 
-        modal.style.display = "flex";
+    //     modal.style.display = "flex";
 
-        closeBtn.onclick = () => {
-          modal.style.display = "none";
-        };
+    //     closeBtn.onclick = () => {
+    //       modal.style.display = "none";
+    //     };
 
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") {
-            modal.style.display = "none";
-          }
-        });
+    //     document.addEventListener("keydown", (e) => {
+    //       if (e.key === "Escape") {
+    //         modal.style.display = "none";
+    //       }
+    //     });
 
-        modal.addEventListener("click", (e) => {
-        if (!videoContent.contains(e.target)) {
-          modal.style.display = "none";
-        }
-        });
-    };
+    //     modal.addEventListener("click", (e) => {
+    //     if (!videoContent.contains(e.target)) {
+    //       modal.style.display = "none";
+    //     }
+    //     });
+    // };
 
     const setaEsquerda = document.getElementById('seta-esquerda');
     const setaDireita = document.getElementById('seta-direita');
