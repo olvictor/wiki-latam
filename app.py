@@ -276,17 +276,6 @@ scheduler.start()
 
 atualizar_stream_cache() 
 
-# def check_live(username):
-#         try:
-#             live, data = is_stream_live(username)
-#             return jsonify({
-#                 'username': username,
-#                 'live': live,
-#                 'stream_data': data
-#             })
-#         except Exception as e:
-#             return jsonify({'error': str(e)}), 500
-
 
 @app.context_processor
 def inject_request():
@@ -298,7 +287,7 @@ def info_page():
     video_mais_recente = (
     "Ragnarok Online LATAM",
     "Personalize seu personagem como nunca antes! Estilistas em Ragnarok LATAM",
-    "https://i.ytimg.com/vi/muwNm1AsT8U/maxresdefault.jpg",
+    "https://i.ytimg.com/vi/muwNm1AsT8U/sddefault.jpg",
     "https://www.youtube.com/embed/muwNm1AsT8U",
     "2025-07-14T00:00:52Z"
     )

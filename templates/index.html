@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
+  <!-- <meta name="google-adsense-account" content="ca-pub-6266174717644829"> -->
   <title>Home | GUIA-ROLATAM</title>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
   <script>
@@ -15,8 +15,8 @@
   </script>
   <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6266174717644829"
-  crossorigin="anonymous"></script>
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6266174717644829"
+  crossorigin="anonymous"></script> -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <style>
     * {
@@ -772,7 +772,7 @@ table {
                       {% for video in videos_secundarios[i*4:(i+1)*4] %}
                         <div class="videoSecundario">
                           <a href="{{ video[3] }}" target="_blank">
-                            <img src="{{ video[1] }}" alt="">
+                            <img src="{{ video[1] }}" alt="" loading="lazy">
                             <p>{{ video[0] }}</p>
                           </a>
                         </div>
