@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki de Ragnarok Online LATAM com informações essenciais, links úteis, builds, rankings e vídeos recentes da comunidade.">
   <!-- <meta name="google-adsense-account" content="ca-pub-6266174717644829"> -->
   <title>Home | GUIA-ROLATAM</title>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
@@ -764,13 +765,13 @@ table {
         <div class="grid-title novidades">
           <h3 class="title is-3">📒 Novidades</h3>
           <div>
-            <button id="seta-esquerda" onclick="mudarPagina(-1)">
+            <button id="seta-esquerda" onclick="mudarPagina(-1)"  aria-label="Página anterior">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                 stroke-width="1.5" stroke="currentColor" width="24" height="24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
               </svg>
             </button> 
-            <button id="seta-direita" onclick="mudarPagina(1)">
+            <button id="seta-direita" onclick="mudarPagina(1)" aria-label="Próxima página">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                 stroke-width="1.5" stroke="currentColor" width="24" height="24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -791,7 +792,7 @@ table {
               allowfullscreen>
             </iframe> -->
             <div class="youtube-player" data-id="muwNm1AsT8U">
-              <img src="https://i.ytimg.com/vi/muwNm1AsT8U/maxresdefault.jpg" loading="lazy">
+              <img src="https://i.ytimg.com/vi/muwNm1AsT8U/maxresdefault.jpg" loading="lazy" alt="{{ video_mais_recente[0]}}">
               <button class="play">▶</button>
             </div>
            {% endif %}
@@ -808,7 +809,7 @@ table {
                       {% for video in videos_secundarios[i*4:(i+1)*4] %}
                         <div class="videoSecundario">
                           <a href="{{ video[3] }}" target="_blank">
-                            <img src="{{ video[1] }}" alt="" loading="lazy">
+                            <img src="{{ video[1] }}" alt="Thumb Video Youtube" loading="lazy">
                             <p>{{ video[0] }}</p>
                           </a>
                         </div>
@@ -863,7 +864,7 @@ table {
             </div>
           </div> 
             <div class="tabela-sugestoes"> 
-              <img src="{{ url_for('static', filename='assets/renfir.png') }}" alt="QRCode">
+              <img src="{{ url_for('static', filename='assets/renfir.png') }}" alt="Logo Fenrir">
               <a href="https://discord.com/invite/3MWZrSSXnh" target="_blank">Recrutamento Aberto</a>
 
               <h2>Sugestão de items cash para classes 2-1:</h2>

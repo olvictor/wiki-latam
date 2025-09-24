@@ -67,7 +67,7 @@
         <ul>
           {% for item in links %}
             <li>
-                <a href="{{ item.link }}" target="_blank" class="link-card" data-label="{{item.nome}}"> {{ item.icone | safe }}</a>
+                <a href="{{ item.link }}" target="_blank" class="link-card" data-label="{{item.nome}}" aria-label="{{item.nome}}"> {{ item.icone | safe }}</a>
             </li>
           {% endfor %}
         </ul>
