@@ -394,6 +394,53 @@ a{
     border-radius: 8px;
     transition: transform 0.4s ease;
 }
+
+.youtube-player{
+  width: 100%;
+  box-sizing: border-box;
+  height: 80%;
+  position: relative;
+}
+
+.youtube-player img{
+  width: 100%;
+  height: 26rem;
+}
+.youtube-player iframe{
+   width: 100%;
+  height: 26rem;
+}
+
+.play {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  background: rgba(255, 0, 0, 0.85); 
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  
+  border: none;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 0 20px rgba(0,0,0,0.6), 0 0 10px rgba(255,0,0,0.7);
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.play:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 0 25px rgba(0,0,0,0.8), 0 0 15px rgba(255,0,0,0.9);
+}
 .videoPrincipal:hover img {
     opacity: .8;
 }
@@ -712,21 +759,6 @@ table {
     {% include 'components/header.html' %}
     {% include 'components/header_mobile.html' %}
     <div>
-      <!-- <div id="video-modal" class="modal">
-        <div class="modal-content">
-          <button class="close-button" id="close-modal">&times;</button>
-          <video autoplay muted>
-            <source src="{{ url_for('static', filename='assets/video-novidade.mp4') }}" type="video/mp4">
-            Seu navegador não suporta vídeo.
-          </video>
-          <a href="{{ url_for('clips_page') }}">
-              Conferir novidade
-          </a>
-
-          <span></span>
-        </div>
-      </div> -->
-
       <main>
       <div class="fixed-grid">
         <div class="grid-title novidades">
@@ -749,7 +781,7 @@ table {
         <div class="grid principal-comunidade">
           <div class="cell">
             {% if video_mais_recente %}
-            <iframe width="100%" height="47%"
+            <!-- <iframe width="100%" height="47%"
               loading="lazy"
               src="{{ video_mais_recente[3] }}"
               title="{{ video_mais_recente[0] }}"
@@ -757,7 +789,11 @@ table {
               style="border: none"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen>
-            </iframe>
+            </iframe> -->
+            <div class="youtube-player" data-id="muwNm1AsT8U">
+              <img src="https://i.ytimg.com/vi/muwNm1AsT8U/hqdefault.jpg" loading="lazy">
+              <button class="play">▶</button>
+            </div>
            {% endif %}
           </div>
           <div class="cell colunaSecundaria">
@@ -939,6 +975,19 @@ table {
     //     toggleButton.style.left = '10rem';
     //   }
     // });
+
+      document.addEventListener("click", function(e) {
+        if(e.target.closest(".youtube-player")) {
+          var div = e.target.closest(".youtube-player");
+          var iframe = document.createElement("iframe");
+          iframe.setAttribute("src", "https://www.youtube-nocookie.com/embed/" + div.dataset.id + "?autoplay=1");
+          iframe.setAttribute("frameborder", "0");
+          iframe.setAttribute("allowfullscreen", "1");
+          iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+          div.innerHTML = "";
+          div.appendChild(iframe);
+        }
+      });
 
     const noticias = [
       {
