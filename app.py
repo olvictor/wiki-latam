@@ -1396,6 +1396,11 @@ def privacy_policy():
 def terms_of_service():
     return render_template('terms.html', streamers=stream_cache, links=links_formatados, last_update=datetime.now().strftime("%d/%m/%Y"))
 
+@app.route('/static/<path:filename>')
+def custom_static(filename):
+    response = send_from_directory(app.static_folder, filename)
+    response.cache_control.max_age = 60 * 60 * 24 * 30  
+    return response
 
 if __name__ == '__main__':
  with app.app_context():
