@@ -1376,6 +1376,11 @@ def perfil_page():
     return render_template('perfil.html', links=links_formatados)
 
 
+@app.route('/index2')
+def index2_page():
+   
+    return render_template('index2.html', links=links_formatados,streamers = stream_cache,)
+
 @app.route('/ads.txt')
 def render_ads():
     return send_from_directory(directory=os.path.abspath("."), path="ads.txt", mimetype='text/plain')
