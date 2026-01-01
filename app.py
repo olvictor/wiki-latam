@@ -71,7 +71,7 @@ canal = videos_recentes_secundarios.iloc[1:,0].dropna().tolist()
 titulo = videos_recentes_secundarios.iloc[1:,1].dropna().tolist()
 thumb_recentes = videos_recentes_secundarios.iloc[1:,2].dropna().tolist()
 thumb_recentes_otimizadas = [
-    url.replace("maxresdefault.jpg", "hqdefault.jpg") for url in thumb_recentes
+    url.replace("maxresdefault.jpg", "mqdefault.jpg") for url in thumb_recentes
 ]
 data_publicacao_recentes = videos_recentes_secundarios.iloc[1:,3].dropna().tolist()
 url = videos_recentes_secundarios.iloc[1:,4].dropna().tolist()
@@ -1378,8 +1378,25 @@ def perfil_page():
 
 @app.route('/index2')
 def index2_page():
+    
+    video_mais_recente = (
+    "Ragnarok Online LATAM",
+    "Personalize seu personagem como nunca antes! Estilistas em Ragnarok LATAM",
+    "https://i.ytimg.com/vi/muwNm1AsT8U/sddefault.jpg",
+    "https://www.youtube-nocookie.com/embed/muwNm1AsT8U",
+    "2025-07-14T00:00:52Z"
+    )
    
-    return render_template('index2.html', links=links_formatados,streamers = stream_cache,)
+    return render_template('index2.html',         info=info_essenciais,
+        links=links_formatados,
+        rank_data = rank_data,
+        data_videos = data_videos,
+        streamers = stream_cache,
+        video_mais_recente = video_mais_recente,
+        videos_secundarios = videos_recentes_secundarios_zip,
+        sugestao_cash = cash,
+        sugestao_cash_classes = cash_para_classes,
+        last_update=datetime.now().strftime("%d/%m/%Y"))
 
 @app.route('/ads.txt')
 def render_ads():
