@@ -277,6 +277,164 @@
   opacity: 1;
 }
 
+  /* NEWS CONTAINERRRRRRR */
+
+
+.second-section-container{
+  max-width: 1400px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+.news-container {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 480px;
+}
+
+/* SECTION TITLE */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+
+.section-title p {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.icon {
+  font-size: 20px;
+}
+
+/* LISTA */
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ITEM */
+.news-item {
+  position: relative;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.news-item:hover {
+  background: #161616;
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+/* BARRA LATERAL */
+.accent-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #a855f7;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.25s ease;
+}
+
+.news-item:hover .accent-bar {
+  transform: scaleY(1);
+}
+
+/* HEADER */
+.news-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+/* TAGS */
+.tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid;
+}
+
+/* CORES DAS TAGS */
+.manutencao {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.2);
+}
+
+.evento {
+  color: #c084fc;
+  background: rgba(192, 132, 252, 0.1);
+  border-color: rgba(192, 132, 252, 0.2);
+}
+
+.update,
+.correcao,
+.comunidade {
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.1);
+  border-color: rgba(96, 165, 250, 0.2);
+}
+
+/* DATA */
+.date {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* TÍTULO */
+.news-item h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  transition: color 0.25s ease;
+}
+
+.news-item:hover h4 {
+  color: #a855f7;
+}
+
+/* BOTÃO */
+.see-all {
+  margin-top: 16px;
+  padding: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: transparent;
+  color: #6b7280;
+  border: 1px dashed #1f2937;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.see-all:hover {
+  color: #ffffff;
+  border-color: #4b5563;
+}
+
+
+
 @keyframes fadeIn {
   to {
     opacity: 1;
@@ -346,14 +504,92 @@
             {% endfor %}
       
           </div>
+      </div>
+        
+      </section>
+      
+      <section class="second-section-container">
+        <div class="news-container">
+          <div class="section-title">
+
+            <div>
+              <h2 class="section-title">Notícias</h2>
+              <p>Fique por dentro do servidor</p>
+            </div>
+          </div>
+        
+          <div class="news-list">
+        
+            <div class="news-item">
+              <span class="accent-bar"></span>
+        
+              <div class="news-header">
+                <span class="tag manutencao">Manutenção</span>
+                <span class="date">📅 02/09/2025</span>
+              </div>
+        
+              <h4>Manutenção Extraordinária - [CONCLUÍDA]</h4>
+            </div>
+        
+            <div class="news-item">
+              <span class="accent-bar"></span>
+        
+              <div class="news-header">
+                <span class="tag update">Update</span>
+                <span class="date">📅 02/09/2025</span>
+              </div>
+        
+              <h4>Novidades da Manutenção - [ATUALIZADA]</h4>
+            </div>
+        
+            <div class="news-item">
+              <span class="accent-bar"></span>
+        
+              <div class="news-header">
+                <span class="tag evento">Evento</span>
+                <span class="date">📅 01/09/2025</span>
+              </div>
+        
+              <h4>Evento de EXP Dobrada neste fim de semana</h4>
+            </div>
+        
+            <div class="news-item">
+              <span class="accent-bar"></span>
+        
+              <div class="news-header">
+                <span class="tag correcao">Correção</span>
+                <span class="date">📅 30/08/2025</span>
+              </div>
+        
+              <h4>Correção de bugs na instância Templo</h4>
+            </div>
+        
+            <div class="news-item">
+              <span class="accent-bar"></span>
+        
+              <div class="news-header">
+                <span class="tag comunidade">Comunidade</span>
+                <span class="date">📅 28/08/2025</span>
+              </div>
+        
+              <h4>Vencedores do Concurso de Fanart</h4>
+            </div>
+        
+            <button class="see-all">
+              Ver todas as notícias
+            </button>
+        
+          </div>
         </div>
       </section>
+      
     </div>
 
     <script>
           const videos = {{ videos_secundarios | tojson }};
           let index = 0;
           const chunkSize = 4;
+          let page = 0;
           const container = document.querySelector(".side-grid");
           const prevBtn = document.getElementById("prevBtn");
           const nextBtn = document.getElementById("nextBtn");
@@ -363,7 +599,6 @@
 
             const slice = videos.slice(index, index + chunkSize);
             slice.forEach(video => {
-              console.log(video)
               container.innerHTML += `
                 <div class="side-card">
                   <img src="${video[1]}" alt="">
@@ -380,6 +615,9 @@
             index += chunkSize;
             if (index >= videos.length) index = 0;
           }
+          renderVideos();
+          setInterval(renderVideos, 5000); // troca a cada 5s
+
           nextBtn.addEventListener("click", () => {
           const maxPage = Math.ceil(videos.length / chunkSize) - 1;
           page = page >= maxPage ? 0 : page + 1;
@@ -390,10 +628,7 @@
             const maxPage = Math.ceil(videos.length / chunkSize) - 1;
             page = page <= 0 ? maxPage : page - 1;
             renderVideos("prev");
-          });
-          renderVideos();
-          setInterval(renderVideos, 5000); // troca a cada 5s
-
+          });  
     </script>
   </body>
 </html>
