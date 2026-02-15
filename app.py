@@ -1398,6 +1398,113 @@ def index2_page():
         sugestao_cash_classes = cash_para_classes,
         last_update=datetime.now().strftime("%d/%m/%Y"))
 
+@app.route('/classes2')
+def classes2_page():
+    
+    df = pd.read_excel('rola.xlsx', header=None)
+    classes = df.iloc[1:27, 4].dropna().tolist()
+    builds = df.iloc[1:29, 5].dropna().tolist()
+
+    wb = load_workbook('rola.xlsx')
+    ws = wb["INFORMAÇÕES"]
+        
+    links_classes = []
+    for row in ws.iter_rows(min_row=33, min_col=2, max_col=2):
+            cell = row[0]
+            if cell.hyperlink:
+                links_classes.append(cell.hyperlink.target)
+            elif cell.value:
+                links_classes.append(cell.value)
+
+    df_guias = pd.read_excel('guias_classes.xlsx',header=None)
+    df_guias.columns = ['id', 'channel_name', 'title', 'thumbnail', 'video_url', 'classe']
+    
+    classe_map = {
+    "Cavaleiros Rúnicos": "Cavaleiro Rúnico",
+    "Guardião Real": "Guardião Real",
+    "Feiticeiro": "Feiticeiro",
+    "Sentinela": "Sentinela",
+    "Sicário": "Sicário",
+    "Arcanos": "Arcano",
+    "Arcebispos": "Arcebispo",
+    "Renegado": "Renegado",
+    "Shura": "Sura",
+    "Mecânico": "Mecânico",
+    "Bioquímicos": "Bioquímico",
+    "Trovadores": "Trovador",
+    "Musa": "Trovador"
+    }   
+    def normalizar(texto):
+        return str(texto).strip().lower()
+    df_guias["classe_normalizada"] = df_guias["classe"].apply(normalizar)
+    
+
+    class_builds = [
+        {"classe": classes[1], "builds": [builds[1], builds[2]], "link": "","imagem": "assets/classes/feiticeiro.png","imagem_sentado": "assets/classes/sentados/feiticeiro.gif","imagem_andando": "assets/classes/andando/feiticeiro.gif"}, #Feiticeiro
+        {"classe": classes[2], "builds": [builds[3]], "link": links_classes[4],"imagem": "assets/classes/sentinela.png","imagem_sentado": "assets/classes/sentados/sentinela.gif","imagem_andando": "assets/classes/andando/sentinela.gif"},# Sentinela
+        {"classe": classes[3], "builds": [builds[4]], "link": links_classes[5],"imagem": "assets/classes/sicario.png","imagem_sentado": "assets/classes/sentados/sicario.gif","imagem_andando": "assets/classes/andando/sicario.gif"},# Sicario
+        {"classe": classes[4], "builds": [builds[5]], "link": links_classes[6],"imagem": "assets/classes/arcano.png","imagem_sentado": "assets/classes/sentados/arcano.gif","imagem_andando": "assets/classes/andando/arcano.gif"},# Arcano
+        {"classe": classes[5], "builds": [builds[6], builds[7]], "link": "","imagem": "assets/classes/arcebispo.png","imagem_sentado": "assets/classes/sentados/arcebispo.gif","imagem_andando": "assets/classes/andando/arcebispo.gif"},# Arcebispo
+        {"classe": classes[6], "builds": [builds[9], builds[8]], "link": links_classes[3],"imagem": "assets/classes/renegado.png","imagem_sentado": "assets/classes/sentados/renegado.gif","imagem_andando": "assets/classes/andando/renegado.gif"},# Renegado
+        {"classe": classes[7], "builds": [builds[11], builds[10]], "link": "","imagem": "assets/classes/sura.png","imagem_sentado": "assets/classes/sentados/shura.gif","imagem_andando": "assets/classes/andando/shura.gif"},# Shura
+        {"classe": classes[8], "builds": [builds[12]], "link": links_classes[1],"imagem": "assets/classes/cavaleiro_runico.png","imagem_sentado": "assets/classes/sentados/cavaleiro_runico.gif","imagem_andando": "assets/classes/andando/cavaleiro_runico.gif"}, # Cavaleiros Rúnicos
+        {"classe": classes[9], "builds": [builds[14], builds[13]], "link": links_classes[2],"imagem": "assets/classes/guardioes_reais.png","imagem_sentado": "assets/classes/sentados/guardiao_real.gif","imagem_andando": "assets/classes/andando/guardiao_real.gif"},# Guardião Real
+        {"classe": classes[10], "builds": [builds[15]], "link": "","imagem": "assets/classes/mecanico.png","imagem_sentado": "assets/classes/sentados/mecanico.gif","imagem_andando": "assets/classes/andando/mecanico.gif"},# Mecânico
+        {"classe": classes[11], "builds": [builds[16]], "link": "","imagem": "assets/classes/genetico.png","imagem_sentado": "assets/classes/sentados/bioquimico.gif","imagem_andando": "assets/classes/andando/bioquimico.gif"},# Bioquímicos
+        {"classe": classes[12], "builds": [builds[17], builds[18]], "link": links_classes[7],"imagem": "assets/classes/trovador.png","imagem_sentado": "assets/classes/sentados/trovador.gif","imagem_andando": "assets/classes/andando/trovador.gif"},# Trovadores
+        {"classe": classes[13], "builds": [builds[19], builds[20]], "link": links_classes[7],"imagem": "assets/classes/musa.png","imagem_sentado": "assets/classes/sentados/musa.gif","imagem_andando": "assets/classes/andando/musa.gif"}, # Musa
+    ]
+    
+
+    def transformar_para_embed(url):
+        if "youtube.com/watch?v=" in url:
+            return url.replace("watch?v=", "embed/")
+        return url
+
+
+    for item in class_builds:
+        nome_original = item["classe"]
+        nome_para_buscar = classe_map.get(nome_original, nome_original)  
+        classe_normalizada = normalizar(nome_para_buscar)
+
+        guias_filtrados = df_guias[df_guias["classe_normalizada"] == classe_normalizada]
+
+        lista_guias = []
+        for _, row in guias_filtrados.iterrows():
+            guia = {
+                "id": row["id"],
+                "channel_name": row["channel_name"],
+                "title": row["title"],
+                "thumbnail": row["thumbnail"],
+                "video_url": row["video_url"]
+            }
+            lista_guias.append(guia)
+        item["guias"] = lista_guias
+
+    
+    colunas = ['channel_name', 'title', 'thumbnail', 'video_url','classe']
+    df_guias_gerais = pd.read_excel('guias_gerais.xlsx', header=None, names=colunas)
+
+
+    df_guias_gerais['embed_url'] = df_guias_gerais['video_url'].apply(transformar_para_embed)
+    guias_gerais = df_guias_gerais[df_guias_gerais['classe'] == 'Geral'].to_dict(orient='records')
+    df_guias_gerais['link'] = df_guias_gerais['embed_url']
+
+    df_guias_gerais['thumb'] = (
+        df_guias_gerais['link']
+        .str.replace('https://www.youtube.com/embed/', 'https://img.youtube.com/vi/', regex=False)
+        + '/hqdefault.jpg'
+    )
+    print(guias_gerais[0].keys())
+    guias_gerais = df_guias_gerais[df_guias_gerais['classe'] == 'Geral'].to_dict(orient='records')
+
+    return render_template('classes2.html', 
+                           class_builds=class_builds,
+                           links = links_formatados,
+                           streamers = stream_cache,
+                           guias_gerais  = guias_gerais
+                           )
+
 @app.route('/ads.txt')
 def render_ads():
     return send_from_directory(directory=os.path.abspath("."), path="ads.txt", mimetype='text/plain')

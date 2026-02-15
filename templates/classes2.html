@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='global-style.css') }}">
+    <meta name="description" content="Wiki de Ragnarok Online LATAM com informações essenciais, links úteis, builds, rankings e vídeos recentes da comunidade.">
+    <!-- <meta name="google-adsense-account" content="ca-pub-6266174717644829"> -->
+    <title>Home | GUIA-ROLATAM</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+  
+      gtag('config', 'G-K3HW966K67');
+    </script>
+    <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Rajdhani', 'sans-serif'],
+            },
+            colors: {
+              accent: {
+                400: '#fbbf24',
+                500: '#f59e0b',
+                600: '#d97706',
+              },
+              dark: {
+                800: '#1f1f22',
+                900: '#0f0f11',
+                950: '#050505',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #050505;
+        color: #e4e4e7;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f0f11;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      :root {
+  --bg: #0b0f14;
+  --card: rgba(20, 25, 35, 0.6);
+  --border: rgba(255, 255, 255, 0.06);
+  --accent: #7c7cff;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+}
+
+
+
+.section-header {
+  max-width: 1400px;
+  margin: 40px auto;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+.section-title-container{
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  color:#FFD700;
+}
+
+.section-subtitle {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.section-title span {
+  display: flex;
+  align-items: center;     
+  justify-content: center; 
+
+  background-color: #1a1604;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 6px;
+
+  color: #facc15;        
+  font-size: 0.9rem;       
+}
+.section-title p {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.icon {
+  font-size: 20px;
+}
+
+.badges {
+  display: flex;
+  gap: 8px;
+}
+
+.badge {
+  padding: 6px 12px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+.badge.accent {
+  color: var(--accent);
+  background: rgba(124,124,255,0.1);
+}
+
+.badge.muted {
+  color: #6b7280;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  max-width: 1400px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+/* CARD */
+
+.card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  text-align: center;
+  transition: all 0.4s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  border-color: #facc1575;
+  background: rgba(20,25,40,0.85);
+}
+
+
+.card-star {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 18px;
+  color: #facc15; /* dourado */
+  opacity: 0.1;
+  pointer-events: none;
+  transition: all 0.4s ease;
+  filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.4));
+}
+
+/* efeito no hover */
+.card:hover .card-star {
+  opacity: 1;
+  transform: scale(1.2) rotate(8deg);
+}
+
+/* SPRITE */
+
+.sprite-wrapper {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  transition: transform 0.4s;
+}
+
+.card:hover .sprite-wrapper {
+  transform: scale(1.12);
+}
+
+.sprite-wrapper img {
+  width: 360px;
+  image-rendering: pixelated;
+}
+
+/* TEXT */
+
+.card h3 {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.category {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* HOVER CONTENT */
+
+.hover-content {
+  margin-top: 16px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  text-align: left;
+  border-top: 1px solid var(--border);
+  padding-top: 0;
+}
+
+.card:hover .hover-content {
+  max-height: 300px;
+  opacity: 1;
+  padding-top: 16px;
+}
+
+.label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.hover-content ul {
+  padding-left: 16px;
+  margin: 0 0 12px;
+}
+
+.hover-content li {
+  font-size: 12px;
+  color: #d1d5db;
+  margin-bottom: 4px;
+}
+
+.hover-content a {
+  display: block;
+  padding: 8px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 6px;
+  transition: 0.3s;
+}
+
+.hover-content a:hover {
+  color: white;
+  background: rgba(124,124,255,0.15);
+}
+
+/* HINT */
+
+.hint {
+  display: block;
+  margin-top: 12px;
+  font-size: 10px;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+.card:hover .hint {
+  display: none;
+}
+
+/* teste claude design */
+
+
+
+
+.card-container {
+            position: relative;
+        }
+
+        .card {
+            position: relative;
+            background: rgba(17, 17, 17, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.5s ease;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 320px;
+        }
+
+        .card:hover {
+            background: rgba(31, 31, 31, 0.8);
+            transform: translateY(-8px);
+        }
+
+        /* Background Decor */
+        .bg-decor {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 16px;
+            opacity: 0.05;
+            transition: opacity 0.5s ease;
+        }
+
+        .card:hover .bg-decor {
+            opacity: 0.2;
+        }
+
+        .sparkles-icon {
+            width: 48px;
+            height: 48px;
+            color: #c084fc;
+        }
+
+        /* Sprite Frame */
+        .sprite-frame {
+            position: relative;
+            margin-bottom: 16px;
+            width: 128px;
+            height: 128px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s ease;
+        }
+
+        .card:hover .sprite-frame {
+            border-color: rgba(168, 85, 247, 0.2);
+            transform: scale(1.1);
+        }
+
+        .sprite-glow {
+            position: absolute;
+            inset: 0;
+            background: rgba(168, 85, 247, 0.05);
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .card:hover .sprite-glow {
+            opacity: 1;
+        }
+
+        .sprite-img {
+            position: relative;
+            z-index: 10;
+            width: 96px;
+            height: 96px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        /* Info */
+        .class-name {
+            font-weight: bold;
+            font-size: 20px;
+            color: white;
+            letter-spacing: 0.05em;
+            transition: color 0.5s ease;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .card:hover .class-name {
+            color: #c084fc;
+        }
+
+        .category {
+            font-size: 10px;
+            color: #6b7280;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 16px;
+        }
+
+        /* Hover Content */
+        .hover-content {
+            width: 100%;
+            margin-top: 16px;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 0;
+        }
+
+        .card:hover .hover-content {
+            max-height: 400px;
+            opacity: 1;
+            padding-top: 16px;
+        }
+
+        .section {
+            margin-bottom: 16px;
+        }
+
+        .builds-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4px;
+        }
+
+        .build-item {
+            font-size: 12px;
+            color: #d1d5db;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .guides-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .guide-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            font-size: 11px;
+            color: #9ca3af;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .guide-link:hover {
+            color: white;
+            background: rgba(168, 85, 247, 0.1);
+        }
+
+        .chevron {
+            width: 12px;
+            height: 12px;
+        }
+
+        .hover-hint {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #4b5563;
+            text-transform: uppercase;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover .hover-hint {
+            opacity: 0;
+            display: none;
+        }
+
+.general-guides-section{
+        max-width: 1400px;
+        margin: 40px auto;
+        padding: 0 16px;
+        }
+        
+        .video-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 3rem;
+}
+
+@media (min-width: 768px) {
+    .video-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Video Card */
+.video-card {
+    cursor: pointer;
+}
+
+.video-thumbnail-wrapper {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 0.75rem;
+}
+
+.video-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.video-card:hover .video-thumbnail {
+    transform: scale(1.05);
+}
+
+/* Video Overlay */
+.video-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-card:hover .video-overlay {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Play Button */
+.play-button {
+    width: 3rem;
+    height: 3rem;
+    background-color: #a78bfa; /* accent-500 */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.75);
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.play-button svg {
+    color: #000;
+    margin-left: 0.25rem;
+}
+
+.video-card:hover .play-button {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Video Duration */
+.video-duration {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    padding: 0.125rem 0.375rem;
+    background-color: rgba(0, 0, 0, 0.8);
+    font-size: 0.625rem;
+    font-weight: bold;
+    color: white;
+    border-radius: 0.25rem;
+}
+
+/* Video Title */
+.video-title {
+    color: #e5e7eb; /* gray-200 */
+    font-weight: bold;
+    transition: color 0.3s ease;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.video-card:hover .video-title {
+    color: #a78bfa; /* accent-400 */
+}
+
+/* Video Description */
+.video-description {
+    font-size: 0.75rem;
+    color: #6b7280; /* gray-500 */
+    margin: 0.25rem 0 0 0;
+}
+        /* SVG Icons */
+        svg {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
+</head>
+  <body>
+    <div id="root">
+      {% include 'components/header-remaster.html' %}
+      {% include 'components/sidebar-remaster.html' %}
+    
+      <header class="section-header">
+        <div class="section-title">
+          <span>
+            <svg width="16px" height="16px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#FFD700" stroke="#FFD700"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="icomoon-ignore"> </g> <path d="M9.069 2.672v14.928h-6.397c0 0 0 6.589 0 8.718s1.983 3.010 3.452 3.010c1.469 0 16.26 0 20.006 0 1.616 0 3.199-1.572 3.199-3.199 0-1.175 0-23.457 0-23.457h-20.259zM6.124 28.262c-0.664 0-2.385-0.349-2.385-1.944v-7.652h5.331v7.192c0 0.714-0.933 2.404-2.404 2.404h-0.542zM28.262 26.129c0 1.036-1.096 2.133-2.133 2.133h-17.113c0.718-0.748 1.119-1.731 1.119-2.404v-22.12h18.126v22.391z" fill="#000000"> </path> <path d="M12.268 5.871h13.861v1.066h-13.861v-1.066z" fill="#000000"> </path> <path d="M12.268 20.265h13.861v1.066h-13.861v-1.066z" fill="#000000"> </path> <path d="M12.268 23.997h13.861v1.066h-13.861v-1.066z" fill="#000000"> </path> <path d="M26.129 9.602h-13.861v7.997h13.861v-7.997zM25.063 16.533h-11.729v-5.864h11.729v5.864z" fill="#000000"> </path> </g></svg>
+          </span>
+          <div class="section-title-container">
+            <h2 class="section-title">Guia de Classes</h2>
+            <p>Explore as builds e guias para cada especialização</p>
+          </div>
+        </div>
+
+
+      </header>
+    
+      <!-- CLASSES GRID -->
+      <section class="grid">
+        
+        <!-- CARD -->
+
+
+        {% for classe in class_builds %}
+        <article class="card">
+          <span class="card-star">✦</span>
+          <div class="sprite-wrapper">
+          <img  src="{{ url_for('static', filename=classe.imagem_sentado) }}"
+          data-hover="{{ url_for('static', filename=classe.imagem_andando) }}"
+          data-original="{{ url_for('static', filename=classe.imagem_sentado) }}"
+          alt="Imagem de {{ classe.classe }}"
+          class="imagem-classe">
+          </div>
+    
+          <h3>{{ classe.classe }}</h3>
+          <span class="category">3rd Class</span>
+    
+          <div class="hover-content">
+            <div>
+              <p class="label">Builds Comuns</p>
+              <ul>
+              {% for build in classe.builds %}
+                <li> # {{ build }}</li>
+              {% endfor %}
+              </ul>
+            </div>
+    
+            <div>
+              <p class="label">Guias</p>
+              {% for guia in classe.guias %}
+              <a href={{guia.video_url}} target="_blank">{{guia.title}} →</a>
+              {% endfor %}
+            </div>
+          </div>
+    
+          <span class="hint">Passe o mouse para mais info</span>
+        </article>
+
+      {% endfor %}
+    
+      </section>
+    
+
+      <section class="general-guides-section">
+        <div class="section-title">
+          <span>
+            <svg width="16px" height="16px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#FFD700" stroke="#FFD700"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="icomoon-ignore"> </g> <path d="M9.069 2.672v14.928h-6.397c0 0 0 6.589 0 8.718s1.983 3.010 3.452 3.010c1.469 0 16.26 0 20.006 0 1.616 0 3.199-1.572 3.199-3.199 0-1.175 0-23.457 0-23.457h-20.259zM6.124 28.262c-0.664 0-2.385-0.349-2.385-1.944v-7.652h5.331v7.192c0 0.714-0.933 2.404-2.404 2.404h-0.542zM28.262 26.129c0 1.036-1.096 2.133-2.133 2.133h-17.113c0.718-0.748 1.119-1.731 1.119-2.404v-22.12h18.126v22.391z" fill="#000000"> </path> <path d="M12.268 5.871h13.861v1.066h-13.861v-1.066z" fill="#000000"> </path> <path d="M12.268 20.265h13.861v1.066h-13.861v-1.066z" fill="#000000"> </path> <path d="M12.268 23.997h13.861v1.066h-13.861v-1.066z" fill="#000000"> </path> <path d="M26.129 9.602h-13.861v7.997h13.861v-7.997zM25.063 16.533h-11.729v-5.864h11.729v5.864z" fill="#000000"> </path> </g></svg>
+          </span>
+          <div class="section-title-container">
+            <h2 class="section-title">Guias Gerais</h2>
+            <p>Vídeos essenciais para sua jornada</p>
+          </div>
+        </div>
+        
+        <div class="video-grid">
+            {% for guia in guias_gerais %}
+             <div class="video-card">
+                <div class="video-thumbnail-wrapper">
+                    <img src="{{ guia.thumb }}" class="video-thumbnail" alt="Título do Vídeo 3">
+                    <div class="video-overlay">
+                        <div class="play-button">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 5v14l11-7z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="video-duration">8:30</span>
+                </div>
+                <h4 class="video-title">{{ guia.title }}</h4>
+            </div>
+          {% endfor %}
+        </div>
+    </section>
+    <script>
+       const dados = {{ class_builds | tojson | safe }};
+
+       console.log(dados)
+    </script>
+  </body>
+</html>
