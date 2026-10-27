@@ -2,7 +2,8 @@ flask
 pandas
 openpyxl
 flask-cors
-gunicorn
+.\.venv\Scripts\Activate.ps1gunicorn
 APScheduler
 google-api-python-client
 flask_sqlalchemy
+python-dotenv

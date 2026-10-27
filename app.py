@@ -18,6 +18,13 @@ import urllib.parse
 from urllib.parse import urlparse
 import json
 
+# Carrega as variáveis do arquivo .env (se existir). O .env NÃO vai para o GitHub.
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 
 app = Flask(__name__)
 CORS(app)
@@ -25,7 +32,7 @@ CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key= "#aSDa32#"
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'troque-esta-chave-no-env')
 db = SQLAlchemy(app)
 
 class Link(db.Model):
@@ -36,9 +43,11 @@ class Link(db.Model):
 
 
 
-CLIENT_ID = 'qdn4nkcag974fxftx5xwfs5goddqx6'
-CLIENT_SECRET = 'l0a2yo19o38jl7luid7nu0xerz38m1'
-YOUTUBE_API_KEY = 'AIzaSyBjK1M3gsWEZCA75qYeIXBFzgoVu7vKcqY'
+# Credenciais SEMPRE via variáveis de ambiente (arquivo .env localmente,
+# painel de variáveis no servidor). Nunca escreva chaves direto no código.
+CLIENT_ID = os.environ.get('TWITCH_CLIENT_ID', '')
+CLIENT_SECRET = os.environ.get('TWITCH_CLIENT_SECRET', '')
+YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY', '')
 API_SERVICE_NAME = 'youtube'
 API_VERSION = 'v3'
 
