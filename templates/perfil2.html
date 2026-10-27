@@ -1,0 +1,473 @@
+{% extends 'components/layout-remaster.html' %}
+
+{% block title %}Minha Conta | GUIA-ROLATAM{% endblock %}
+{% block head %}
+<meta name="robots" content="noindex">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+{% endblock %}
+
+{% block styles %}
+.banner {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.banner img { width: 100%; height: 100%; object-fit: cover; }
+.banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, #050505, rgba(0, 0, 0, 0.2));
+}
+
+.perfil-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 24px;
+  margin-top: -60px;
+  position: relative;
+  z-index: 1;
+  align-items: start;
+}
+
+.panel h2 { font-size: 18px; font-weight: 700; color: #fff; }
+.panel h3 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin: 20px 0 10px;
+}
+.topo-conta { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.campos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.redes { display: flex; gap: 10px; }
+.redes a {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.redes a:hover { border-color: rgba(245, 158, 11, 0.4); transform: translateY(-2px); }
+.redes img { width: 20px; height: 20px; }
+
+/* Cartão do perfil */
+.card-perfil { text-align: center; padding-top: 28px; }
+.profile-pic {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 12px;
+  border: 3px solid #f59e0b;
+  background: #1a1a1a;
+}
+.card-perfil h2 { font-family: 'Rajdhani', sans-serif; font-size: 24px; }
+.card-perfil .local { font-size: 13px; color: #6b7280; margin-top: 2px; }
+.card-perfil .cargo { font-size: 14px; color: #fbbf24; font-weight: 600; margin-top: 10px; }
+.card-perfil .bio { font-size: 13px; color: #9ca3af; margin-top: 8px; line-height: 1.6; }
+.stats-perfil {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 16px 0 4px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.stats-perfil strong { display: block; font-family: 'Rajdhani', sans-serif; font-size: 26px; color: #fff; }
+.stats-perfil span { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; }
+
+/* Posts */
+.posts-topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+#posts { display: flex; flex-direction: column; gap: 12px; }
+.post-card {
+  position: relative;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  padding: 16px 20px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: background 0.25s, border-color 0.25s;
+}
+.post-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #a855f7;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.25s;
+}
+.post-card:hover { background: #161616; border-color: rgba(168, 85, 247, 0.3); }
+.post-card:hover::before, .post-card.expandido::before { transform: scaleY(1); }
+.post-content { display: flex; gap: 14px; align-items: flex-start; }
+.post-avatar { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 64px; flex-shrink: 0; }
+.post-avatar .avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; background: #1a1a1a; }
+.post-avatar p { font-size: 11px; color: #6b7280; text-align: center; word-break: break-all; }
+.post-title { font-size: 16px; font-weight: 600; color: #fff; transition: color 0.2s; }
+.post-card:hover .post-title { color: #a855f7; }
+.post-body {
+  display: none;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #d1d5db;
+  line-height: 1.7;
+}
+.post-body img { max-width: 100%; border-radius: 8px; margin: 8px 0; }
+.post-body ul, .post-body ol { padding-left: 20px; list-style: revert; }
+.post-body h1 { font-size: 20px; font-weight: 700; margin: 8px 0; }
+.post-body h2 { font-size: 17px; font-weight: 700; margin: 8px 0; }
+.post-meta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; font-size: 12px; color: #6b7280; }
+
+/* Modal novo post + editor */
+.modal-box.grande { max-width: 760px; }
+.modal-box h2 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+#editor-toolbar.ql-toolbar.ql-snow {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px 10px 0 0;
+  background: #161616;
+}
+#editor.ql-container.ql-snow {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  background: #0b0b0b;
+  color: #e5e7eb;
+  min-height: 220px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+}
+.ql-snow .ql-stroke { stroke: #9ca3af; }
+.ql-snow .ql-fill { fill: #9ca3af; }
+.ql-snow .ql-picker { color: #9ca3af; }
+.ql-snow .ql-picker-options { background: #161616; border-color: rgba(255, 255, 255, 0.1) !important; }
+.ql-snow button:hover .ql-stroke, .ql-snow .ql-active .ql-stroke { stroke: #fbbf24 !important; }
+.ql-snow button:hover .ql-fill, .ql-snow .ql-active .ql-fill { fill: #fbbf24 !important; }
+.ql-editor.ql-blank::before { color: #4b5563; font-style: normal; }
+
+/* Carregando */
+#loading {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(5, 5, 5, 0.85);
+  color: #9ca3af;
+  font-size: 13px;
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #f59e0b;
+  animation: girar 0.8s linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+
+@media (max-width: 1000px) {
+  .perfil-grid { grid-template-columns: 1fr; }
+  .card-perfil { order: -1; }
+}
+@media (max-width: 560px) {
+  .campos { grid-template-columns: 1fr; }
+  .banner { height: 160px; }
+}
+{% endblock %}
+
+{% block content %}
+<div id="loading">
+  <div class="spinner"></div>
+  <span>Carregando...</span>
+</div>
+
+<section class="container">
+  <div class="banner">
+    <img src="{{ url_for('static', filename='assets/banner.jpg') }}" alt="Ragnarok Online">
+  </div>
+
+  <div class="perfil-grid">
+    <!-- Informações -->
+    <div class="panel">
+      <div class="topo-conta">
+        <h2>Minha Conta</h2>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost settings-btn">⚙ Configurações</button>
+          <button class="btn btn-danger" id="sair">🚪 Sair</button>
+        </div>
+      </div>
+
+      <h3>Informações do usuário</h3>
+      <div class="campos">
+        <div class="field">
+          <label>Username</label>
+          <input class="input username" type="text" value="" disabled>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input class="input email" type="email" value="" disabled>
+        </div>
+      </div>
+
+      <h3>Redes sociais</h3>
+      <div class="redes">
+        <a href="" aria-label="Instagram"><img src="{{ url_for('static', filename='assets/instagram.svg') }}" alt=""></a>
+        <a href="" aria-label="Twitter"><img src="{{ url_for('static', filename='assets/twitter.svg') }}" alt=""></a>
+        <a href="" aria-label="Twitch"><img src="{{ url_for('static', filename='assets/twitch.svg') }}" alt=""></a>
+        <a href="" aria-label="YouTube"><img src="{{ url_for('static', filename='assets/youtube.svg') }}" alt=""></a>
+      </div>
+    </div>
+
+    <!-- Cartão do perfil -->
+    <div class="panel card-perfil">
+      <img src="" alt="Foto de perfil" class="profile-pic">
+      <h2>Victor Oliveira, 27</h2>
+      <p class="local">São Paulo, Brasil</p>
+      <div class="stats-perfil">
+        <div><strong class="qtdPosts">0</strong><span>Posts</span></div>
+      </div>
+      <p class="cargo">Desenvolvedor Full Stack</p>
+      <p class="bio">Apaixonado por tecnologia, café e código limpo. Sempre buscando desafios e novas soluções.</p>
+    </div>
+  </div>
+</section>
+
+<section class="container">
+  <div class="posts-topo">
+    <div class="section-title" style="margin-bottom:0;">
+      <span>📝</span>
+      <div>
+        <h2>Posts</h2>
+        <p>Clique em um post para ler</p>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-add-post">+ Adicionar post</button>
+  </div>
+  <div id="posts">
+    <div class="panel empty-state"><span class="icone">📝</span>Nenhum post ainda.</div>
+  </div>
+</section>
+
+<!-- Modal novo post -->
+<div id="modal" class="modal-overlay">
+  <div class="modal-box grande" role="dialog" aria-modal="true">
+    <button class="modal-close close" aria-label="Fechar">×</button>
+    <h2>Novo post</h2>
+    <div class="field" style="margin-bottom:12px;">
+      <label for="postTitle">Título</label>
+      <input class="input" type="text" id="postTitle" placeholder="Digite o título do post">
+    </div>
+
+    <div id="create-post">
+      <!-- Toolbar do Quill -->
+      <div id="editor-toolbar">
+        <span class="ql-formats">
+          <select class="ql-header">
+            <option value="1"></option>
+            <option value="2"></option>
+            <option selected></option>
+          </select>
+          <button class="ql-bold"></button>
+          <button class="ql-italic"></button>
+          <button class="ql-underline"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-list" value="ordered"></button>
+          <button class="ql-list" value="bullet"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-color"></button>
+          <button class="ql-background"></button>
+        </span>
+        <span class="ql-formats">
+          <button class="ql-image"></button>
+        </span>
+      </div>
+      <div id="editor"></div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
+      <button class="btn btn-ghost close">Cancelar</button>
+      <button class="btn btn-primary" id="savePost">Salvar post</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const API_URL = "http://localhost:3000";
+  const PAGINA_LOGIN = "{{ url_for('login2_page') }}";
+  const token = localStorage.getItem("token");
+  const loading = document.getElementById("loading");
+
+  window.addEventListener("DOMContentLoaded", async () => {
+    if (!token) {
+      window.location.href = PAGINA_LOGIN;
+      return;
+    }
+    try {
+      loading.style.display = "flex";
+      const response = await fetch(`${API_URL}/auth/user`, {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json"
+        }
+      });
+      if (!response.ok) {
+        window.location.href = PAGINA_LOGIN;
+        return;
+      }
+      const json = await response.json();
+      const { usuario } = json.data;
+
+      document.querySelector(".profile-pic").src = usuario.img_url;
+      document.querySelector(".username").value = usuario.username;
+      document.querySelector(".email").value = usuario.email;
+
+      await carregarPosts(usuario.id);
+    } catch (error) {
+      console.error("Erro ao buscar usuário:", error);
+      mostrarToast("Não foi possível conectar ao servidor.", "erro");
+    } finally {
+      loading.style.display = "none";
+    }
+  });
+
+  async function carregarPosts(userId) {
+    try {
+      const response = await fetch(`${API_URL}/posts?user_id=${encodeURIComponent(userId)}`);
+      const json = await response.json();
+      if (!json.success) return;
+
+      document.querySelector(".qtdPosts").textContent = json.data.length;
+      const postsContainer = document.getElementById("posts");
+      postsContainer.innerHTML = "";
+
+      if (!json.data.length) {
+        postsContainer.innerHTML = '<div class="panel empty-state"><span class="icone">📝</span>Nenhum post ainda.</div>';
+        return;
+      }
+
+      json.data.forEach(post => {
+        const postDiv = document.createElement("div");
+        postDiv.classList.add("post-card");
+
+        const contentDiv = document.createElement("div");
+        contentDiv.classList.add("post-content");
+
+        const avatarDiv = document.createElement("div");
+        avatarDiv.classList.add("post-avatar");
+        const avatar = document.createElement("img");
+        avatar.className = "avatar";
+        avatar.src = post.User?.img_url || "";
+        avatar.alt = "";
+        const autor = document.createElement("p");
+        autor.textContent = post.User?.username || "";
+        avatarDiv.append(avatar, autor);
+
+        const contentBox = document.createElement("div");
+        contentBox.style.flex = "1";
+
+        const title = document.createElement("h3");
+        title.classList.add("post-title");
+        title.textContent = post.title;
+
+        const content = document.createElement("div");
+        content.classList.add("post-body");
+        content.innerHTML = marked.parse(post.content || "");
+
+        const meta = document.createElement("div");
+        meta.classList.add("post-meta");
+        meta.innerHTML = `
+          <span class="date">📅 ${new Date(post.createdAt).toLocaleDateString("pt-BR")}</span>
+          <span class="views">👁️ ${Math.floor(Math.random() * 1000)} views</span>
+          <span class="likes">❤️ ${Math.floor(Math.random() * 500)} likes</span>
+        `;
+
+        // clique abre/fecha o conteúdo
+        postDiv.addEventListener("click", () => {
+          const aberto = content.style.display === "block";
+          content.style.display = aberto ? "none" : "block";
+          postDiv.classList.toggle("expandido", !aberto);
+          contentDiv.classList.toggle("expanded", !aberto);
+        });
+
+        contentBox.append(title, content, meta);
+        contentDiv.append(avatarDiv, contentBox);
+        postDiv.appendChild(contentDiv);
+        postsContainer.appendChild(postDiv);
+      });
+    } catch (error) {
+      console.error("Erro ao carregar posts:", error);
+    }
+  }
+
+  // ---------- Modal de novo post ----------
+  const modal = document.getElementById("modal");
+  document.querySelector(".btn-add-post").addEventListener("click", () => modal.classList.add("ativo"));
+  modal.querySelectorAll(".close").forEach(b => b.addEventListener("click", () => modal.classList.remove("ativo")));
+  modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("ativo"); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") modal.classList.remove("ativo"); });
+
+  const quill = new Quill("#editor", {
+    modules: { toolbar: "#editor-toolbar" },
+    placeholder: "Escreva seu post...",
+    theme: "snow"
+  });
+
+  document.getElementById("savePost").addEventListener("click", async () => {
+    const title = document.getElementById("postTitle").value.trim();
+    const content = quill.root.innerHTML;
+    if (!title) {
+      mostrarToast("Dê um título para o post.", "erro");
+      return;
+    }
+    modal.classList.remove("ativo");
+    try {
+      const response = await fetch(`${API_URL}/posts/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ title, content })
+      });
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        mostrarToast("Não foi possível salvar o post.", "erro");
+      }
+    } catch (err) {
+      console.log(err);
+      mostrarToast("Não foi possível salvar o post.", "erro");
+    }
+  });
+
+  // ---------- Sair ----------
+  document.getElementById("sair").addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.href = PAGINA_LOGIN;
+  });
+</script>
+{% endblock %}

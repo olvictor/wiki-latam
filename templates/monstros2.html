@@ -1,0 +1,307 @@
+{% extends 'components/layout-remaster.html' %}
+
+{% block title %}Monstros | GUIA-ROLATAM{% endblock %}
+{% block description %}Banco de monstros de Ragnarok Online LATAM: nível, HP, experiência, drops e mapas onde encontrar.{% endblock %}
+
+{% block styles %}
+.monstros-layout {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+/* Lista lateral */
+.lista-panel {
+  position: sticky;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: calc(100vh - 120px);
+}
+.lista-monstros {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 -8px;
+  padding: 0 8px;
+}
+.item-monstro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #d1d5db;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.item-monstro:hover { background: #161616; }
+.item-monstro.ativo {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #fff;
+}
+.item-monstro .lv { font-size: 11px; color: #6b7280; white-space: nowrap; }
+
+/* Detalhe */
+.detalhe-topo {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+.sprite-monstro {
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12), rgba(0, 0, 0, 0.4) 70%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 50%;
+}
+.sprite-monstro img { max-width: 110px; max-height: 110px; object-fit: contain; image-rendering: pixelated; }
+.detalhe-topo h2 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.stat {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.stat span { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #6b7280; margin-bottom: 4px; }
+.stat strong { font-size: 18px; color: #fff; font-variant-numeric: tabular-nums; }
+
+.bloco-titulo {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fbbf24;
+  margin: 0 0 12px;
+}
+.drops {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.drop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  font-size: 12px;
+  color: #d1d5db;
+  transition: border-color 0.2s, color 0.2s;
+}
+a.drop:hover { border-color: rgba(168, 85, 247, 0.4); color: #fff; }
+.drop img { width: 28px; height: 28px; object-fit: contain; flex-shrink: 0; }
+
+.mapas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+.mapa-card {
+  position: relative;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.mapa-card:hover { border-color: rgba(245, 158, 11, 0.4); transform: translateY(-2px); }
+.mapa-card.copiado { border-color: rgba(74, 222, 128, 0.6); }
+.mapa-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #0b0b0b;
+  margin-bottom: 6px;
+}
+.mapa-card p { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #fbbf24; }
+.mapa-card small { display: block; font-size: 10px; color: #6b7280; }
+
+@media (max-width: 900px) {
+  .monstros-layout { grid-template-columns: 1fr; }
+  .lista-panel { position: static; max-height: 360px; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detalhe-topo { flex-direction: column; text-align: center; }
+}
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div class="section-header">
+    <div class="section-title">
+      <span>🐺</span>
+      <div>
+        <h1>Monstros</h1>
+        <p>Nível, HP, experiência, drops e onde encontrar cada monstro</p>
+      </div>
+    </div>
+    <span class="pill"><strong>{{ data | length }}</strong> monstros</span>
+  </div>
+</header>
+
+<section class="container">
+  <div class="monstros-layout">
+    <aside class="panel lista-panel">
+      <div class="field">
+        <label for="buscaMonstro">Selecione um monstro</label>
+        <input class="input" id="buscaMonstro" type="search" placeholder="Buscar por nome ou ID..." autocomplete="off">
+      </div>
+      <div class="lista-monstros" id="listaMonstros"></div>
+    </aside>
+
+    <div class="panel" id="infoMonstro">
+      <div class="empty-state">
+        <span class="icone">🔍</span>
+        Escolha um monstro na lista para ver os detalhes.
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const dados = {{ data | tojson | safe }};
+  const lista = document.getElementById("listaMonstros");
+  const busca = document.getElementById("buscaMonstro");
+  const infoDiv = document.getElementById("infoMonstro");
+  let indiceAtivo = null;
+
+  const esc = (t) => String(t ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fmt = (n) => (typeof n === "number" ? n.toLocaleString("pt-BR") : esc(n));
+
+  // ---------- Lista com busca ----------
+  function renderLista() {
+    const termo = busca.value.trim().toLowerCase();
+    const html = [];
+    dados.forEach((m, i) => {
+      if (termo && !String(m.nome).toLowerCase().includes(termo) && String(m.id) !== termo) return;
+      html.push(`<button class="item-monstro${i === indiceAtivo ? " ativo" : ""}" data-index="${i}">
+        <span>${esc(String(m.nome).trim())}</span><span class="lv">Lv ${esc(m.level)}</span></button>`);
+    });
+    lista.innerHTML = html.length ? html.join("") : `<p class="empty-state">Nenhum monstro encontrado.</p>`;
+  }
+
+  lista.addEventListener("click", (e) => {
+    const btn = e.target.closest(".item-monstro");
+    if (btn) mostrarMonstro(parseInt(btn.dataset.index));
+  });
+  busca.addEventListener("input", renderLista);
+
+  // ---------- Detalhe ----------
+  function mostrarMonstro(index) {
+    const monstro = dados[index];
+    if (!monstro) return;
+    indiceAtivo = index;
+    lista.querySelectorAll(".item-monstro").forEach(b => b.classList.toggle("ativo", parseInt(b.dataset.index) === index));
+    history.replaceState(null, "", "#" + monstro.id);
+
+    const locais = String(monstro.mapa || "")
+      .split(",")
+      .map(item => item.trim())
+      .filter(Boolean)
+      .map(nome => `
+        <div class="mapa-card" data-clipboard="${esc(nome)}" title="Clique para copiar /nav ${esc(nome)}">
+          <img src="https://www.divine-pride.net/img/map/original/${encodeURIComponent(nome)}" alt="${esc(nome)}" loading="lazy">
+          <p>${esc(nome)}</p>
+          <small>clique para copiar /nav</small>
+        </div>`)
+      .join("");
+
+    const itens = (monstro.itens_com_id || []).map(item => {
+      if (item.id == null) {
+        return `<div class="drop"><span>📦</span>${esc(item.nome)}</div>`;
+      }
+      return `
+        <a class="drop" href="https://ratemyserver.net/item_db.php?item_id=${encodeURIComponent(item.id)}&small=1&back=1" target="_blank" rel="noopener">
+          <img src="https://game.ragnaplace.com/ro/bro/item/${encodeURIComponent(item.id)}.webp" alt="" loading="lazy">
+          <span>${esc(item.nome)}</span>
+        </a>`;
+    }).join("");
+
+    infoDiv.innerHTML = `
+      <div class="detalhe-topo">
+        <div class="sprite-monstro">
+          <img src="https://static.divine-pride.net/images/mobs/png/${encodeURIComponent(monstro.id)}.png" data-id="${esc(monstro.id)}" onerror="fallbackMonstro(this)" alt="${esc(monstro.nome)}">
+        </div>
+        <div>
+          <h2>${esc(String(monstro.nome).trim())}</h2>
+          <span class="tag amarelo">ID ${esc(monstro.id)}</span>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span>📶 Nível</span><strong>${fmt(monstro.level)}</strong></div>
+        <div class="stat"><span>❤️ HP</span><strong>${fmt(monstro.hp)}</strong></div>
+        <div class="stat"><span>📈 EXP Base</span><strong>${fmt(monstro.exp_base)}</strong></div>
+        <div class="stat"><span>📈 EXP Job</span><strong>${fmt(monstro.exp_job)}</strong></div>
+      </div>
+
+      <h3 class="bloco-titulo">📦 Drops</h3>
+      <div class="drops">${itens || '<p class="muted">Sem drops cadastrados.</p>'}</div>
+
+      <h3 class="bloco-titulo">📍 Localização</h3>
+      <div class="mapas">${locais || '<p class="muted">Sem mapas cadastrados.</p>'}</div>
+    `;
+
+    if (window.innerWidth <= 900) infoDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // ---------- Copiar /nav do mapa ----------
+  document.addEventListener("click", async (e) => {
+    const el = e.target.closest(".mapa-card");
+    if (!el) return;
+    const comando = "/nav " + el.dataset.clipboard;
+    if (await copiarTexto(comando)) {
+      mostrarToast(`${comando} copiado!`, "sucesso");
+      el.classList.add("copiado");
+      setTimeout(() => el.classList.remove("copiado"), 1000);
+    } else {
+      mostrarToast("Não foi possível copiar", "erro");
+    }
+  });
+
+  renderLista();
+
+  // abre direto o monstro do link (ex.: /monstros2#1059)
+  const idHash = decodeURIComponent(location.hash.slice(1));
+  if (idHash) {
+    const i = dados.findIndex(m => String(m.id) === idHash);
+    if (i >= 0) mostrarMonstro(i);
+  }
+</script>
+{% endblock %}

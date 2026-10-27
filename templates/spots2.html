@@ -1,0 +1,230 @@
+{% extends 'components/layout-remaster.html' %}
+
+{% block title %}Melhores SPOTS | GUIA-ROLATAM{% endblock %}
+{% block description %}Melhores spots de UP por nível em Ragnarok Online LATAM: monstro, mapa, experiência e /navi pronto para copiar.{% endblock %}
+
+{% block styles %}
+.como-usar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.passo {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.passo-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: #000;
+  background: #f59e0b;
+}
+.passo h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+.passo p { font-size: 12px; color: #9ca3af; line-height: 1.5; }
+kbd {
+  font-family: inherit;
+  font-size: 11px;
+  background: #1f1f1f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0 5px;
+  color: #e5e7eb;
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 16px;
+}
+.filtros .field { min-width: 200px; }
+.filtros .field.busca { flex: 1; }
+
+.table-wrap { max-height: 70vh; }
+
+.monstro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #fff;
+}
+.monstro img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+.mapa-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 6px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+.data-table tr.clicavel:hover .mapa-chip { background: rgba(245, 158, 11, 0.18); }
+.data-table tr.copiado td { background: rgba(74, 222, 128, 0.08) !important; }
+
+@media (max-width: 900px) {
+  .como-usar { grid-template-columns: 1fr; }
+}
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div class="section-header">
+    <div class="section-title">
+      <span>👣</span>
+      <div>
+        <h1>Melhores SPOTS</h1>
+        <p>Os melhores lugares para upar em cada nível</p>
+      </div>
+    </div>
+    <span class="pill"><strong id="contador">{{ dados | length }}</strong> spots</span>
+  </div>
+</header>
+
+<section class="container">
+  <div class="panel como-usar">
+    <div class="passo">
+      <span class="passo-num">1</span>
+      <div>
+        <h4>Encontre o lugar</h4>
+        <p>Filtre pelo seu nível ou busque pelo nome do monstro ou do mapa.</p>
+      </div>
+    </div>
+    <div class="passo">
+      <span class="passo-num">2</span>
+      <div>
+        <h4>Clique na linha</h4>
+        <p>O comando <span class="mapa-chip">/navi mapa</span> é copiado automaticamente.</p>
+      </div>
+    </div>
+    <div class="passo">
+      <span class="passo-num">3</span>
+      <div>
+        <h4>Cole no jogo</h4>
+        <p>Use <kbd>Shift</kbd> + <kbd>Insert</kbd> no chat do jogo para colar a coordenada.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="filtros">
+    <div class="field busca">
+      <label for="busca">Buscar</label>
+      <input class="input" id="busca" type="search" placeholder="Monstro ou mapa...">
+    </div>
+    <div class="field">
+      <label for="nivel">Seu nível</label>
+      <input class="input" id="nivel" type="number" min="1" max="275" placeholder="Ex.: 85">
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Monstro</th>
+          <th>Nível monstro</th>
+          <th>Base EXP</th>
+          <th>Job EXP</th>
+          <th>Quantidade</th>
+          <th>Mapa</th>
+          <th>XP ajustada</th>
+          <th>Nível jogador</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for monstro, exp, job_exp, quantidade, mapa, xp_ajustada, nivel_jogador, nivel_monstro in dados %}
+        <tr class="clicavel linha-copiavel" data-mapa="{{ mapa }}" data-nivel="{{ nivel_jogador }}" data-busca="{{ (monstro.nome ~ ' ' ~ mapa) | lower }}" title="Clique para copiar /navi {{ mapa }}">
+          <td>
+            <div class="monstro">
+              {% if monstro.id %}
+              <img src="https://static.divine-pride.net/images/mobs/png/{{ monstro.id }}.png" data-id="{{ monstro.id }}" onerror="fallbackMonstro(this)" alt="" loading="lazy">
+              {% endif %}
+              {{ monstro.nome }}
+            </div>
+          </td>
+          <td class="num">{{ nivel_monstro }}</td>
+          <td class="num">{{ exp }}</td>
+          <td class="num">{{ job_exp }}</td>
+          <td class="num">{{ quantidade }}</td>
+          <td><span class="mapa-chip">📋 {{ mapa }}</span></td>
+          <td class="num destaque">{{ xp_ajustada }}</td>
+          <td class="num">{{ nivel_jogador }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="empty-state" id="vazio" style="display: none;">
+      <span class="icone">🔍</span>
+      Nenhum spot encontrado com esse filtro.
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const linhas = document.querySelectorAll(".linha-copiavel");
+
+  // Clique na linha: copia o /navi do mapa
+  linhas.forEach(linha => {
+    linha.addEventListener("click", async () => {
+      const mapa = linha.dataset.mapa;
+      if (!mapa) return;
+      const comando = `/navi ${mapa}`;
+      if (await copiarTexto(comando)) {
+        mostrarToast(`${comando} copiado!`, "sucesso");
+        linha.classList.add("copiado");
+        setTimeout(() => linha.classList.remove("copiado"), 1200);
+      } else {
+        mostrarToast("Não foi possível copiar", "erro");
+      }
+    });
+  });
+
+  // Filtros: busca por texto + nível do jogador
+  const busca = document.getElementById("busca");
+  const nivel = document.getElementById("nivel");
+  const contador = document.getElementById("contador");
+  const vazio = document.getElementById("vazio");
+
+  function filtrar() {
+    const termo = busca.value.trim().toLowerCase();
+    const lvl = parseInt(nivel.value);
+    let visiveis = 0;
+    linhas.forEach(linha => {
+      const okTexto = !termo || linha.dataset.busca.includes(termo);
+      const nivelLinha = parseInt(linha.dataset.nivel);
+      // mostra os spots de 5 níveis abaixo até 5 acima do nível informado
+      const okNivel = isNaN(lvl) || isNaN(nivelLinha) || Math.abs(nivelLinha - lvl) <= 5;
+      const mostrar = okTexto && okNivel;
+      linha.style.display = mostrar ? "" : "none";
+      if (mostrar) visiveis++;
+    });
+    contador.textContent = visiveis;
+    vazio.style.display = visiveis ? "none" : "block";
+  }
+  busca.addEventListener("input", filtrar);
+  nivel.addEventListener("input", filtrar);
+</script>
+{% endblock %}

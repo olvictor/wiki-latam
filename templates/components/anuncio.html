@@ -1,0 +1,21 @@
+{#-
+  Bloco de anúncio do Google AdSense.
+  Uso numa página:  {% from 'components/anuncio.html' import anuncio with context %}
+                    {{ anuncio('conteudo') }}
+  O bloco só aparece se o slot estiver configurado no app.py (ADSENSE_SLOTS).
+-#}
+{% macro anuncio(posicao) -%}
+  {%- set slot = (ad_slots or {}).get(posicao) -%}
+  {%- if adsense_ativo and slot -%}
+  <aside class="ad-wrap ad-{{ posicao }}" aria-label="Publicidade">
+    <span class="ad-label">Publicidade</span>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="{{ adsense_client }}"
+         data-ad-slot="{{ slot }}"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </aside>
+  {%- endif -%}
+{%- endmacro %}

@@ -1,537 +1,320 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
-  <title>Monstros | GUIA-ROLATAM</title>
-  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+{% extends 'components/layout-remaster.html' %}
 
-    gtag('config', 'G-K3HW966K67');
-  </script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+{% block title %}Monstros | GUIA-ROLATAM{% endblock %}
+{% block description %}Banco de monstros de Ragnarok Online LATAM: nível, HP, experiência, drops e mapas onde encontrar.{% endblock %}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #121212;
-      color: #fff;
-      display: flex;
-    }
-
-    main {
-      padding: 30px;
-      width: 100%;
-    }
-
-    .section {
-      margin-bottom: 50px;
-      text-align: center;
-    }
-
-.loader-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 9999;
-    }
-.spinner {
-        border: 6px solid #ccc;
-        border-top: 6px solid #4b4b7a;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        animation: spin 1s linear infinite;
+{% block styles %}
+.monstros-layout {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
 }
 
-.box_monstro{
-  width: 40vw;
-  height: auto;
+/* Lista lateral */
+.lista-panel {
+  position: sticky;
+  top: 100px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: .5rem;
+  gap: 12px;
+  max-height: calc(100vh - 120px);
 }
-#infoMonstro{
+.lista-monstros {
+  flex: 1;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 2px;
+  margin: 0 -8px;
+  padding: 0 8px;
+}
+.item-monstro {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: .2rem;
-
-}
-
-.imagen-monstro{
-  filter: drop-shadow(0px 0px 5px orange);
-}
-
-.info{
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  padding: .4rem;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-}
-.box_monstro input{
-    height: 3rem;
-    outline: none;
-}
-.timer-container{
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 4rem;
-}
-.timer-container h2{
-  font-size: 3rem;
-}
-.timer{
-  display: flex;
-}
-.timer p{
-  font-size: 10rem;
-}
-.mensagem{
-  position: absolute;
-  z-index: 150;
-  background-color: rgba(0,0,0,0.9);
+  gap: 8px;
   width: 100%;
-  height: 100%;
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
-
-.mensagem-box{
-  background-color: white;
-  width: 30%;
-  height: auto;
-  min-height: 30%;
-  border-radius: .5rem;
-  color: #121212;
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-}
-.timer-container input{
-  height: 2rem;
-  padding: .3rem;
-  width: 4rem;
-  border: none;
+  text-align: left;
+  padding: 8px 10px;
   border-radius: 8px;
-  filter: saturate(70%);
-  color: black;
-  outline: none;
-}
-
-
-.container-porcentagem{
-  display: flex;
-  gap: 3rem;
-}
-
-.start-timer{
-  background-color: orange;
-  padding: .5rem;
-  width: 8rem;
-  outline: none;
-  border: none;
-  border-radius: 1rem;
-  font-weight: bolder;
-  text-transform: uppercase;
-  margin-top: 2rem;
-  color: white;
-}
-.start-timer:hover{
-  opacity: .4;
-}
-
-.container-calculo{
-  position: absolute;
-  z-index: 100;
-  background-color: rgba(0,0,0,1);
-  width: 100%;
-  min-height: 100%;
-  height: auto;
-  display: none;
-  border-radius: 1rem;
-  align-items: center;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 2rem;
-  margin-top: 1rem;
-}
-
-.container-calculo button{
-  background-color: orange;
-  padding: .5rem;
-  width: 8rem;
-  outline: none;
-  border: none;
-  border-radius: 1rem;
-  font-weight: bolder;
-  text-transform: uppercase;
-  color: white;
-
-}
-.inputBox{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-button{
-  cursor: pointer;
-}
-
-button:disabled{
-  cursor: wait;
-  background-color: gray;
-}
-.container{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.mensagem-container-calculo{
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  font-size: 1rem;
-}
-.mensagem-container-calculo div{
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding: 1rem;
-}
-.button-calcular{
-  display: none;
-}
-.mapas{
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.info-mapas{
-  width: 100%;
-  text-align: center;
-}
-
-.container-mapas-monstro{
-  display: flex;
-  gap: .5rem;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-}
-
-.mapas-monstro:hover{
-  opacity: .6;
-}
-
-
-.info-items{
-  display: flex;
-  width: 100%;
-  gap: .3rem;
-  flex-wrap: wrap;
-  width: 60%;
-}
-
-.info-items a{
-  color: #1e90ff;
-  font: .4rem;
-}
-
-.info-items img{
-  filter: drop-shadow(0px 0px 5px white);
-
-}
-h3{
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
-}
-@keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-@media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      aside {
-        width: 100%;
-        height: auto;
-        position: static;
-        border-right: none;
-      }
-
-      main {
-        margin-left: 0;
-        padding: 20px;
-      }
-  
-  .tooltip-copiado {
-  position: absolute;
-  bottom: 100%; 
-  left: 50%;
-  transform: translateX(-50%) translateY(-8px);
-  background-color: #222;
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #d1d5db;
   font-size: 13px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 10;
-  }
-.mostrar {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-16px);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
 }
-  }
-  </style>
-</head>
-<body onload=esconderLoader()>
+.item-monstro:hover { background: #161616; }
+.item-monstro.ativo {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #fff;
+}
+.item-monstro .lv { font-size: 11px; color: #6b7280; white-space: nowrap; }
 
-  {% include 'components/novoheader.html' %}
+/* Detalhe */
+.detalhe-topo {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+.sprite-monstro {
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.12), rgba(0, 0, 0, 0.4) 70%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 50%;
+}
+.sprite-monstro img { max-width: 110px; max-height: 110px; object-fit: contain; image-rendering: pixelated; }
+.detalhe-topo h2 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 6px;
+}
 
-  <div class="global">
-    {% include 'components/header.html' %}
-      <main>
-        <section id="rank" class="section">
-              <h2 class="title is-2">🐺 Monstros ragnarok</h2>
-              <br>
-              <div id="loader" class="loader-container">
-                <div class="spinner"></div>
-                <p>Carregando...</p>
-              </div>
-              <div id="conteudo" class="container">
-                <div class="box_monstro">              
-                  <label for="monstroSelect">Selecione um Monstro:</label>
-                  <div class="select">
-                      <select id="monstroSelect">
-                        <option disabled selected>Escolha...</option>
-                        {% for monstro in data %}
-                        <option value="{{ loop.index0 }}">{{ monstro.nome }}</option>
-                        {% endfor %}
-                      </select>
-                    </div>
-    
-                    <div id="infoMonstro" style="margin-top: 20px;">
-                      
-                    </div>
-                </div>
-              </div>
-              
-              <div class="timer-container">
-                <div class="mensagem">
-                  <div class="mensagem-box">
-                  <p class="mensagem-text"></p>
-    
-                  <button class="button-mensagem">OK</button>
-                  </div>
-                </div>
-    
-          </section>
-    </main>
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.stat {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.stat span { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #6b7280; margin-bottom: 4px; }
+.stat strong { font-size: 18px; color: #fff; font-variant-numeric: tabular-nums; }
+
+.bloco-titulo {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fbbf24;
+  margin: 0 0 12px;
+}
+.drops {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.drop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  font-size: 12px;
+  color: #d1d5db;
+  transition: border-color 0.2s, color 0.2s;
+}
+a.drop:hover { border-color: rgba(168, 85, 247, 0.4); color: #fff; }
+.drop img { width: 28px; height: 28px; object-fit: contain; flex-shrink: 0; }
+
+.mapas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+.mapa-card {
+  position: relative;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.mapa-card:hover { border-color: rgba(245, 158, 11, 0.4); transform: translateY(-2px); }
+.mapa-card.copiado { border-color: rgba(74, 222, 128, 0.6); }
+.mapa-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #0b0b0b;
+  margin-bottom: 6px;
+}
+.mapa-card p { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #fbbf24; }
+.mapa-card small { display: block; font-size: 10px; color: #6b7280; }
+
+@media (max-width: 900px) {
+  .monstros-layout { grid-template-columns: 1fr; }
+  .lista-panel { position: static; max-height: 360px; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detalhe-topo { flex-direction: column; text-align: center; }
+}
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div class="section-header">
+    <div class="section-title">
+      <span>🐺</span>
+      <div>
+        <h1>Monstros</h1>
+        <p>Nível, HP, experiência, drops e onde encontrar cada monstro</p>
+      </div>
+    </div>
+    <span class="pill"><strong>{{ data | length }}</strong> monstros</span>
   </div>
- 
-    
+</header>
 
-    <script >
-        const dados = {{ data | tojson | safe }};
+<section class="container">
+  <div class="monstros-layout">
+    <aside class="panel lista-panel">
+      <div class="field">
+        <label for="buscaMonstro">Selecione um monstro</label>
+        <input class="input" id="buscaMonstro" type="search" placeholder="Buscar por nome ou ID..." autocomplete="off">
+      </div>
+      <div class="lista-monstros" id="listaMonstros"></div>
+    </aside>
 
-        document.addEventListener('DOMContentLoaded', () => {
-        const expand_btn = document.querySelector(".expand-btn");
+    <div class="panel" id="infoMonstro">
+      <div class="empty-state">
+        <span class="icone">🔍</span>
+        Escolha um monstro na lista para ver os detalhes.
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
 
-        let activeIndex;
+{% block scripts %}
+<script>
+  const dados = {{ data | tojson | safe }};
+  const lista = document.getElementById("listaMonstros");
+  const busca = document.getElementById("buscaMonstro");
+  const infoDiv = document.getElementById("infoMonstro");
+  let indiceAtivo = null;
 
-        expand_btn.addEventListener("click", () => {
-          console.log("aaa")
-          document.body.classList.toggle("collapsed");
-        });
+  const esc = (t) => String(t ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fmt = (n) => (typeof n === "number" ? n.toLocaleString("pt-BR") : esc(n));
 
-        const current = window.location.href;
-        const allLinks = document.querySelectorAll(".sidebar-links a");
-
-        allLinks.forEach((elem) => {
-          elem.addEventListener("click", function () {
-            const hrefLinkClick = elem.href;
-
-            allLinks.forEach((link) => {
-              if (link.href == hrefLinkClick) {
-                link.classList.add("active");
-              } else {
-                link.classList.remove("active");
-              }
-            });
-          });
-        });
-      });
-
-      function esconderLoader() {
-            setTimeout(() => {
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("conteudo").style.display = "flex";
-            }, 1000); 
-      }
-
-
-      const select = document.getElementById("monstroSelect");
-      const infoDiv = document.getElementById("infoMonstro");
-
-      select.addEventListener("change", function () {
-      const index = this.value;
-      const monstro = dados[index];
-
-   
-        
-        if (monstro) {
-
-        const locais = monstro.mapa
-        .split(',')
-        .map(item => {
-          const nome = item.trim();
-          return `
-            <div class="mapas-monstro" data-clipboard="${nome}" style="display: inline-block; text-align: center; margin: 4px; cursor: pointer; position: relative;">
-              <img src="https://www.divine-pride.net/img/map/original/${nome}" alt="${nome}" style="width: 80px;">
-              <p>${nome}</p>
-            </div>
-          `;
-        })
-         .join('');
-
-         const itens = monstro.itens_com_id.map(item => {
-          const id = Number(item);
-
-          if (item.id == null) {
-            return `<img src="https://game.ragnaplace.com/ro/bro/item/${item.id}.webp" alt="${item.nome}" style="width: 30px;">`;
-          }
-
-          return `
-            <div style="display: inline-block; text-align: center; margin: 4px;">
-              <a href="https://ratemyserver.net/item_db.php?item_id=${item.id}&small=1&back=1" target="_blank">
-                <img src="https://game.ragnaplace.com/ro/bro/item/${item.id}.webp" alt="${item.nome}" style="width: 30px;">
-                <p>${item.nome}</p>
-              </a>
-            </div>
-          `;
-        }).join('');
-
-        infoDiv.innerHTML = `
-              <img class="imagen-monstro" src=${`https://game.ragnaplace.com/ro/job/${monstro.id}/0.png`} alt=${monstro.id}>
-              <br>
-              <strong>ID:</strong> ${monstro.id}<br>
-              <strong>${monstro.nome.trim()}</strong><br>
-              <div class="info">
-              <strong>📶 Nível:</strong> ${monstro.level}<br>
-              <strong>❤️ HP:</strong> ${monstro.hp}<br>
-              </div>
-              <div class="info">
-              <strong>📈 EXP Base:</strong> ${monstro.exp_base}<br>
-              <strong>📈 EXP Job:</strong> ${monstro.exp_job}<br>
-              </div>
-              <h3>📦 Drops :</h3>
-              <div class="info-items">
-                ${itens}  
-              </div>
-              <div class="info-mapas">
-                <h3>📍 Localização:<h3/>
-                <div class="container-mapas-monstro">
-                  ${locais}
-                <div> 
-              </div>
-            `;
-          }
-        });
-
-      document.addEventListener('click', function (e) {
-      const el = e.target.closest('.mapas-monstro');
-      if (el) {
-        const nomeMapa = el.getAttribute('data-clipboard');
-        navigator.clipboard.writeText("/nav "+ nomeMapa)
-          .then(() => {
-            // Feedback visual (box shadow)
-            el.style.boxShadow = '0 0 6px 2px limegreen';
-            setTimeout(() => el.style.boxShadow = '', 1000);
-
-            // Balão "copiado!"
-            let tooltip = document.createElement('div');
-            tooltip.className = 'tooltip-copiado';
-            tooltip.innerText = 'Copiado!';
-            el.appendChild(tooltip);
-            // força reflow para ativar transição
-            requestAnimationFrame(() => tooltip.classList.add('mostrar'));
-
-            // remover depois de 1s
-            setTimeout(() => {
-              tooltip.classList.remove('mostrar');
-              setTimeout(() => tooltip.remove(), 300); // espera a transição
-            }, 1000);
-          })
-          .catch(err => {
-            console.error('Erro ao copiar:', err);
-          });
-      }
+  // ---------- Lista com busca ----------
+  function renderLista() {
+    const termo = busca.value.trim().toLowerCase();
+    const html = [];
+    dados.forEach((m, i) => {
+      if (termo && !String(m.nome).toLowerCase().includes(termo) && String(m.id) !== termo) return;
+      html.push(`<button class="item-monstro${i === indiceAtivo ? " ativo" : ""}" data-index="${i}">
+        <span>${esc(String(m.nome).trim())}</span><span class="lv">Lv ${esc(m.level)}</span></button>`);
     });
+    lista.innerHTML = html.length ? html.join("") : `<p class="empty-state">Nenhum monstro encontrado.</p>`;
+  }
 
-    const toggleButton = document.getElementById('toggle-menu');
-    const sidebar = document.getElementById('sidebar');
+  lista.addEventListener("click", (e) => {
+    const btn = e.target.closest(".item-monstro");
+    if (btn) mostrarMonstro(parseInt(btn.dataset.index));
+  });
+  busca.addEventListener("input", renderLista);
 
-    const chevronLeftSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-      </svg>
-    `;
+  // ---------- Detalhe ----------
+  function mostrarMonstro(index) {
+    const monstro = dados[index];
+    if (!monstro) return;
+    indiceAtivo = index;
+    lista.querySelectorAll(".item-monstro").forEach(b => b.classList.toggle("ativo", parseInt(b.dataset.index) === index));
+    history.replaceState(null, "", "#" + monstro.id);
 
-    const chevronRightSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-      </svg>
-    `;
+    const locais = String(monstro.mapa || "")
+      .split(",")
+      .map(item => item.trim())
+      .filter(Boolean)
+      .map(nome => `
+        <div class="mapa-card" data-clipboard="${esc(nome)}" title="Clique para copiar /nav ${esc(nome)}">
+          <img src="https://www.divine-pride.net/img/map/original/${encodeURIComponent(nome)}" alt="${esc(nome)}" loading="lazy">
+          <p>${esc(nome)}</p>
+          <small>clique para copiar /nav</small>
+        </div>`)
+      .join("");
 
-    toggleButton.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      toggleButton.classList.toggle('collapsed');
-
-      if (sidebar.classList.contains('collapsed')) {
-        toggleButton.innerHTML = chevronRightSVG;
-        toggleButton.style.left = '1rem'; 
-      } else {
-        toggleButton.innerHTML = chevronLeftSVG;
-        toggleButton.style.left = '10rem';
+    const itens = (monstro.itens_com_id || []).map(item => {
+      if (item.id == null) {
+        return `<div class="drop"><span>📦</span>${esc(item.nome)}</div>`;
       }
-    });    
+      return `
+        <a class="drop" href="https://ratemyserver.net/item_db.php?item_id=${encodeURIComponent(item.id)}&small=1&back=1" target="_blank" rel="noopener">
+          <img src="https://game.ragnaplace.com/ro/bro/item/${encodeURIComponent(item.id)}.webp" alt="" loading="lazy">
+          <span>${esc(item.nome)}</span>
+        </a>`;
+    }).join("");
 
-    </script>
-</body>
-</html>
+    infoDiv.innerHTML = `
+      <div class="detalhe-topo">
+        <div class="sprite-monstro">
+          <img src="https://static.divine-pride.net/images/mobs/png/${encodeURIComponent(monstro.id)}.png" data-id="${esc(monstro.id)}" onerror="fallbackMonstro(this)" alt="${esc(monstro.nome)}">
+        </div>
+        <div>
+          <h2>${esc(String(monstro.nome).trim())}</h2>
+          <span class="tag amarelo">ID ${esc(monstro.id)}</span>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span>📶 Nível</span><strong>${fmt(monstro.level)}</strong></div>
+        <div class="stat"><span>❤️ HP</span><strong>${fmt(monstro.hp)}</strong></div>
+        <div class="stat"><span>📈 EXP Base</span><strong>${fmt(monstro.exp_base)}</strong></div>
+        <div class="stat"><span>📈 EXP Job</span><strong>${fmt(monstro.exp_job)}</strong></div>
+      </div>
+
+      <h3 class="bloco-titulo">📦 Drops</h3>
+      <div class="drops">${itens || '<p class="muted">Sem drops cadastrados.</p>'}</div>
+
+      <h3 class="bloco-titulo">📍 Localização</h3>
+      <div class="mapas">${locais || '<p class="muted">Sem mapas cadastrados.</p>'}</div>
+    `;
+
+    if (window.innerWidth <= 900) infoDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // ---------- Copiar /nav do mapa ----------
+  document.addEventListener("click", async (e) => {
+    const el = e.target.closest(".mapa-card");
+    if (!el) return;
+    const comando = "/nav " + el.dataset.clipboard;
+    if (await copiarTexto(comando)) {
+      mostrarToast(`${comando} copiado!`, "sucesso");
+      el.classList.add("copiado");
+      setTimeout(() => el.classList.remove("copiado"), 1000);
+    } else {
+      mostrarToast("Não foi possível copiar", "erro");
+    }
+  });
+
+  // busca vinda do campo do topo (/monstros?busca=...)
+  const buscaUrl = new URLSearchParams(location.search).get("busca");
+  if (buscaUrl) busca.value = buscaUrl;
+
+  renderLista();
+
+  // se a busca achou exatamente um monstro (ou um nome idêntico), já abre ele
+  if (buscaUrl && !location.hash) {
+    const termo = buscaUrl.trim().toLowerCase();
+    const exato = dados.findIndex(m => String(m.nome).trim().toLowerCase() === termo);
+    const achados = lista.querySelectorAll(".item-monstro");
+    if (exato >= 0) mostrarMonstro(exato);
+    else if (achados.length === 1) mostrarMonstro(parseInt(achados[0].dataset.index));
+  }
+
+  // abre direto o monstro do link (ex.: /monstros#1059)
+  const idHash = decodeURIComponent(location.hash.slice(1));
+  if (idHash) {
+    const i = dados.findIndex(m => String(m.id) === idHash);
+    if (i >= 0) mostrarMonstro(i);
+  }
+</script>
+{% endblock %}

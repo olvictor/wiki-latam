@@ -1,0 +1,143 @@
+{% extends 'components/layout-remaster.html' %}
+
+{% block title %}Rank de Classes | GUIA-ROLATAM{% endblock %}
+{% block description %}Tier list das classes de Ragnarok Online LATAM: descubra as melhores classes para começar.{% endblock %}
+
+{% block styles %}
+.tiers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tier-card {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.25s ease, border-color 0.25s ease;
+  opacity: 0;
+  animation: fadeIn 0.4s ease forwards;
+  transform: translateY(8px);
+}
+.tier-card:hover { background: #161616; }
+
+.rank-badge {
+  width: 80px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  padding: 12px 0;
+}
+
+.class-list {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+}
+.class-tag {
+  font-size: 14px;
+  font-weight: 500;
+  color: #d1d5db;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.class-tag:hover { border-color: rgba(245, 158, 11, 0.4); color: #fff; }
+
+.tier-link {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.tier-card:hover .tier-link { color: #fbbf24; }
+
+.tier-s .rank-badge { background: linear-gradient(to bottom, #ca8a04, #854d0e); color: #fef3c7; }
+.tier-a .rank-badge { background: linear-gradient(to bottom, #6b7280, #374151); color: #f3f4f6; }
+.tier-b .rank-badge { background: linear-gradient(to bottom, #c2410c, #7c2d12); color: #ffedd5; }
+.tier-c .rank-badge { background: #1f2933; color: #9ca3af; }
+.tier-d .rank-badge,
+.tier-e .rank-badge,
+.tier-f .rank-badge,
+.tier-x .rank-badge { background: #18181b; color: #71717a; }
+
+.tier-s { border-color: rgba(250, 204, 21, 0.15); }
+
+.pro-tip {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 14px;
+}
+.pro-tip h4 { color: #a855f7; font-weight: 700; margin-bottom: 4px; }
+.pro-tip p { font-size: 13px; color: #9ca3af; }
+
+@media (max-width: 640px) {
+  .tier-link { display: none; }
+  .rank-badge { width: 60px; font-size: 22px; }
+}
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div class="section-title">
+    <span>🏆</span>
+    <div>
+      <h1>Rank de Classes</h1>
+      <p>Comece da melhor forma: as classes mais fortes do servidor no momento</p>
+    </div>
+  </div>
+</header>
+
+<section class="container" style="max-width: 1000px;">
+  {% if rank_data %}
+  <div class="tiers-list">
+    {% for tier, classes in rank_data %}
+    {% set letra = tier.split()[-1] if tier.split() else tier %}
+    <a href="{{ url_for('classes2_page') }}" class="tier-card tier-{{ letra | lower if letra | length == 1 else 'x' }}" style="animation-delay: {{ loop.index0 * 0.06 }}s">
+      <div class="rank-badge">
+        {% if loop.index0 == 0 %}<span>👑</span>{% elif loop.index0 == 1 %}<span>🏅</span>{% endif %}
+        <span>{{ letra }}</span>
+      </div>
+      <div class="class-list">
+        {% for classe in classes.split(',') if classe.strip() %}
+        <span class="class-tag">{{ classe.strip() }}</span>
+        {% endfor %}
+      </div>
+      <span class="tier-link">Ver builds →</span>
+    </a>
+    {% endfor %}
+  </div>
+
+  <div class="pro-tip">
+    <h4>Dica do Pro</h4>
+    <p>Classes Rank S possuem maior facilidade de farm solo em instâncias de nível alto. Clique em um tier para ver as builds de cada classe.</p>
+  </div>
+  {% else %}
+  <div class="panel empty-state">
+    <span class="icone">🏆</span>
+    Nenhum rank cadastrado no momento.
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

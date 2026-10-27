@@ -1,436 +1,246 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
-  <title>Items | GUIA-ROLATAM</title>
-  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+{% extends 'components/layout-remaster.html' %}
+{% from 'components/anuncio.html' import anuncio with context %}
 
-    gtag('config', 'G-K3HW966K67');
-  </script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+{% block title %}Items Importantes | GUIA-ROLATAM{% endblock %}
+{% block description %}Items importantes de Ragnarok Online LATAM: itens do Éden, itens para guardar, consumíveis essenciais e itens de quest de classe.{% endblock %}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #121212;
-      color: #fff;
-      display: flex;
-    }
-
-
-    main {
-      margin-left: 270px;
-      padding: 30px;
-      width: 100%;
-    }
-
-    h1 {
-      margin-bottom: 30px;
-      color: #ffc107;
-    }
-
-    .section {
-      margin-bottom: 50px;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    li {
-      margin-bottom: 5px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #444;
-      height: 1rem;
-      align-items: center;
-    }
-    th {
-      background-color: #202020;
-    }
-
-    tr:nth-child(even) {
-      background-color: #333	;
-    }
-    
-.build-tag {
-  background-color: #3a3a5a;
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 3px 5px 3px 0;
+{% block styles %}
+.item-nome {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-weight: 500;
+}
+.item-nome img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 6px;
-  font-size: 0.9rem;
-  color: #f1f1f1;
-  transition: background-color 0.2s ease;
+  padding: 2px;
 }
-
-
-.loader-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 9999;
-    }
-.spinner {
-        border: 6px solid #ccc;
-        border-top: 6px solid #4b4b7a;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        animation: spin 1s linear infinite;
-}
-.container-accordion{
-  width: 40vw;
+.item-nome .sem-imagem {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  opacity: 0.6;
 }
+.accordion-header .emoji { font-size: 18px; }
+.accordion-header .titulo { display: flex; align-items: center; gap: 10px; }
+.accordion-header small { display: block; font-size: 12px; font-weight: 400; color: #6b7280; }
 
-.container-accordion img{
-  width: 30%;
+.instancia-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fbbf24;
+  font-weight: 600;
 }
+.instancia-link:hover { text-decoration: underline; }
+.moeda { white-space: nowrap; color: #fbbf24; font-weight: 600; }
 
-.accordion {
-    cursor: pointer;
-    padding: 1rem;
-    width: 100%;
-    text-align: left;
-    border: none;
-    outline: none;
-    color: #E0E0E0;
-    font-size: 16px;
-    position: relative;
-    background-color: #212121;
-    border-radius: .5rem;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+/* Items de quest por classe */
+.quest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
 }
-.accordion:hover{
-  opacity: .8;
+.quest-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 14px;
 }
-
-.accordion::after {
-    content: '+';
-    font-size: 18px;
-    position: absolute;
-    right: 20px;
-    color: #FFC107;
-}
-
-.accordion.active::after {
-    content: '−';
-}
-
-.panel {
-    padding: 20px 10px;
-    display: none;
-    background-color: #3C3C3C;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-.panel.show {
-    display: block;
-}  
-
-.panel p{
-  border-bottom: 1px solid #555;
-  padding: .5rem;
-  color: white;
-}
-.melee{
+.quest-card header {
   display: flex;
-  flex-direction: column;
-  gap: .5rem;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
 }
-.ranged{
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
+.quest-card header img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
-@keyframes spin {
-      to { transform: rotate(360deg); }
+.quest-card h4 { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #fff; text-transform: uppercase; }
+.quest-etapa + .quest-etapa { margin-top: 10px; padding-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.06); }
+.quest-etapa .etapa-titulo {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 6px;
 }
-.item-list {
-    display: flex;
-    gap: 40px;
-  }
-.item-col {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-.item-col.right {
-    text-align: right;
+.quest-etapa ul { display: flex; flex-wrap: wrap; gap: 4px; }
+.quest-etapa li {
+  font-size: 12px;
+  color: #d1d5db;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
+  padding: 2px 6px;
 }
-a{
-  text-decoration: none;
-  color: rgb(19, 221, 221);
-}
+{% endblock %}
 
-@media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
+{% macro icone_item(imagem, nome) %}
+  {% if imagem and imagem.startswith('http') %}
+    {% set item_id = imagem.rsplit('/', 1)[-1].split('.')[0] %}
+    <img src="{{ imagem }}" data-id="{{ item_id if item_id.isdigit() else '' }}" onerror="fallbackItem(this)" alt="" loading="lazy">
+  {% else %}
+    <span class="sem-imagem" title="Imagem não encontrada">📦</span>
+  {% endif %}
+{% endmacro %}
 
-      aside {
-        width: 100%;
-        height: auto;
-        position: static;
-        border-right: none;
-      }
+{% block content %}
+<header class="page-header">
+  <div class="section-title">
+    <span>🎒</span>
+    <div>
+      <h1>Items Importantes</h1>
+      <p>O que guardar, o que usar e o que não vender de jeito nenhum</p>
+    </div>
+  </div>
+</header>
 
-    main {
-        margin-left: 0;
-        padding: 20px;
-    }
-    .container-accordion{
-      width: 90vw;
-    }
-    }
-  </style>
-</head>
-<body onload=esconderLoader()>
-  {% include 'components/novoheader.html' %}
-  <div class="global">
-    {% include 'components/header.html' %}
-    <main>
-      <div id="loader" class="loader-container">
-          <div class="spinner"></div>
-          <p>Carregando...</p>
-      </div>
-      <div>
-      <section class="section">
-          <div id="conteudo" class="container-accordion">
-              <div>
-                  <button class="accordion">🧈 Items</button>
-                  <div class="panel">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Utilizar</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for item, utilizar, imagem in tabela_items %}
-                            {% if utilizar == 'Éden' %}
-                            <tr>
-                                <td>{{ item }} 
-                                    <img src="{{ imagem }}" style="height: 25px; width: 25px; vertical-align: middle;" alt="imagem_item">
-                                </td>
-                                <td>{{ utilizar }}</td>
-                            </tr>
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-              </div>
-              
-              <div>
-                  <button class="accordion">💡 Items IMPORTANTES!</button>
-                  <div class="panel">
-                    <table>
-                      <thead>
-                      <tr>
-                          <th>Item</th>
-                          <th>Onde Utilizar</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                        {% for item,local,imagem in tabela_items_importantes %}
-                        <tr>
-                          <td>{{ item }} <img src="{{imagem}}" style="height: 25px; width: 25px; vertical-align: middle;" alt="imagem_item"></td>
-                          <td>{{ local }}</td>
-                         </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-              </div>    
-          </div>
-  
-          <div>
-            <button class="accordion">💎 Items para o futuro !</button>
-            <div class="panel">
-              <table>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Instância</th>
-                      <th>Item</th>
-                      <th>Moeda</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for instancia, item, moeda, link in array_items_guardar %}
-                    <tr>
-                      <td>
-                        {% if instancia.strip() %}
-                          <a href="{{ link }}" target="_blank" title="Ver no Browiki">🔗 {{ instancia }}</a>
-                        {% else %}
-                        
-                          <span style="color: gray;">{{ instancia }}</span>
-                        {% endif %}
-                      </td>
-                      <td>{{ item }}</td>
-                      <td>🪙 {{ moeda }}</td>
-                    </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
+<section class="container">
+  {% set itens_eden = tabela_items | selectattr(1, 'equalto', 'Éden') | list %}
+
+  <!-- Items do Éden -->
+  <div class="accordion-item aberto-inicial">
+    <button class="accordion-header" aria-expanded="false">
+      <span class="titulo"><span class="emoji">🧈</span><span>Items <small>Itens usados nas quests do Éden</small></span></span>
+      <span class="pill contador"><strong>{{ itens_eden | length }}</strong></span>
+      <span class="chevron">▾</span>
+    </button>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Item</th><th>Utilizar</th></tr></thead>
+            <tbody>
+              {% for item, utilizar, imagem in itens_eden %}
+              <tr>
+                <td><div class="item-nome">{{ icone_item(imagem, item) }}{{ item }}</div></td>
+                <td><span class="tag amarelo">{{ utilizar }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
-  
-      <div>
-        <button class="accordion">🎒 Items de quest !</button>
-        <div class="panel">
-          <table>
-            <table>
-              <thead>
-                <tr>
-                  <th>Classe</th>
-                  <th>Item</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for entry in array_items_n_vender %}
-                {% set num_subgrupos = entry["items"]|length %}
-                  <tr>
-                    <td class="classes" rowspan="{{ num_subgrupos if num_subgrupos > 0 else 1 }}">
-                      <div style="text-align: center;">
-                        <img src="{{ url_for('static', filename=entry.imagem) }}" alt="{{ entry.classe }}" style="display: block; margin: 0 auto; width: 100px; height: auto;">
-                        <div style="margin-top: 8px;">{{ entry.classe }}</div>
-                      </div>
-                    </td>
-                    {% if num_subgrupos > 0 %}
-                      <td>
-                        {% for item in entry["items"][0] %}
-                          {{ item }}<br>
-                        {% endfor %}
-                      </td>
-                    {% else %}
-                      <td>(sem itens)</td>
-                    {% endif %}
-                  </tr>
-                  {% for grupo in entry["items"][1:] %}
-                  <tr>
-                    <td>
-                      {% for item in grupo %}
-                        {{ item }}<br>
-                      {% endfor %}
-                    </td>
-                  </tr>
-                  {% endfor %}
-                {% endfor %}
-              </tbody>
-            </table>
     </div>
-      </section>
-    </main>
   </div>
-  <script>
-     document.addEventListener('DOMContentLoaded', () => {
-        const expand_btn = document.querySelector(".expand-btn");
 
-        let activeIndex;
+  <!-- Items importantes -->
+  <div class="accordion-item">
+    <button class="accordion-header" aria-expanded="false">
+      <span class="titulo"><span class="emoji">💡</span><span>Items IMPORTANTES! <small>Consumíveis e itens que fazem diferença</small></span></span>
+      <span class="pill contador"><strong>{{ tabela_items_importantes | length }}</strong></span>
+      <span class="chevron">▾</span>
+    </button>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Item</th><th>Onde utilizar</th></tr></thead>
+            <tbody>
+              {% for item, local, imagem in tabela_items_importantes %}
+              <tr>
+                <td><div class="item-nome">{{ icone_item(imagem, item) }}{{ item }}</div></td>
+                <td>{{ local }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        expand_btn.addEventListener("click", () => {
-          console.log("aaa")
-          document.body.classList.toggle("collapsed");
-        });
+  {{ anuncio('conteudo') }}
 
-        const current = window.location.href;
-        const allLinks = document.querySelectorAll(".sidebar-links a");
+  <!-- Items para o futuro -->
+  <div class="accordion-item">
+    <button class="accordion-header" aria-expanded="false">
+      <span class="titulo"><span class="emoji">💎</span><span>Items para o futuro! <small>Guarde estes itens para trocar nas instâncias</small></span></span>
+      <span class="pill contador"><strong>{{ array_items_guardar | length }}</strong></span>
+      <span class="chevron">▾</span>
+    </button>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Instância</th><th>Item</th><th>Moeda</th></tr></thead>
+            <tbody>
+              {% for instancia, item, moeda, link in array_items_guardar %}
+              <tr>
+                <td>
+                  {% if instancia.strip() %}
+                    <a class="instancia-link" href="{{ link }}" target="_blank" rel="noopener" title="Ver no Browiki">🔗 {{ instancia }}</a>
+                  {% else %}
+                    <span class="muted">—</span>
+                  {% endif %}
+                </td>
+                <td>{{ item }}</td>
+                <td class="moeda">🪙 {{ moeda }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        allLinks.forEach((elem) => {
-          elem.addEventListener("click", function () {
-            const hrefLinkClick = elem.href;
+  <!-- Items de quest -->
+  {% set classes_com_itens = array_items_n_vender | selectattr('items') | list %}
+  <div class="accordion-item">
+    <button class="accordion-header" aria-expanded="false">
+      <span class="titulo"><span class="emoji">📜</span><span>Items de quest! <small>Não venda: são pedidos nas quests de mudança de classe</small></span></span>
+      <span class="pill contador"><strong>{{ classes_com_itens | length }}</strong> classes</span>
+      <span class="chevron">▾</span>
+    </button>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <div class="quest-grid">
+          {% for entry in classes_com_itens %}
+          <article class="quest-card">
+            <header>
+              <img src="{{ url_for('static', filename=entry.imagem) }}" alt="{{ entry.classe }}" loading="lazy">
+              <h4>{{ entry.classe | replace(':', '') | trim }}</h4>
+            </header>
+            {% for grupo in entry["items"] %}
+            <div class="quest-etapa">
+              {% if entry["items"] | length > 1 %}<p class="etapa-titulo">Etapa {{ loop.index }}</p>{% endif %}
+              <ul>
+                {% for item in grupo %}<li>{{ item }}</li>{% endfor %}
+              </ul>
+            </div>
+            {% endfor %}
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
 
-            allLinks.forEach((link) => {
-              if (link.href == hrefLinkClick) {
-                link.classList.add("active");
-              } else {
-                link.classList.remove("active");
-              }
-            });
-          });
-        });
-      });
-
-    function esconderLoader() {
-        setTimeout(() => {
-        document.getElementById("loader").style.display = "none";
-        document.getElementById("conteudo").style.display = "flex";
-        }, 1000); // 1000 milissegundos = 1 segundo
-    }
-    document.addEventListener("DOMContentLoaded", function () {
-    const accordions = document.querySelectorAll(".accordion");
-
-    accordions.forEach((btn) => {
-        btn.addEventListener("click", function () {
-          this.classList.toggle("active");
-          const panel = this.nextElementSibling;
-          panel.classList.toggle("show");
-        });
-      });
-    });  
-
-    const toggleButton = document.getElementById('toggle-menu');
-    const sidebar = document.getElementById('sidebar');
-
-    const chevronLeftSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-      </svg>
-    `;
-
-    const chevronRightSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-      </svg>
-    `;
-
-    toggleButton.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      toggleButton.classList.toggle('collapsed');
-
-      if (sidebar.classList.contains('collapsed')) {
-        toggleButton.innerHTML = chevronRightSVG;
-        toggleButton.style.left = '1rem'; 
-      } else {
-        toggleButton.innerHTML = chevronLeftSVG;
-        toggleButton.style.left = '10rem';
-      }
-    });
-  </script>
-</body>
-</html>
+{% block scripts %}
+<script>
+  // abre o primeiro acordeão ao carregar a página
+  document.querySelectorAll(".aberto-inicial .accordion-header").forEach(btn => btn.click());
+</script>
+{% endblock %}

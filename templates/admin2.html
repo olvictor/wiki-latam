@@ -1,0 +1,134 @@
+{% extends 'components/layout-remaster.html' %}
+
+{% block title %}Gerenciar Clipes | GUIA-ROLATAM{% endblock %}
+{% block head %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+
+{# Página administrativa: sem o header (a variável "links" aqui são os clipes do banco) #}
+{% block chrome %}{% include 'components/sidebar-remaster.html' %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block styles %}
+.flash {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: opacity 1s ease;
+}
+.flash.sucesso { background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); color: #86efac; }
+.flash.erro { background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); color: #fca5a5; }
+
+.url-clip {
+  color: #a970ff;
+  word-break: break-all;
+  font-size: 13px;
+}
+.url-clip:hover { text-decoration: underline; }
+.acoes-linha { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.acoes-linha form { display: inline; margin: 0; }
+.acoes-linha .select { width: auto; padding: 6px 10px; font-size: 13px; }
+.acoes-linha .btn { padding: 6px 12px; font-size: 12px; }
+.filtro-status { display: inline-flex; gap: 4px; }
+.filtro-status button.ativa { background: #f59e0b; color: #000; border-color: transparent; }
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div class="section-header">
+    <div class="section-title">
+      <span>🛠️</span>
+      <div>
+        <h1>Gerenciar Clipes</h1>
+        <p>Aprove, reprove ou remova os clipes enviados pela comunidade</p>
+      </div>
+    </div>
+    <div class="filtro-status">
+      <button class="btn btn-ghost ativa" data-filtro="todos">Todos ({{ links | length }})</button>
+      <button class="btn btn-ghost" data-filtro="pendente">Pendentes ({{ links | rejectattr('aprovado') | list | length }})</button>
+      <button class="btn btn-ghost" data-filtro="aprovado">Aprovados ({{ links | selectattr('aprovado') | list | length }})</button>
+    </div>
+  </div>
+</header>
+
+<section class="container">
+  {% with mensagens = get_flashed_messages(with_categories=true) %}
+    {% for categoria, msg in mensagens %}
+      <div class="flash {{ 'sucesso' if categoria == 'sucesso' else 'erro' }}">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  {% if links %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>URL</th>
+          <th>Enviado em</th>
+          <th>Aprovado?</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for link in links %}
+        <tr data-status="{{ 'aprovado' if link.aprovado else 'pendente' }}">
+          <td class="num">{{ link.id }}</td>
+          <td><a class="url-clip" href="{{ link.url }}" target="_blank" rel="noopener">{{ link.url }}</a></td>
+          <td class="num muted">{{ link.data.strftime('%d/%m/%Y %H:%M') if link.data else '—' }}</td>
+          <td>
+            {% if link.aprovado %}<span class="tag azul">Sim</span>{% else %}<span class="tag amarelo">Pendente</span>{% endif %}
+          </td>
+          <td>
+            <div class="acoes-linha">
+              <!-- Alterar aprovação -->
+              <form method="POST">
+                <input type="hidden" name="link_id" value="{{ link.id }}">
+                <input type="hidden" name="action" value="aprovar">
+                <select class="select" name="aprovado" onchange="this.form.submit()" aria-label="Aprovado">
+                  <option value="true" {% if link.aprovado %}selected{% endif %}>Sim</option>
+                  <option value="false" {% if not link.aprovado %}selected{% endif %}>Não</option>
+                </select>
+              </form>
+
+              <!-- Deletar -->
+              <form method="POST" onsubmit="return confirm('Tem certeza que deseja deletar?');">
+                <input type="hidden" name="link_id" value="{{ link.id }}">
+                <input type="hidden" name="action" value="deletar">
+                <button type="submit" class="btn btn-danger">Deletar</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="panel empty-state">
+    <span class="icone">📭</span>
+    Nenhum clipe enviado ainda.
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll(".flash").forEach(msg => {
+    setTimeout(() => {
+      msg.style.opacity = "0";
+      setTimeout(() => msg.remove(), 1000);
+    }, 3000);
+  });
+
+  // filtro por status
+  const botoesFiltro = document.querySelectorAll("[data-filtro]");
+  botoesFiltro.forEach(btn => btn.addEventListener("click", () => {
+    botoesFiltro.forEach(b => b.classList.toggle("ativa", b === btn));
+    const filtro = btn.dataset.filtro;
+    document.querySelectorAll("tbody tr[data-status]").forEach(tr => {
+      tr.style.display = filtro === "todos" || tr.dataset.status === filtro ? "" : "none";
+    });
+  }));
+</script>
+{% endblock %}

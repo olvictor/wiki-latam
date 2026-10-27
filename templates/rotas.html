@@ -1,418 +1,255 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
-  <title>Rotas | GUIA-ROLATAM</title>
-  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+{% extends 'components/layout-remaster.html' %}
+{% from 'components/anuncio.html' import anuncio with context %}
 
-    gtag('config', 'G-K3HW966K67');
-  </script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+{% block title %}Rotas de UP + Dicas | GUIA-ROLATAM{% endblock %}
+{% block description %}Rotas de UP para classes Melee e Ranged em Ragnarok Online LATAM, com builds sugeridas e quests de equipamentos.{% endblock %}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #121212;
-      color: #fff;
-      display: flex;
-    }
-    main {
-      padding: 30px;
-      width: 100%;
-      display: flex;
-    }
+{% block styles %}
+.tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+.tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.tab-btn img { width: 22px; height: 22px; object-fit: contain; image-rendering: pixelated; }
+.tab-btn:hover { color: #fff; }
+.tab-btn.ativa { background: #f59e0b; color: #000; }
 
-    h1 {
-      margin-bottom: 30px;
-      color: #ffc107;
-    }
+.tab-panel { display: none; }
+.tab-panel.ativa { display: block; animation: fadeIn 0.3s ease forwards; }
 
-    .section {
-      margin-bottom: 50px;
-      margin-left: 10rem;
-    }
+.rotas-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.coluna { display: flex; flex-direction: column; gap: 24px; }
 
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
+/* Timeline de níveis */
+.timeline { position: relative; display: flex; flex-direction: column; gap: 10px; }
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 44px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(to bottom, #f59e0b, rgba(245, 158, 11, 0.05));
+}
+.etapa {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.etapa-nivel {
+  position: relative;
+  z-index: 1;
+  width: 90px;
+  flex-shrink: 0;
+  text-align: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fbbf24;
+  background: #1a1604;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 9999px;
+  padding: 4px 0;
+}
+.etapa-local {
+  flex: 1;
+  font-size: 14px;
+  color: #e5e7eb;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px 14px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.etapa:hover .etapa-local { background: #161616; border-color: rgba(245, 158, 11, 0.25); }
+.hl { color: #9ca3af; font-size: 12px; }
 
-    li {
-      margin-bottom: 5px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #444;
-    }
-
-    th {
-      background-color: #202020;
-    }
-
-    tr:nth-child(even) {
-      background-color: #333	;
-    }
-
-
-.build-tag {
-  background-color: #3a3a5a;
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 3px 5px 3px 0;
+/* Builds */
+.build-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.build-row:last-child { border-bottom: none; padding-bottom: 0; }
+.build-row:first-child { padding-top: 0; }
+.build-classe { font-weight: 700; color: #fff; font-size: 14px; }
+.combo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.skill {
+  font-size: 12px;
+  color: #d1d5db;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 6px;
-  font-size: 0.9rem;
-  color: #f1f1f1;
-  transition: background-color 0.2s ease;
+  padding: 3px 8px;
+}
+.seta { color: #f59e0b; font-size: 12px; }
+
+/* Quests */
+.quest-titulo {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #fbbf24;
+  margin: 14px 0 6px;
+}
+.quest-titulo:first-child { margin-top: 0; }
+.quest-item {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  color: #d1d5db;
+  padding: 4px 0;
+}
+.quest-item::before { content: "▸"; color: #6b7280; }
+
+.panel h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-
-.loader-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 9999;
-    }
-.spinner {
-        border: 6px solid #ccc;
-        border-top: 6px solid #4b4b7a;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        animation: spin 1s linear infinite;
+@media (max-width: 1000px) {
+  .rotas-grid { grid-template-columns: 1fr; }
 }
-.container-accordion {
-      max-width: 50vw;
-      margin: auto;
-      padding: 2rem;
-      animation: slideInLeft 0.5s ease-out forwards;
-      min-height: 40vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+@media (max-width: 640px) {
+  .timeline::before { left: 34px; }
+  .etapa-nivel { width: 70px; font-size: 14px; }
 }
+{% endblock %}
 
+{% macro timeline(rotas) %}
+<div class="timeline">
+  {% for nivel, local in rotas %}
+  <div class="etapa">
+    <span class="etapa-nivel">{{ nivel }}</span>
+    {% set partes = local.split('(', 1) %}
+    <div class="etapa-local">{{ partes[0] }}{% if partes | length > 1 %}<span class="hl">({{ partes[1] }}</span>{% endif %}</div>
+  </div>
+  {% endfor %}
+</div>
+{% endmacro %}
 
-.container-accordion h2{
-  color: gold;
-  font-size: 2rem;
-  font-weight: bolder;
-}
+{% macro builds(lista) %}
+{% for classe, build in lista %}
+<div class="build-row">
+  <span class="build-classe">{{ classe }}</span>
+  <div class="combo">
+    {% for passo in build.split('>') if passo.strip() %}
+      {% if not loop.first %}<span class="seta">›</span>{% endif %}
+      <span class="skill">{{ passo.strip() }}</span>
+    {% endfor %}
+  </div>
+</div>
+{% endfor %}
+{% endmacro %}
 
-.accordion {
-      width: 100%;
-      text-align: left;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      border: none;
-      color: white;
-      cursor: pointer;
-      margin-bottom: 0.25rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+{% macro quests(lista) %}
+{% for q in lista %}
+  {% set texto = q.replace('Equipamentos Equipamentos', 'Equipamentos').strip() %}
+  {% if texto.endswith(':') or texto == 'Quests Extras' %}
+    <p class="quest-titulo">{{ texto.rstrip(':') }}</p>
+  {% else %}
+    <div class="quest-item">{{ texto }}</div>
+  {% endif %}
+{% endfor %}
+{% endmacro %}
 
-    .accordion i {
-      transition: transform 0.3s ease;
-    }
-
-    .accordion.active i {
-      transform: rotate(90deg);
-    }
-
-    .panel {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease;
-      background-color: #1a1a1a;
-      /* border-left: 3px solid #555; */
-      padding: 0 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .panel table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-
-    .panel table th, .panel table td {
-      padding: 0.5rem;
-      border-bottom: 1px solid #333;
-    }
-.ranged{
-  margin-top: 3rem;
-}
-h2 {
-      text-align: center;
-}
-
-img {
-      display: block;
-      margin: 0 auto;
-      height: 200px;
-      filter: drop-shadow(0px 0px 5px white);
-
-}
-
-.build{
-  color: #d90057;
-}
-
-.highlight {
-  color: #45ebbc; 
-  font-weight: bold;
-}
-
-
-    @keyframes slideInLeft {
-      from {
-        transform: translateX(-100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-@keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-@media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      aside {
-        width: 100%;
-        height: auto;
-        position: static;
-        border-right: none;
-      }
-
-    main {
-        margin-left: 0;
-        padding: 20px;
-    }
-    .container-accordion{
-      width: 90vw;
-    }
-    }
-  </style>
-</head>
-<body onload=esconderLoader()>
-
- {% include 'components/novoheader.html' %}
-
-
-  <div class="global">
-    {% include 'components/header.html' %}
-    <main>
-      <section class="section">
-        <div class="container-accordion">
-          <div class="melee">
-            <h2>Melee</h2>
-            <img src="{{ url_for('static', filename='assets/classes/cavaleiro_runico.png') }}" alt="Logo do Rag" />
-            <div class="melee-content">
-              <button class="accordion"><i class="fa-solid fa-chevron-right"></i> ⚔️ Rotas Melee + Dicas</button>
-              <div class="panel">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Nível</th>
-                      <th>Localização</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for nivel,local in rotas_melee %}
-                      <tr>
-                        <td>{{ nivel }}</td>
-                        <td>{{ local | replace('(', '<span class="highlight">(') | replace(')', ')</span>') | safe }}</td>
-
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-  
-              <button class="accordion"><i class="fa-solid fa-chevron-right"></i> 🛠️ Builds Melee Para Up 1-99</button>
-              <div class="panel">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Classe</th>
-                      <th>Build Sugerida</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for classe, build in array_builds_formatado %}
-                      <tr>
-                        <td>{{ classe }}</td>
-                        <td class="build">{{ build }}</td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-      </section>
-
-      <section>
-        <div class="container-accordion">
-        <div class="ranged">
-          <h2>Ranged</h2>
-          <img src="{{ url_for('static', filename='assets/classes/sentinela.png') }}" alt="Logo do Rag" />
-          <button class="accordion"><i class="fa-solid fa-chevron-right"></i> 🏹 Rotas Ranged + Dicas</button>
-          <div class="panel">
-            <table>
-              <thead>
-                <tr>
-                  <th>Nível</th>
-                  <th>Localização</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for nivel,local in rotas_ranged %}
-                  <tr>
-                    <td>{{ nivel }}</td>
-                    <td>{{ local | replace('(', '<span class="highlight">(') | replace(')', ')</span>') | safe }}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-
-          <button class="accordion"><i class="fa-solid fa-chevron-right"></i> 🛠️ Builds Ranged Para Up 1-99</button>
-          <div class="panel">
-            <table>
-              <thead>
-                <tr>
-                  <th>Classe</th>
-                  <th>Build Sugerida</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for classe, build in array_builds_ranged_formatado %}
-                  <tr>
-                    <td>{{ classe }}</td>
-                    <td class="build">{{ build }}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
+{% block content %}
+<header class="page-header">
+  <div class="section-header">
+    <div class="section-title">
+      <span>🗺️</span>
+      <div>
+        <h1>Rotas de UP + Dicas</h1>
+        <p>Onde upar em cada faixa de nível, builds sugeridas e quests de equipamento</p>
       </div>
-      </section>
-    </main>
-  <script>
-     document.addEventListener('DOMContentLoaded', () => {
-        const expand_btn = document.querySelector(".expand-btn");
+    </div>
 
-        let activeIndex;
+    <div class="tabs" role="tablist">
+      <button class="tab-btn ativa" data-tab="melee" role="tab">
+        <img src="{{ url_for('static', filename='assets/classes/cavaleiro_runico.png') }}" alt=""> Melee
+      </button>
+      <button class="tab-btn" data-tab="ranged" role="tab">
+        <img src="{{ url_for('static', filename='assets/classes/sentinela.png') }}" alt=""> Ranged
+      </button>
+    </div>
+  </div>
+</header>
 
-        expand_btn.addEventListener("click", () => {
-          console.log("aaa")
-          document.body.classList.toggle("collapsed");
-        });
+<section class="container">
+  {% for chave, rotas, lista_builds, lista_quests in [
+      ('melee', rotas_melee, array_builds_formatado, array_quest_melee),
+      ('ranged', rotas_ranged, array_builds_ranged_formatado, array_quest_ranged)] %}
+  <div class="tab-panel{% if loop.first %} ativa{% endif %}" id="tab-{{ chave }}" role="tabpanel">
+    <div class="rotas-grid">
+      <div class="panel">
+        <h3>📍 Rota por nível <span class="tag amarelo">{{ chave }}</span></h3>
+        {{ timeline(rotas) }}
+      </div>
 
-        const current = window.location.href;
-        const allLinks = document.querySelectorAll(".sidebar-links a");
+      <div class="coluna">
+        <div class="panel">
+          <h3>⚔️ Build sugerida para upar</h3>
+          {{ builds(lista_builds) }}
+        </div>
+        {% if lista_quests %}
+        <div class="panel">
+          <h3>📜 Quests recomendadas</h3>
+          {{ quests(lista_quests) }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 
-        allLinks.forEach((elem) => {
-          elem.addEventListener("click", function () {
-            const hrefLinkClick = elem.href;
+  {{ anuncio('conteudo') }}
+</section>
+{% endblock %}
 
-            allLinks.forEach((link) => {
-              if (link.href == hrefLinkClick) {
-                link.classList.add("active");
-              } else {
-                link.classList.remove("active");
-              }
-            });
-          });
-        });
-      });
-
-
-    function esconderLoader() {
-        setTimeout(() => {
-        document.getElementById("loader").style.display = "none";
-        document.getElementById("conteudo").style.display = "block";
-        }, 1000); // 1000 milissegundos = 1 segundo
-    }
-    const accordions = document.querySelectorAll('.accordion');
-
-    accordions.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const panel = btn.nextElementSibling;
-        const isOpen = btn.classList.toggle('active');
-
-        if (isOpen) {
-          panel.style.maxHeight = panel.scrollHeight + "px";
-        } else {
-          panel.style.maxHeight = null;
-        }
-      });
-    });
-
-    const toggleButton = document.getElementById('toggle-menu');
-    const sidebar = document.getElementById('sidebar');
-
-    const chevronLeftSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-      </svg>
-    `;
-
-    const chevronRightSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-      </svg>
-    `;
-
-    toggleButton.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      toggleButton.classList.toggle('collapsed');
-
-      if (sidebar.classList.contains('collapsed')) {
-        toggleButton.innerHTML = chevronRightSVG;
-        toggleButton.style.left = '1rem'; 
-      } else {
-        toggleButton.innerHTML = chevronLeftSVG;
-        toggleButton.style.left = '10rem';
-      }
-    });
-  </script>
-</body>
-</html>
+{% block scripts %}
+<script>
+  const botoes = document.querySelectorAll(".tab-btn");
+  function abrirAba(nome) {
+    botoes.forEach(b => b.classList.toggle("ativa", b.dataset.tab === nome));
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.toggle("ativa", p.id === "tab-" + nome));
+  }
+  botoes.forEach(b => b.addEventListener("click", () => {
+    abrirAba(b.dataset.tab);
+    history.replaceState(null, "", "#" + b.dataset.tab);
+  }));
+  if (location.hash === "#ranged") abrirAba("ranged");
+</script>
+{% endblock %}

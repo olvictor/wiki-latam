@@ -1,17 +1,30 @@
 <header class="header">
+  <!-- Botão do menu (só aparece no celular/tablet) -->
+  <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <line x1="4" y1="7" x2="20" y2="7"></line>
+      <line x1="4" y1="12" x2="20" y2="12"></line>
+      <line x1="4" y1="17" x2="20" y2="17"></line>
+    </svg>
+  </button>
+  <a class="header-logo" href="{{ url_for('info_page') }}">ROLA<span>GUIADA</span></a>
+
   <!-- Search Bar -->
-  <div class="search-bar">
+  <form class="search-bar" action="{{ url_for('monstros_page') }}" method="get" role="search">
     <div class="search-icon">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 icon">
         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-      </svg>   
+      </svg>
     </div>
     <input
-      type="text"
+      type="search"
+      name="busca"
       class="search-input"
-      placeholder="Pesquisar itens, monstros, guias..."
+      placeholder="Buscar monstro..."
+      aria-label="Buscar monstro"
+      value="{{ request.args.get('busca', '') }}"
     />
-  </div>
+  </form>
 
   <!-- Right Actions -->
   <div class="right-actions">
@@ -43,7 +56,7 @@
               </div>
           
               <div class="streamer-info">
-                <p class="name">{{ item.dados }}e</p>
+                <p class="name">{{ item.dados }}</p>
                 <p class="activity">{{ item.stream_info.game_name }}</p>
               </div>
       
@@ -59,7 +72,10 @@
           </div>
         </a>
           {% endif %}
-          {% endfor %}      
+          {% endfor %}
+          {% if not (streamers | selectattr('status', 'equalto', 'on') | list) %}
+          <p class="vazio">Ninguém ao vivo agora.</p>
+          {% endif %}      
           <!-- Repita streamer-item conforme necessário -->
     
         </div>

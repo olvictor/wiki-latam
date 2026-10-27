@@ -1,271 +1,223 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | GUIA-ROLATAM</title>
-  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto:wght@400;700&display=swap');
+{% extends 'components/layout-remaster.html' %}
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+{# página sem conteúdo editorial: sem anúncios #}
+{% block anuncios %}nao{% endblock %}
 
-body {
-  background-color: #141414;
-  color: #ffcc00;
-  font-family: 'Roboto', sans-serif;
-  height: 100vh;
+{% block title %}Login | GUIA-ROLATAM{% endblock %}
+{% block head %}<meta name="robots" content="noindex">{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block styles %}
+.login-wrap {
+  min-height: calc(100vh - 80px);
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
+  padding: 40px 16px;
 }
-
-.login-container {
-  background-color: #1a1a1a;
-  padding: 30px;
-  border-radius: 12px;
-  border: 1px solid #ffcc00;
-  box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
-  width: 320px;
-  text-align: center;
+.login-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  overflow: hidden;
 }
-
-h1 {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 2rem;
-  margin-bottom: 20px;
-  color: #ffcc00;
-  text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+.login-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
 }
-
-label {
-  display: block;
-  text-align: left;
-  font-size: 0.9rem;
-  margin: 10px 0 5px;
-  color: #ffcc00;
-}
-
-.input-box {
+.login-logo {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
   display: flex;
   align-items: center;
-  background-color: #262626;
-  border: 1px solid #ffcc00;
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 15px;
-  box-shadow: inset 0 0 5px rgba(255, 204, 0, 0.2);
+  justify-content: center;
+  font-size: 26px;
 }
-
-.input-box .icon {
-  margin-right: 8px;
-  font-size: 1.1rem;
+.login-card h1 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  color: #fff;
 }
+.login-card .sub { text-align: center; font-size: 13px; color: #9ca3af; margin-bottom: 24px; }
 
-.input-box input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #ffcc00;
-  flex: 1;
-  font-size: 1rem;
+#formulario { display: flex; flex-direction: column; gap: 14px; }
+.input-icone { position: relative; }
+.input-icone span {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity: 0.7;
 }
+.input-icone .input { padding-left: 38px; }
 
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #ffcc00;
-  border: none;
-  color: #141414;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
-  transition: all 0.2s ease-in-out;
+#msgerro {
+  display: none;
+  font-size: 13px;
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: 10px;
+  padding: 10px 12px;
 }
+#formulario .btn-primary { width: 100%; padding: 12px; font-size: 14px; }
+.forgot { display: block; text-align: center; font-size: 12px; color: #6b7280; }
+.forgot:hover { color: #fbbf24; }
 
-button:hover {
-  background-color: #e6b800;
-  box-shadow: 0 0 15px rgba(255, 204, 0, 0.9);
-}
-
-.forgot {
-  display: block;
-  margin-top: 10px;
-  font-size: 0.8rem;
-  text-decoration: none;
-  color: #ffcc00;
-  transition: 0.2s;
-}
-
-.forgot:hover {
-  text-decoration: underline;
-}
-
-#msgerro{
-    display: none;
-    margin-bottom: .8rem;
-    color: red;
-}
-
+/* Carregando */
 #loading {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      display: none; 
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-size: 20px;
-      font-weight: bold;
-      color: #333;
-      z-index: 9999;
-      gap: .6rem;
-    }
-
-#loading h2{
-      opacity: 1;
-      color: white;
-    }
-
-.spinner {
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #ffcc00;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-      margin-right: 10px;
-    }
-
-@keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(17, 17, 17, 0.92);
+  font-size: 13px;
+  color: #9ca3af;
 }
+.spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #f59e0b;
+  animation: girar 0.8s linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+{% endblock %}
 
-  </style>
+{% block content %}
+<section class="login-wrap">
+  <div class="panel login-card">
+    <div id="loading">
+      <div class="spinner"></div>
+      <span>Carregando...</span>
+    </div>
 
-</head>
-<body>
-  <div class="login-container">
-      <div id="loading">
-        <div class="spinner">
-        </div>
-          <h2>Carregando...</h2>
-      </div>
+    <div class="login-logo">⚔️</div>
     <h1>LOGIN</h1>
+    <p class="sub">Entre para acessar sua conta</p>
+
     <form id="formulario">
-      <label for="username">Usuário</label>
-      <div class="input-box">
-        <span class="icon">👤</span>
-        <input type="text" id="username" placeholder="Digite seu usuário">
+      <div class="field">
+        <label for="username">Usuário</label>
+        <div class="input-icone">
+          <span>👤</span>
+          <input class="input" type="text" id="username" placeholder="Digite seu usuário" autocomplete="username" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="password">Senha</label>
+        <div class="input-icone">
+          <span>🔒</span>
+          <input class="input" type="password" id="password" placeholder="Digite sua senha" autocomplete="current-password" required>
+        </div>
       </div>
 
-      <label for="password">Senha</label>
-      <div class="input-box">
-        <span class="icon">🔒</span>
-        <input type="password" id="password" placeholder="Digite sua senha">
-      </div>
-      <span id="msgerro"></span>
-      <button type="submit">Entrar</button>
+      <span id="msgerro" role="alert"></span>
+
+      <button type="submit" class="btn btn-primary">Entrar</button>
       <a href="#" class="forgot">Esqueceu a senha?</a>
     </form>
   </div>
+</section>
+{% endblock %}
 
-  <script>
-    const username = document.getElementById("username");
-    const password = document.getElementById("password");
-    const formulario = document.getElementById("formulario");
-    const error = document.getElementById("msgerro");
-    const inputs = document.querySelectorAll('input');
+{% block scripts %}
+<script>
+  const API_URL = "http://localhost:3000";
+  const PAGINA_PERFIL = "{{ url_for('perfil_page') }}";
 
-    window.addEventListener("DOMContentLoaded", async() => {
-      const token = localStorage.getItem("token");
-      
-      if (token) {
-        loading.style.display = "flex";
-          try {
-          const response = await fetch("http://localhost:3000/auth/user", {
-            method: "GET",
-            headers: {
-              "Authorization": "Bearer " + token,
-              "Content-Type": "application/json"
-          }
-          });
+  const username = document.getElementById("username");
+  const password = document.getElementById("password");
+  const formulario = document.getElementById("formulario");
+  const error = document.getElementById("msgerro");
+  const loading = document.getElementById("loading");
+  const inputs = formulario.querySelectorAll("input");
 
-          if(!response.ok){
-            return localStorage.removeItem("token");
-          }
-          window.location.href = "perfil";
-          } catch (error) {
-            console.error("Erro ao buscar usuário:", error);
-          } finally {
-            loading.style.display = "none";
-          }
-          }
+  // se já tem token válido, vai direto para o perfil
+  window.addEventListener("DOMContentLoaded", async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    loading.style.display = "flex";
+    try {
+      const response = await fetch(`${API_URL}/auth/user`, {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json"
+        }
       });
-
-
-
-   inputs.forEach(input => {
-    input.addEventListener('input', () => {
-        if (error.innerText !=="") {
-            error.innerText = '';
-        }
-        });
-    });
-
-    const efetuarLogin = async () =>{
-        const usuario = {
-           username:username.value,
-           password:password.value
-        }
-       loading.style.display = "flex";
-
-       const url = 'http://localhost:3000/auth/login';
-
-       try{
-         const result = await fetch(url,{
-              method:"POST",
-              body: JSON.stringify(usuario),
-              headers: {
-                  "Content-type": "application/json; charset=UTF-8"
-              }
-          })
-  
-          const json = await result.json();
-  
-          if(!json.success){
-              error.innerText = json.message
-              error.style.display = "block";
-              return
-          }
-  
-          const {data} = json;
-          localStorage.setItem('token', data.token);
-          window.location.href = "perfil";
-       }catch(err){
-        console.log(err)
-       }finally{
-        loading.style.display = "none";
-       }
-
-
+      if (!response.ok) {
+        return localStorage.removeItem("token");
+      }
+      window.location.href = PAGINA_PERFIL;
+    } catch (err) {
+      console.error("Erro ao buscar usuário:", err);
+    } finally {
+      loading.style.display = "none";
     }
-    
+  });
 
-    formulario.addEventListener("submit",(e)=>{
-        e.preventDefault();
-        efetuarLogin();
-    })
-  </script>
-</body>
-</html>
+  // limpa a mensagem de erro ao digitar
+  inputs.forEach(input => {
+    input.addEventListener("input", () => {
+      if (error.innerText !== "") {
+        error.innerText = "";
+        error.style.display = "none";
+      }
+    });
+  });
+
+  const efetuarLogin = async () => {
+    const usuario = {
+      username: username.value,
+      password: password.value
+    };
+    loading.style.display = "flex";
+    try {
+      const result = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        body: JSON.stringify(usuario),
+        headers: { "Content-type": "application/json; charset=UTF-8" }
+      });
+      const json = await result.json();
+      if (!json.success) {
+        error.innerText = json.message;
+        error.style.display = "block";
+        return;
+      }
+      const { data } = json;
+      localStorage.setItem("token", data.token);
+      window.location.href = PAGINA_PERFIL;
+    } catch (err) {
+      console.log(err);
+      error.innerText = "Não foi possível conectar ao servidor. Tente novamente.";
+      error.style.display = "block";
+    } finally {
+      loading.style.display = "none";
+    }
+  };
+
+  formulario.addEventListener("submit", (e) => {
+    e.preventDefault();
+    efetuarLogin();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends 'components/layout-remaster.html' %}
+
+{% block title %}Clipes | GUIA-ROLATAM{% endblock %}
+{% block description %}Os melhores clipes da comunidade de Ragnarok Online LATAM. Envie o seu!{% endblock %}
+
+{% block styles %}
+.envio-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.envio-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.envio-topo h2 { font-size: 16px; font-weight: 700; color: #fff; }
+.envio-topo p { font-size: 13px; color: #9ca3af; }
+.twitch-icone {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(145, 70, 255, 0.15);
+  border: 1px solid rgba(145, 70, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.twitch-icone svg { width: 20px; height: 20px; fill: #a970ff; }
+
+.formulario {
+  display: none;
+  gap: 8px;
+}
+.formulario.active { display: flex; animation: fadeIn 0.3s ease forwards; }
+.formulario .input { flex: 1; }
+
+.toggle-btn .mais { display: inline-block; transition: transform 0.25s; font-size: 16px; line-height: 1; }
+.toggle-btn.aberto .mais { transform: rotate(45deg); }
+
+.flash {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: opacity 1s ease;
+}
+.flash.sucesso { background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); color: #86efac; }
+.flash.erro { background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); color: #fca5a5; }
+
+.container-clipes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 20px;
+}
+.clip-card {
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.25s;
+}
+.clip-card:hover { border-color: rgba(145, 70, 255, 0.4); }
+.clip-card iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+
+@media (max-width: 560px) {
+  .container-clipes { grid-template-columns: 1fr; }
+  .formulario.active { flex-direction: column; }
+}
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div class="section-header">
+    <div class="section-title">
+      <span>🎬</span>
+      <div>
+        <h1>Clipes</h1>
+        <p>Os melhores momentos da comunidade</p>
+      </div>
+    </div>
+    <span class="pill"><strong>{{ links_clipes | length }}</strong> clipes</span>
+  </div>
+</header>
+
+<section class="container">
+  {% with mensagens = get_flashed_messages(with_categories=true) %}
+    {% for categoria, msg in mensagens %}
+      <div class="flash {{ 'sucesso' if categoria == 'sucesso' else 'erro' }}">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <div class="panel envio-card" id="form-container">
+    <div class="envio-topo">
+      <div style="display:flex;gap:12px;align-items:center;">
+        <span class="twitch-icone">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 1L2 6v16h6v3l3-3h4l6-6V1H3zm17 13l-3 3h-5l-2 2v-2H6V3h14v11z"/><path d="M14 6h2v5h-2zm-4 0h2v5h-2z"/></svg>
+        </span>
+        <div>
+          <h2>Envie seu clipe</h2>
+          <p>Cole o link de um clipe da Twitch. Depois de aprovado, ele aparece aqui.</p>
+        </div>
+      </div>
+      <button class="btn btn-primary toggle-btn" type="button" aria-expanded="false"><span class="mais">+</span> Enviar clipe</button>
+    </div>
+
+    <form method="POST" class="formulario">
+      <input class="input" type="text" name="url" placeholder="https://clips.twitch.tv/..." required>
+      <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+  </div>
+
+  {% if links_clipes %}
+  <div class="container-clipes">
+    {% for clip in links_clipes %}
+    <div class="clip-card">
+      <iframe
+        src="https://clips.twitch.tv/embed?clip={{ clip.slug }}&parent=rolaguiada.com.br&parent=www.rolaguiada.com.br&parent={{ request.host.split(':')[0] }}"
+        allowfullscreen
+        loading="lazy"
+        title="Clipe da comunidade"></iframe>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="panel empty-state">
+    <span class="icone">🎬</span>
+    Nenhum clipe aprovado ainda. Seja o primeiro a enviar!
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // mensagens somem sozinhas depois de 3s
+  document.querySelectorAll(".flash").forEach(msg => {
+    setTimeout(() => {
+      msg.style.opacity = "0";
+      setTimeout(() => msg.remove(), 1000);
+    }, 3000);
+  });
+
+  // abre/fecha o formulário de envio
+  const buttonForm = document.querySelector(".toggle-btn");
+  const formContainer = document.querySelector(".formulario");
+  buttonForm.addEventListener("click", (event) => {
+    event.preventDefault();
+    const aberto = formContainer.classList.toggle("active");
+    buttonForm.classList.toggle("aberto", aberto);
+    buttonForm.setAttribute("aria-expanded", aberto);
+    if (aberto) formContainer.querySelector("input").focus();
+  });
+</script>
+{% endblock %}

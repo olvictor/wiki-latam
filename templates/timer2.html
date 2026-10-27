@@ -1,0 +1,435 @@
+{% extends 'components/layout-remaster.html' %}
+
+{% block title %}Calculadora de EXP | GUIA-ROLATAM{% endblock %}
+{% block description %}Timer de 10 minutos para calcular sua EXP por minuto e quanto tempo falta para o nível máximo em Ragnarok Online LATAM.{% endblock %}
+
+{% block styles %}
+.timer-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.passos { display: flex; flex-direction: column; gap: 16px; }
+.passo { display: flex; gap: 14px; }
+.passo-num {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: #000;
+  background: #f59e0b;
+}
+.passo h3 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.passo p, .passo li { font-size: 13px; color: #9ca3af; line-height: 1.6; }
+.passo ul { list-style: disc; padding-left: 18px; }
+
+/* Relógio */
+.relogio-card { text-align: center; }
+.relogio {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 8px auto 24px;
+}
+.relogio svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.relogio .trilho { stroke: #1f1f1f; }
+.relogio .progresso {
+  stroke: #f59e0b;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear;
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.5));
+}
+.relogio-texto {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.tempo {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 64px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.status-timer {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+.relogio.rodando .status-timer { color: #4ade80; }
+
+.form-timer {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  text-align: left;
+  margin-bottom: 16px;
+}
+.acoes { display: flex; gap: 8px; justify-content: center; }
+
+/* Resultado */
+.resultado {
+  margin-top: 16px;
+  display: grid;
+  gap: 10px;
+}
+.resultado .destaque-ganho {
+  text-align: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fbbf24;
+}
+.resultado .linha {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  font-size: 13px;
+  color: #9ca3af;
+}
+.resultado .linha strong { color: #fff; text-align: right; }
+
+.modal-box h3 { font-size: 18px; font-weight: 700; color: #fff; margin: 8px 0 16px; text-align: center; }
+.modal-box .alarme { font-size: 40px; text-align: center; display: block; }
+
+@media (max-width: 1000px) {
+  .timer-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .form-timer { grid-template-columns: 1fr; }
+  .relogio { width: 200px; height: 200px; }
+  .tempo { font-size: 52px; }
+}
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div class="section-title">
+    <span>⏱️</span>
+    <div>
+      <h1>Calculadora de EXP</h1>
+      <p>Farme por 10 minutos e descubra quanto tempo falta para o nível máximo</p>
+    </div>
+  </div>
+</header>
+
+<section class="container">
+  <div class="timer-layout">
+    <!-- Como funciona -->
+    <div class="panel">
+      <h2 class="bloco-titulo" style="font-size:16px;font-weight:700;color:#fff;margin-bottom:16px;">Como funciona o timer de 10 minutos?</h2>
+      <div class="passos">
+        <div class="passo">
+          <span class="passo-num">1</span>
+          <div>
+            <h3>Preenchimento inicial</h3>
+            <p>Antes de iniciar, informe sua classe, seu nível atual e sua porcentagem atual de XP.</p>
+          </div>
+        </div>
+        <div class="passo">
+          <span class="passo-num">2</span>
+          <div>
+            <h3>Início do timer</h3>
+            <ul>
+              <li>Com tudo preenchido, clique em <strong class="text-accent">Iniciar</strong>.</li>
+              <li>O cronômetro conta exatamente 10 minutos.</li>
+              <li>Vá para o jogo e mate monstros para ganhar experiência.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="passo">
+          <span class="passo-num">3</span>
+          <div>
+            <h3>Alerta sonoro no fim</h3>
+            <p>Quando os 10 minutos acabarem, um alarme toca. É a hora de parar e registrar seu progresso.</p>
+          </div>
+        </div>
+        <div class="passo">
+          <span class="passo-num">4</span>
+          <div>
+            <h3>Preenchimento final</h3>
+            <p>Informe a porcentagem de XP que você tem após os 10 minutos.</p>
+          </div>
+        </div>
+        <div class="passo">
+          <span class="passo-num">5</span>
+          <div>
+            <h3>Cálculo automático</h3>
+            <ul>
+              <li>Quantidade total de XP ganha.</li>
+              <li>Média de XP por minuto.</li>
+              <li>Quanto tempo falta para o nível máximo nesse ritmo.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timer -->
+    <div class="panel relogio-card">
+      <div class="relogio" id="relogio">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="trilho" cx="60" cy="60" r="54" fill="none" stroke-width="8"></circle>
+          <circle class="progresso" id="progresso" cx="60" cy="60" r="54" fill="none" stroke-width="8"></circle>
+        </svg>
+        <div class="relogio-texto">
+          <span class="tempo"><span class="minutos">10</span>:<span class="segundos">00</span></span>
+          <span class="status-timer" id="statusTimer">Pronto</span>
+        </div>
+      </div>
+
+      <div class="form-timer">
+        <div class="field">
+          <label for="selecao_classe">Classe</label>
+          <select class="select" name="classe" id="selecao_classe">
+            <option value="">Selecione...</option>
+            <option value="0">Segunda Classe</option>
+            <option value="1">Transclasse</option>
+            <option value="2">Terceira Classe</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="levelInicial">Seu level</label>
+          <input class="input level-inicial" type="number" placeholder="LvL" id="levelInicial" />
+        </div>
+        <div class="field">
+          <label for="porcentagemInicial">% inicial</label>
+          <input class="input porcentagem-inicial" type="number" step="0.01" placeholder="%" id="porcentagemInicial" />
+        </div>
+      </div>
+
+      <div class="acoes">
+        <button class="btn btn-primary start-timer">▶ Iniciar</button>
+        <button class="btn btn-ghost" id="reiniciar" disabled>↺ Reiniciar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal de fim do tempo -->
+<div class="modal-overlay" id="meuModal">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="tituloModal">
+    <button class="modal-close" aria-label="Fechar">×</button>
+    <span class="alarme">⏰</span>
+    <h3 id="tituloModal">O tempo chegou ao fim! Qual a % de XP final?</h3>
+    <div class="field">
+      <label for="porcentagemFinal">% final</label>
+      <input class="input porcentagem-final" id="porcentagemFinal" type="number" step="0.01" placeholder="%" />
+    </div>
+    <div class="acoes" style="margin-top: 12px;">
+      <button class="btn btn-primary button-calcular" disabled>Calcular</button>
+    </div>
+    <div class="resultado mensagem-container-calculo"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const tabelaXP = {{ tabela_unificada_segunda_classe | tojson | safe }};
+  const tabelaXP_transclasse = {{ tabela_unificada_transclasse | tojson | safe }};
+  const tabelaXP_terceira = {{ tabela_unificada_terceira | tojson | safe }};
+  const tabelas = [tabelaXP, tabelaXP_transclasse, tabelaXP_terceira];
+  // nível máximo de cada tipo de classe
+  const nivelMaximo = [99, 99, 175];
+
+  const alarme = new Audio("{{ url_for('static', filename='assets/sound/alarme.wav') }}");
+  const TEMPO_TOTAL = 10 * 60; // segundos
+  const TEMPO_MINUTOS = 10;
+
+  const iniciar = document.querySelector(".start-timer");
+  const reiniciar = document.getElementById("reiniciar");
+  const minutosEl = document.querySelector(".minutos");
+  const segundosEl = document.querySelector(".segundos");
+  const relogio = document.getElementById("relogio");
+  const statusTimer = document.getElementById("statusTimer");
+  const progresso = document.getElementById("progresso");
+  const porcentagemInicial = document.querySelector(".porcentagem-inicial");
+  const levelInicial = document.querySelector(".level-inicial");
+  const porcentagemFinal = document.querySelector(".porcentagem-final");
+  const buttonCalcular = document.querySelector(".button-calcular");
+  const mensagemCalculo = document.querySelector(".mensagem-container-calculo");
+  const selecaoClasse = document.getElementById("selecao_classe");
+  const modal = document.getElementById("meuModal");
+  const btnFechar = modal.querySelector(".modal-close");
+
+  const CIRCUNFERENCIA = 2 * Math.PI * 54;
+  progresso.style.strokeDasharray = CIRCUNFERENCIA;
+  progresso.style.strokeDashoffset = 0;
+
+  let timer = null;
+  let restante = TEMPO_TOTAL;
+
+  const fmt = (n) => Math.round(n).toLocaleString("pt-BR");
+
+  function desenharTempo() {
+    minutosEl.innerText = String(Math.floor(restante / 60)).padStart(2, "0");
+    segundosEl.innerText = String(restante % 60).padStart(2, "0");
+    progresso.style.strokeDashoffset = CIRCUNFERENCIA * (1 - restante / TEMPO_TOTAL);
+  }
+
+  function travarCampos(travar) {
+    selecaoClasse.disabled = travar;
+    porcentagemInicial.disabled = travar;
+    levelInicial.disabled = travar;
+  }
+
+  function resetar() {
+    clearInterval(timer);
+    timer = null;
+    restante = TEMPO_TOTAL;
+    desenharTempo();
+    travarCampos(false);
+    iniciar.disabled = false;
+    reiniciar.disabled = true;
+    relogio.classList.remove("rodando");
+    statusTimer.textContent = "Pronto";
+    porcentagemFinal.value = "";
+    buttonCalcular.disabled = true;
+    mensagemCalculo.innerHTML = "";
+  }
+
+  function validarInicio() {
+    const classe = selecaoClasse.value;
+    const lvl = parseInt(levelInicial.value);
+    const pct = parseFloat(porcentagemInicial.value);
+    if (classe === "") {
+      mostrarToast("Selecione a sua classe.", "erro");
+      return false;
+    }
+    if (isNaN(pct) || isNaN(lvl)) {
+      mostrarToast("Preencha o campo da % inicial e o nível.", "erro");
+      return false;
+    }
+    const tabela = tabelas[classe];
+    const minimo = tabela[0].Level;
+    const maximo = nivelMaximo[classe] - 1;
+    if (lvl < minimo || lvl > maximo) {
+      mostrarToast(`O nível deve estar entre ${minimo} e ${maximo}.`, "erro");
+      return false;
+    }
+    if (pct < 0 || pct >= 100) {
+      mostrarToast("A % inicial deve estar entre 0 e 99.", "erro");
+      return false;
+    }
+    return true;
+  }
+
+  function iniciarTimer() {
+    if (!validarInicio()) return;
+    // "destrava" o áudio no clique para o alarme poder tocar no fim
+    alarme.play().then(() => { alarme.pause(); alarme.currentTime = 0; }).catch(() => {});
+
+    travarCampos(true);
+    iniciar.disabled = true;
+    reiniciar.disabled = false;
+    relogio.classList.add("rodando");
+    statusTimer.textContent = "Farmando...";
+
+    timer = setInterval(() => {
+      restante -= 1;
+      desenharTempo();
+      if (restante <= 0) {
+        clearInterval(timer);
+        timer = null;
+        relogio.classList.remove("rodando");
+        statusTimer.textContent = "Tempo esgotado";
+        alarme.play().catch(() => {});
+        modal.classList.add("ativo");
+        porcentagemFinal.focus();
+      }
+    }, 1000);
+  }
+
+  function calcular() {
+    const classe = parseInt(selecaoClasse.value);
+    const lvl = parseInt(levelInicial.value);
+    const pctInicial = parseFloat(porcentagemInicial.value);
+    const pctFinal = parseFloat(porcentagemFinal.value);
+
+    if (isNaN(pctFinal) || pctFinal < pctInicial) {
+      mostrarToast("A % final tem que ser maior que a inicial.", "erro");
+      return;
+    }
+    if (pctFinal >= 100) {
+      mostrarToast("A % final tem que ser menor que 100.", "erro");
+      return;
+    }
+
+    const tabela = tabelas[classe];
+    const alvo = nivelMaximo[classe];
+    const xpNivelAtual = tabela.find(l => l.Level === lvl)?.["EXP Proximo Level"] || 0;
+    const ganhoPercentual = pctFinal - pctInicial;
+    const xpGanho = (ganhoPercentual / 100) * xpNivelAtual;
+    const xpPorMinuto = xpGanho / TEMPO_MINUTOS;
+
+    const xpAteMaximo = tabela
+      .filter(l => l.Level >= lvl && l.Level < alvo)
+      .reduce((soma, l) => soma + (Number(l["EXP Proximo Level"]) || 0), 0);
+    const xpRestante = Math.max(0, xpAteMaximo - (pctFinal / 100) * xpNivelAtual);
+
+    let tempoFormatado = "—";
+    if (xpPorMinuto > 0) {
+      const minutosRestantes = xpRestante / xpPorMinuto;
+      const horas = Math.floor(minutosRestantes / 60);
+      const minutos = Math.round(minutosRestantes % 60);
+      const dias = Math.floor(horas / 24);
+      const horasRestantes = horas % 24;
+      tempoFormatado = "";
+      if (dias > 0) tempoFormatado += `${dias}d `;
+      if (horasRestantes > 0 || dias > 0) tempoFormatado += `${horasRestantes}h `;
+      tempoFormatado += `${minutos}min`;
+    }
+
+    mensagemCalculo.innerHTML = `
+      <p class="destaque-ganho">+${ganhoPercentual.toLocaleString("pt-BR")}% em 10 minutos</p>
+      <div class="linha"><span>📶 XP ganha</span><strong>${fmt(xpGanho)}</strong></div>
+      <div class="linha"><span>⚡ XP por minuto</span><strong>${fmt(xpPorMinuto)}</strong></div>
+      <div class="linha"><span>🎯 XP restante até o nível ${alvo}</span><strong>${fmt(xpRestante)}</strong></div>
+      <div class="linha"><span>⌛ Tempo estimado nesse ritmo</span><strong>${tempoFormatado}</strong></div>
+    `;
+  }
+
+  iniciar.addEventListener("click", iniciarTimer);
+  reiniciar.addEventListener("click", resetar);
+  buttonCalcular.addEventListener("click", calcular);
+  porcentagemFinal.addEventListener("input", () => {
+    const v = parseFloat(porcentagemFinal.value);
+    buttonCalcular.disabled = isNaN(v) || v < parseFloat(porcentagemInicial.value) || v >= 100;
+  });
+  porcentagemFinal.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !buttonCalcular.disabled) calcular();
+  });
+
+  // fechar o modal reinicia o timer para uma nova medição
+  function fecharModal() {
+    modal.classList.remove("ativo");
+    alarme.pause();
+    alarme.currentTime = 0;
+    resetar();
+  }
+  btnFechar.addEventListener("click", fecharModal);
+  modal.addEventListener("click", (e) => { if (e.target === modal) fecharModal(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && modal.classList.contains("ativo")) fecharModal(); });
+
+  desenharTempo();
+</script>
+{% endblock %}

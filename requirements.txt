@@ -2,7 +2,6 @@ flask
 pandas
 openpyxl
 flask-cors
-pyyaml
 gunicorn
 APScheduler
 google-api-python-client

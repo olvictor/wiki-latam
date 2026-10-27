@@ -1,246 +1,199 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
-  <title>Contato & Apoio | GUIA-ROLATAM</title>
-  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+{% extends 'components/layout-remaster.html' %}
 
-    gtag('config', 'G-K3HW966K67');
-  </script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+{% block title %}Contato & Apoio | GUIA-ROLATAM{% endblock %}
+{% block description %}Fale com a equipe do RolaGuiada, envie sugestões e apoie o projeto via Pix.{% endblock %}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #121212;
-      color: #fff;
-      display: flex;
-    }
-
-
-    main {
-      margin-left: 270px;
-      padding: 30px;
-      width: 100%;
-    }
-
-    h1 {
-      margin-bottom: 30px;
-      color: #ffc107;
-    }
-    .content{
-        display: flex;
-        flex-direction: column;
-        margin-top: 5rem;
-        gap: 1rem;
-        height: auto;
-    }
-    .field{
-        width: 30vw;
-    }
-    form{
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .submit{
-        width: 6rem;
-    }
-
-    .modal-content{
-      background-color: rgba(11,11,13,255);
-      display: flex;
-      padding: 2rem;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .js-modal-trigger{
-      cursor: pointer;
-    }
-    .content img{
-      width: 10%;
-      height: auto;
-    }
-@keyframes spin {
-      to { transform: rotate(360deg); }
+{% block styles %}
+.contato-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
 }
-@media (max-width: 768px) {
-     body {
-        flex-direction: column;
-      }
+.coluna { display: flex; flex-direction: column; gap: 24px; }
 
-      aside {
-        width: 100%;
-        height: auto;
-        position: static;
-        border-right: none;
-      }
+.panel h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.panel > p { font-size: 14px; color: #9ca3af; line-height: 1.7; }
 
-      main {
-        margin-left: 0;
-        padding: 20px;
-      }
-    }
-  </style>
-</head>
-<body>
- {% include 'components/novoheader.html' %}
-  <div class="global">
-    {% include 'components/header.html' %}
-    <main>
-      <div class="content">
-          <h1 class="title is-1">Sobre o Projeto</h1>
-          <p class="subtitle is-6 has-text-grey-lighter"> O site RolaGuiada nasceu da paixão pela comunidade de Ragnarok e pela vontade de facilitar o acesso às informações mais importantes sobre o jogo.
-              Nossa missão é oferecer um ambiente acessível, organizado e sempre atualizado para jogadores de todos os níveis do novato ao veterano.
-          </p> 
-          <div>
-          <h3>💬 Entre em Contato</h3>
-              <p class="subtitle is-6 has-text-grey-lighter">Se você quiser sugerir melhorias, reportar erros ou apenas trocar uma ideia, estamos disponíveis:
-                  <ul class="has-text-grey-lighter">
-                      <li>Discord: Michels#0484</li>
-                      <li>Discord: wakabayashigg2</li>
-                      <li>In-game: Ghostring</li>
-                      <li>Email: wikirolaguiada@gmail.com</li>
-  
-                  </ul>
-              </p>       
-          </div>  
-          <div> 
-          <h3>🤝 Contribua com o Projeto</h3>
-          <p class="subtitle is-6 has-text-grey-lighter">  Se você gostou do conteúdo e quer apoiar o projeto, há várias formas de contribuir:</p>   
-          <ul class="has-text-grey-lighter">
-              <li>Enviando sugestões ou conteúdos úteis (builds, guias, dicas).</li>
-              <li>Compartilhando o site com amigos e clãs.</li>
-              <li>Apoiando via <span style="color:#ffc107" class="js-modal-trigger">Pix.</span></li>
-  
-          </ul>        
-          </p>
-          </div>
-            <div class="field">
-              <form action="https://formsubmit.co/wikirolaguiada@gmail.com" method="POST">
-                  <input class="input" type="text" name="nome" placeholder="Seu nome" required />
-                  <input class="input" type="email" name="email" placeholder="Seu email" required />
-                  <textarea class="textarea" placeholder="Digite sua mensagem." name="mensagem" required></textarea>
-                  <button type="submit" class="submit button is-link">Enviar</button>
-              </form>
-            </div>  
-          <p class="subtitle is-6 has-text-grey-lighter">Juntos podemos manter este guia sempre vivo e atualizado 💛</p>
+.contatos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.contato-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  font-size: 13px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  text-align: left;
+}
+.contato-item:hover { border-color: rgba(245, 158, 11, 0.3); }
+.contato-item span.tipo { display: block; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #6b7280; }
+.contato-item strong { color: #fbbf24; font-weight: 600; word-break: break-all; }
+.contato-item .ico { font-size: 18px; }
 
-          <h3>Contribua com o projeto !</h3>
-          <img src="{{ url_for('static', filename='assets/QRCode.jpg') }}" alt="QRCode">
-          <p style="margin-top: 3rem;">Chave Pix :</p>
-          <span>b6ba72ec-122d-4993-b67d-838b8d73a4de</span>
+.form-contato { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+.form-contato .linha { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-          <!-- <div class="modal">
-            <div class="modal-background"></div>
-            <div class="modal-content">
-             </div>
-            <button class="modal-close is-large" aria-label="close"></button>
-          </div> -->
-        </div>
-    </main>
+/* Pix */
+.pix-card { text-align: center; }
+.pix-card img.qr {
+  width: 220px;
+  max-width: 100%;
+  margin: 8px auto 16px;
+  border-radius: 12px;
+  border: 4px solid #fff;
+  background: #fff;
+}
+.pix-chave {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #0b0b0b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 6px 6px 6px 12px;
+}
+.pix-chave code {
+  flex: 1;
+  font-size: 12px;
+  color: #fbbf24;
+  word-break: break-all;
+  text-align: left;
+}
+.pix-chave .btn { padding: 8px 12px; font-size: 12px; flex-shrink: 0; }
+
+.formas-apoio { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.forma {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  color: #d1d5db;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.forma:last-child { border-bottom: none; }
+
+.assinatura {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+@media (max-width: 1000px) {
+  .contato-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .contatos, .form-contato .linha { grid-template-columns: 1fr; }
+}
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div class="section-title">
+    <span>💛</span>
+    <div>
+      <h1>Contato &amp; Apoio</h1>
+      <p>Fale com a gente e ajude a manter o guia vivo</p>
+    </div>
   </div>
-  <script>
-     document.addEventListener('DOMContentLoaded', () => {
-        const expand_btn = document.querySelector(".expand-btn");
+</header>
 
-        let activeIndex;
+<section class="container">
+  <div class="contato-grid">
+    <div class="coluna">
+      <div class="panel">
+        <h2>📖 Sobre o projeto</h2>
+        <p>
+          O site RolaGuiada nasceu da paixão pela comunidade de Ragnarok e pela vontade de facilitar o acesso às informações mais importantes sobre o jogo.
+          Nossa missão é oferecer um ambiente acessível, organizado e sempre atualizado para jogadores de todos os níveis, do novato ao veterano.
+        </p>
+      </div>
 
-        expand_btn.addEventListener("click", () => {
-          console.log("aaa")
-          document.body.classList.toggle("collapsed");
-        });
+      <div class="panel">
+        <h2>💬 Entre em contato</h2>
+        <p>Se você quiser sugerir melhorias, reportar erros ou apenas trocar uma ideia, estamos disponíveis (clique para copiar):</p>
+        <div class="contatos">
+          <button class="contato-item" data-copiar="Michels#0484"><span class="ico">🎮</span><span><span class="tipo">Discord</span><strong>Michels#0484</strong></span></button>
+          <button class="contato-item" data-copiar="wakabayashigg2"><span class="ico">🎮</span><span><span class="tipo">Discord</span><strong>wakabayashigg2</strong></span></button>
+          <button class="contato-item" data-copiar="Ghostring"><span class="ico">⚔️</span><span><span class="tipo">In-game</span><strong>Ghostring</strong></span></button>
+          <button class="contato-item" data-copiar="wikirolaguiada@gmail.com"><span class="ico">✉️</span><span><span class="tipo">Email</span><strong>wikirolaguiada@gmail.com</strong></span></button>
+        </div>
+      </div>
 
-        const current = window.location.href;
-        const allLinks = document.querySelectorAll(".sidebar-links a");
+      <div class="panel">
+        <h2>✉️ Envie uma mensagem</h2>
+        <form class="form-contato" action="https://formsubmit.co/wikirolaguiada@gmail.com" method="POST">
+          <div class="linha">
+            <div class="field">
+              <label for="nome">Nome</label>
+              <input class="input" id="nome" type="text" name="nome" placeholder="Seu nome" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input class="input" id="email" type="email" name="email" placeholder="Seu email" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="mensagem">Mensagem</label>
+            <textarea class="textarea" id="mensagem" name="mensagem" placeholder="Digite sua mensagem." required></textarea>
+          </div>
+          <div><button type="submit" class="btn btn-primary">Enviar mensagem</button></div>
+        </form>
+      </div>
+    </div>
 
-        allLinks.forEach((elem) => {
-          elem.addEventListener("click", function () {
-            const hrefLinkClick = elem.href;
+    <div class="coluna">
+      <div class="panel">
+        <h2>🤝 Contribua com o projeto</h2>
+        <p>Se você gostou do conteúdo e quer apoiar o projeto, há várias formas de contribuir:</p>
+        <div class="formas-apoio">
+          <div class="forma"><span>💡</span>Enviando sugestões ou conteúdos úteis (builds, guias, dicas).</div>
+          <div class="forma"><span>📣</span>Compartilhando o site com amigos e clãs.</div>
+          <div class="forma"><span>💸</span><span>Apoiando via <a href="#pix" class="text-accent" style="text-decoration:underline;">Pix</a>.</span></div>
+        </div>
+      </div>
 
-            allLinks.forEach((link) => {
-              if (link.href == hrefLinkClick) {
-                link.classList.add("active");
-              } else {
-                link.classList.remove("active");
-              }
-            });
-          });
-        });
-      });
+      <div class="panel pix-card" id="pix">
+        <h2 style="justify-content:center;">💠 Apoie via Pix</h2>
+        <img class="qr" src="{{ url_for('static', filename='assets/QRCode.jpg') }}" alt="QR Code Pix">
+        <p class="muted" style="font-size:12px;margin-bottom:8px;">Chave Pix</p>
+        <div class="pix-chave">
+          <code id="chavePix">b6ba72ec-122d-4993-b67d-838b8d73a4de</code>
+          <button class="btn btn-primary" data-copiar="b6ba72ec-122d-4993-b67d-838b8d73a4de">Copiar</button>
+        </div>
+        <p class="assinatura">Juntos podemos manter este guia sempre vivo e atualizado 💛</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
 
-
-    document.querySelectorAll(".clickable-row").forEach(row => {
-    const link = row.dataset.link;
-    if (link) {
-      row.style.cursor = "pointer";
-      row.addEventListener("click", () => {
-        window.open(link, "_blank");
-      });
-    }
+{% block scripts %}
+<script>
+  document.querySelectorAll("[data-copiar]").forEach(el => {
+    el.addEventListener("click", async () => {
+      const texto = el.dataset.copiar;
+      if (await copiarTexto(texto)) mostrarToast(`"${texto}" copiado!`, "sucesso");
+      else mostrarToast("Não foi possível copiar", "erro");
     });
-
-    const toggleIcon = document.getElementById('toggle-icon');
-    const modal = document.querySelector('.modal');
-    const botaoDesativarModal = document.querySelector('.modal-close')
-    const botaoAtivarModal = document.querySelector('.js-modal-trigger');
-    
-    botaoAtivarModal.addEventListener("click",()=>{
-      modal.classList.add('is-active')
-    })
-    
-    botaoDesativarModal.addEventListener("click",()=>{
-      modal.classList.remove('is-active')
-    })
-    
-    modal.querySelector('.modal-background').addEventListener('click', () => {
-      modal.classList.remove('is-active');
-    });
-    
-    const toggleButton = document.getElementById('toggle-menu');
-    const sidebar = document.getElementById('sidebar');
-
-    const chevronLeftSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-      </svg>
-    `;
-
-    const chevronRightSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-      </svg>
-    `;
-
-    toggleButton.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      toggleButton.classList.toggle('collapsed');
-
-      if (sidebar.classList.contains('collapsed')) {
-        toggleButton.innerHTML = chevronRightSVG;
-        toggleButton.style.left = '1rem'; 
-      } else {
-        toggleButton.innerHTML = chevronLeftSVG;
-        toggleButton.style.left = '10rem';
-      }
-    });
-  </script>
-</body>
-</html>
+  });
+</script>
+{% endblock %}

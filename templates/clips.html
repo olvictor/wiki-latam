@@ -1,377 +1,164 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
-  <title>Clipes | GUIA-ROLATAM</title>
-  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+{% extends 'components/layout-remaster.html' %}
 
-    gtag('config', 'G-K3HW966K67');
-  </script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
+{% block title %}Clipes | GUIA-ROLATAM{% endblock %}
+{% block description %}Os melhores clipes da comunidade de Ragnarok Online LATAM. Envie o seu!{% endblock %}
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?display=swap&family=Newsreader:wght@400;500;700;800&family=Noto+Sans:wght@400;500;700;900');
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #121212;
-      color: #fff;
-      display: flex;
-    }
-
-
-    main {
-      padding: 8rem 15rem;
-      width: 100%;
-      height: auto;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    h1 {
-     color: #ffc107;
-     font-size: 2rem;
-     font-weight: bold;
-    }
-    #form-container{
-      width: 100%;
-      position: relative;
-    }
-   
-    .formulario {
-      display: flex;
-      margin-top: 20px;
-      border: 1px solid rgba(255, 255, 255, .03);
-      padding: 16px;
-      border-radius: 8px;
-      transform: translateY(-10px);
-      opacity: 0;
-      position: relative;
-      width: 40%;
-      align-items: center;
-      justify-content: center;
-    }
-    .formulario.active{
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-      animation: fadeInUp 0.4s ease forwards;
-    }
-    .box-button{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      width: 15%;
-      text-transform: uppercase;
-      font-weight: bolder;
-    }
-  button.toggle-btn {
-	border-radius:3px;
-	border:1px solid rgba(255, 255, 255, .07);
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:24px;
-  height: 40px;
-  width: 40px;
-  text-decoration:none;
-  border-radius:100%;
-	text-shadow:0px 1px 0px #263666;
-}
-button.toggle-btn:hover {
-  filter: drop-shadow(0px 0px 5px orange);
-  transition: .3s;
-}
-button.toggle-btn:active {
-	position:relative;
-	top:1px;
-}
-
-    .formulario input[type="text"] {
-      width: 70%;
-      padding: 10px 16px;
-      height: 2.7rem;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    button[type="submit"] {
-      background-color: #9146FF;
-      color: white;
-      border: none;
-      width: 6rem;
-      height: 2.7rem;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bolder;
-    }
-    iframe{
-      filter: drop-shadow(0px 0px 5px #9146FF);
-      width: 30%;
-      height: 20rem;
-    }
-.loader-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 9999;
-    }
-    .msg_acerto{
-      background-color: #4CAF50;
-      color: white;
-      font-weight: bolder;
-      font-size: 1rem;
-      width: 20rem;
-      height: 5rem;
-      border-radius: 6px;
-      position: fixed;
-      right: 1rem;
-      top: 1rem;
-      z-index: 9999;
-
-      display: flex;
-      text-align: center;
-      justify-content: center;
-      align-items: center;
-      border: 1px solid white;
-      transition: opacity 1s ease-out;
-      animation: fadeInUp 0.6s ease-out;
-    }
-    .msg_erro{
-      background-color: red;
-      color: white;
-      font-weight: bolder;
-      font-size: 1rem;
-      width: 20rem;
-      height: 5rem;
-      border-radius: 6px;
-      position: fixed;
-      right: 40rem;
-      top: 10rem;
-      z-index: 9999;
-      display: flex;
-      text-align: center;
-      justify-content: center;
-      align-items: center;
-      border: 1px solid white;
-      transition: opacity 1s ease-out;
-      animation: fadeInUp 0.6s ease-out;
-    }
-
-    
-.spinner {
-        border: 6px solid #ccc;
-        border-top: 6px solid #4b4b7a;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        animation: spin 1s linear infinite;
-}
-
-.container-clipes{
+{% block styles %}
+.envio-card {
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.envio-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   flex-wrap: wrap;
-  gap: 1rem;
+}
+.envio-topo h2 { font-size: 16px; font-weight: 700; color: #fff; }
+.envio-topo p { font-size: 13px; color: #9ca3af; }
+.twitch-icone {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(145, 70, 255, 0.15);
+  border: 1px solid rgba(145, 70, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.twitch-icone svg { width: 20px; height: 20px; fill: #a970ff; }
+
+.formulario {
+  display: none;
+  gap: 8px;
+}
+.formulario.active { display: flex; animation: fadeIn 0.3s ease forwards; }
+.formulario .input { flex: 1; }
+
+.toggle-btn .mais { display: inline-block; transition: transform 0.25s; font-size: 16px; line-height: 1; }
+.toggle-btn.aberto .mais { transform: rotate(45deg); }
+
+.flash {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  transition: opacity 1s ease;
+}
+.flash.sucesso { background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); color: #86efac; }
+.flash.erro { background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); color: #fca5a5; }
+
+.container-clipes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 20px;
+}
+.clip-card {
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.25s;
+}
+.clip-card:hover { border-color: rgba(145, 70, 255, 0.4); }
+.clip-card iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(100px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@media (max-width: 560px) {
+  .container-clipes { grid-template-columns: 1fr; }
+  .formulario.active { flex-direction: column; }
 }
+{% endblock %}
 
-
-@keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      aside {
-        width: 100%;
-        height: auto;
-        position: static;
-        border-right: none;
-      }
-
-      main {
-        margin-left: 0;
-        padding: 20px;
-      }
-      
-  
-  }
-  </style>
-</head>
-<body onload=esconderLoader()>
-
-  {% include 'components/novoheader.html' %}
-
-  <div class="global">
-    {% include 'components/header.html' %}
-      <main>
-        {% with mensagens = get_flashed_messages(with_categories=true) %}
-        {% if mensagens %}
-          {% for categoria, msg in mensagens %}
-            {% if categoria == 'sucesso' %}
-              <div class="msg_acerto">{{ msg }}</div>
-            {% elif categoria == 'erro' %}
-              <div class="msg_erro">{{ msg }}</div>
-            {% endif %}
-          {% endfor %}
-        {% endif %}
-       {% endwith %}
-        <div id="form-container">
-          <div class="box-button">
-            <button class="toggle-btn" type="button">+</button>
-            <p>Envie seu clipe</p>
-          </div>
-          <form method="POST" class="formulario">
-            <h1>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="#9146FF" viewBox="0 0 24 24" width="24" height="24">
-                <path d="M3 1L2 6v16h6v3l3-3h4l6-6V1H3zm17 13l-3 3h-5l-2 2v-2H6V3h14v11z"/>
-                <path d="M14 6h2v5h-2zm-4 0h2v5h-2z" fill="#fff"/>
-              </svg>
-            </h1>
-            <input type="text" name="url" placeholder="Cole seu link aqui" required>
-            <button type="submit">Enviar</button>
-          </form>
-        </div>
-            <hr>
-            <div class="container-clipes">
-              {% for clip in links_clipes %}
-              <iframe
-              src="https://clips.twitch.tv/embed?clip={{ clip.slug }}&parent=rolaguiada.com.br&parent=www.rolaguiada.com.br"
-              width="100%"
-              height="315"
-              allowfullscreen
-              style="border-radius: 12px; border: none;">
-              </iframe>
-              {% endfor %}
-            </div>
-    </main>
+{% block content %}
+<header class="page-header">
+  <div class="section-header">
+    <div class="section-title">
+      <span>🎬</span>
+      <div>
+        <h1>Clipes</h1>
+        <p>Os melhores momentos da comunidade</p>
+      </div>
+    </div>
+    <span class="pill"><strong>{{ links_clipes | length }}</strong> clipes</span>
   </div>
- 
-    
+</header>
 
-    <script >
+<section class="container">
+  {% with mensagens = get_flashed_messages(with_categories=true) %}
+    {% for categoria, msg in mensagens %}
+      <div class="flash {{ 'sucesso' if categoria == 'sucesso' else 'erro' }}">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
 
-      document.addEventListener('DOMContentLoaded', () => {
-        const expand_btn = document.querySelector(".expand-btn");
+  <div class="panel envio-card" id="form-container">
+    <div class="envio-topo">
+      <div style="display:flex;gap:12px;align-items:center;">
+        <span class="twitch-icone">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 1L2 6v16h6v3l3-3h4l6-6V1H3zm17 13l-3 3h-5l-2 2v-2H6V3h14v11z"/><path d="M14 6h2v5h-2zm-4 0h2v5h-2z"/></svg>
+        </span>
+        <div>
+          <h2>Envie seu clipe</h2>
+          <p>Cole o link de um clipe da Twitch. Depois de aprovado, ele aparece aqui.</p>
+        </div>
+      </div>
+      <button class="btn btn-primary toggle-btn" type="button" aria-expanded="false"><span class="mais">+</span> Enviar clipe</button>
+    </div>
 
-        let activeIndex;
+    <form method="POST" class="formulario">
+      <input class="input" type="text" name="url" placeholder="https://clips.twitch.tv/..." required>
+      <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+  </div>
 
-        expand_btn.addEventListener("click", () => {
-          console.log("aaa")
-          document.body.classList.toggle("collapsed");
-        });
+  {% if links_clipes %}
+  <div class="container-clipes">
+    {% for clip in links_clipes %}
+    <div class="clip-card">
+      <iframe
+        src="https://clips.twitch.tv/embed?clip={{ clip.slug }}&parent=rolaguiada.com.br&parent=www.rolaguiada.com.br&parent={{ request.host.split(':')[0] }}"
+        allowfullscreen
+        loading="lazy"
+        title="Clipe da comunidade"></iframe>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="panel empty-state">
+    <span class="icone">🎬</span>
+    Nenhum clipe aprovado ainda. Seja o primeiro a enviar!
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
 
-        const current = window.location.href;
-        const allLinks = document.querySelectorAll(".sidebar-links a");
+{% block scripts %}
+<script>
+  // mensagens somem sozinhas depois de 3s
+  document.querySelectorAll(".flash").forEach(msg => {
+    setTimeout(() => {
+      msg.style.opacity = "0";
+      setTimeout(() => msg.remove(), 1000);
+    }, 3000);
+  });
 
-        allLinks.forEach((elem) => {
-          elem.addEventListener("click", function () {
-            const hrefLinkClick = elem.href;
-
-            allLinks.forEach((link) => {
-              if (link.href == hrefLinkClick) {
-                link.classList.add("active");
-              } else {
-                link.classList.remove("active");
-              }
-            });
-          });
-        });
-      });
-      function esconderLoader() {
-            setTimeout(() => {
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("conteudo").style.display = "flex";
-            }, 1000); 
-      
-      }
-      window.addEventListener("DOMContentLoaded", () => {
-        const mensagens = document.querySelectorAll(".msg_acerto, .msg_erro");
-        mensagens.forEach(msg => {
-          setTimeout(() => {
-            msg.style.opacity = "0";  
-            setTimeout(() => msg.remove(), 1000); 
-          }, 3000);  
-        });
-      });
-
-    const toggleButton = document.getElementById('toggle-menu');
-    const sidebar = document.getElementById('sidebar');
-    const icon = toggleButton.querySelector('svg'); 
-
-    const chevronLeftSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-      </svg>
-    `;
-
-    const chevronRightSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-      </svg>
-    `;
-
-    toggleButton.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      toggleButton.classList.toggle('collapsed');
-
-      if (sidebar.classList.contains('collapsed')) {
-        icon.outerHTML = chevronRightSVG; 
-        toggleButton.style.left = '1rem'; 
-      } else {
-        icon.outerHTML = chevronLeftSVG;
-        toggleButton.style.left = '10rem';
-      }
-    });
-
-   
-    
-    const buttonForm = document.querySelector('.toggle-btn');
-    const formContainer = document.querySelector('.formulario');
-
-    buttonForm.addEventListener('click', (event) => {
-      console.log("teste")
-      event.preventDefault();
-      formContainer.classList.toggle('active');
-    });
-    </script>
-</body>
-</html>
+  // abre/fecha o formulário de envio
+  const buttonForm = document.querySelector(".toggle-btn");
+  const formContainer = document.querySelector(".formulario");
+  buttonForm.addEventListener("click", (event) => {
+    event.preventDefault();
+    const aberto = formContainer.classList.toggle("active");
+    buttonForm.classList.toggle("aberto", aberto);
+    buttonForm.setAttribute("aria-expanded", aberto);
+    if (aberto) formContainer.querySelector("input").focus();
+  });
+</script>
+{% endblock %}

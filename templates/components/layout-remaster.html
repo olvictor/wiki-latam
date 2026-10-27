@@ -1,0 +1,180 @@
+{#- Páginas sem conteúdo editorial (login, perfil, admin) desligam os anúncios com:
+    {% block anuncios %}nao{% endblock %} -#}
+{%- if false %}{% block anuncios %}sim{% endblock %}{% endif -%}
+{%- set mostrar_anuncios = adsense_ativo and (self.anuncios() | trim) == 'sim' -%}
+{%- from 'components/anuncio.html' import anuncio with context -%}
+<!DOCTYPE html>
+<html lang="pt-br" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}GUIA-ROLATAM{% endblock %}</title>
+    <meta name="description" content="{% block description %}Wiki de Ragnarok Online LATAM com informações essenciais, builds, rotas, monstros e vídeos da comunidade.{% endblock %}">
+    <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
+    <link rel="canonical" href="{{ request.base_url }}">
+    <meta name="theme-color" content="#050505">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GUIA-ROLATAM">
+    <meta property="og:title" content="{{ self.title() }}">
+    <meta property="og:description" content="{{ self.description() }}">
+    <meta property="og:url" content="{{ request.base_url }}">
+
+    {# ---------- Google AdSense ---------- #}
+    <meta name="google-adsense-account" content="{{ adsense_client }}">
+    {% if mostrar_anuncios %}
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ adsense_client }}" crossorigin="anonymous"></script>
+    {% endif %}
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-K3HW966K67');
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Rajdhani', 'sans-serif'],
+            },
+            colors: {
+              accent: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
+              dark: { 800: '#1f1f22', 900: '#0f0f11', 950: '#050505' }
+            }
+          }
+        }
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='global-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='remaster.css') }}">
+    <script>
+      // Sprite de monstro: tenta divine-pride, depois ratemyserver; se nada carregar, esconde a imagem.
+      // Uso: <img src="https://static.divine-pride.net/images/mobs/png/ID.png" data-id="ID" onerror="fallbackMonstro(this)">
+      window.fallbackMonstro = function (img) {
+        if (!img.dataset.tentativa) {
+          img.dataset.tentativa = "1";
+          img.src = "https://file5s.ratemyserver.net/mobs/" + img.dataset.id + ".gif";
+        } else {
+          img.onerror = null;
+          img.style.visibility = "hidden";
+        }
+      };
+
+      // Ícone de item: se a imagem principal falhar, tenta o ragnaplace; se falhar de novo, esconde.
+      // Uso: <img src="https://static.divine-pride.net/images/items/item/ID.png" data-id="ID" onerror="fallbackItem(this)">
+      window.fallbackItem = function (img) {
+        if (!img.dataset.tentativa && img.dataset.id) {
+          img.dataset.tentativa = "1";
+          img.src = "https://game.ragnaplace.com/ro/bro/item/" + img.dataset.id + ".webp";
+        } else {
+          img.onerror = null;
+          img.style.visibility = "hidden";
+        }
+      };
+    </script>
+    {% block head %}{% endblock %}
+    <style>
+      {% block styles %}{% endblock %}
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      {% block chrome %}
+        {% include 'components/header-remaster.html' %}
+        {% include 'components/sidebar-remaster.html' %}
+      {% endblock %}
+
+      <div class="menu-backdrop" id="menuBackdrop" aria-hidden="true"></div>
+
+      <main class="page-content" id="conteudo">
+        {% if mostrar_anuncios %}{{ anuncio('topo') }}{% endif %}
+        {% block content %}{% endblock %}
+        {% if mostrar_anuncios %}{{ anuncio('rodape') }}{% endif %}
+        {% block footer %}{% include 'components/footer-remaster.html' %}{% endblock %}
+      </main>
+    </div>
+
+    <div class="toast-area" id="toastArea" aria-live="polite"></div>
+    <script>
+      // ---------- Menu lateral no celular (gaveta) ----------
+      (function () {
+        const botao = document.getElementById("menuToggle");
+        const backdrop = document.getElementById("menuBackdrop");
+        if (!botao) return;
+        function alternarMenu(abrir) {
+          const aberto = typeof abrir === "boolean" ? abrir : !document.body.classList.contains("menu-aberto");
+          document.body.classList.toggle("menu-aberto", aberto);
+          botao.setAttribute("aria-expanded", aberto);
+        }
+        botao.addEventListener("click", () => alternarMenu());
+        backdrop.addEventListener("click", () => alternarMenu(false));
+        document.addEventListener("keydown", (e) => { if (e.key === "Escape") alternarMenu(false); });
+        document.querySelectorAll(".sidebar a").forEach(a => a.addEventListener("click", () => alternarMenu(false)));
+        window.addEventListener("resize", () => { if (window.innerWidth > 900) alternarMenu(false); });
+      })();
+
+      // ---------- Popup "Live On": abre/fecha no clique/toque ----------
+      (function () {
+        const status = document.querySelector(".server-status");
+        if (!status) return;
+        status.setAttribute("tabindex", "0");
+        status.addEventListener("click", (e) => {
+          if (e.target.closest(".dropdown-streamers a")) return; // deixa os links abrirem
+          status.classList.toggle("aberto");
+        });
+        document.addEventListener("click", (e) => {
+          if (!status.contains(e.target)) status.classList.remove("aberto");
+        });
+        document.addEventListener("keydown", (e) => { if (e.key === "Escape") status.classList.remove("aberto"); });
+      })();
+
+      // Notificação flutuante reutilizável: mostrarToast("texto", "sucesso" | "erro")
+      function mostrarToast(texto, tipo = "sucesso", duracao = 2500) {
+        const area = document.getElementById("toastArea");
+        const toast = document.createElement("div");
+        toast.className = "toast " + tipo;
+        toast.textContent = texto;
+        area.appendChild(toast);
+        setTimeout(() => {
+          toast.classList.add("saindo");
+          setTimeout(() => toast.remove(), 400);
+        }, duracao);
+      }
+
+      // Copia texto para a área de transferência (com fallback)
+      async function copiarTexto(texto) {
+        try {
+          await navigator.clipboard.writeText(texto);
+          return true;
+        } catch (e) {
+          const tmp = document.createElement("textarea");
+          tmp.value = texto;
+          document.body.appendChild(tmp);
+          tmp.select();
+          const ok = document.execCommand("copy");
+          tmp.remove();
+          return ok;
+        }
+      }
+
+      // Acordeões: <div class="accordion-item"><button class="accordion-header">…</button><div class="accordion-body">…</div></div>
+      document.querySelectorAll(".accordion-header").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const item = btn.closest(".accordion-item");
+          const body = item.querySelector(".accordion-body");
+          const aberto = item.classList.toggle("aberto");
+          btn.setAttribute("aria-expanded", aberto);
+          body.style.maxHeight = aberto ? body.scrollHeight + "px" : null;
+        });
+      });
+    </script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

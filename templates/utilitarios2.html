@@ -1,0 +1,118 @@
+{% extends 'components/layout-remaster.html' %}
+
+{% block title %}Utilitários | GUIA-ROLATAM{% endblock %}
+{% block description %}Ferramentas úteis para Ragnarok Online LATAM: calculadoras, simuladores e atalhos da comunidade.{% endblock %}
+
+{% block styles %}
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.tool-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: background 0.25s, border-color 0.25s, transform 0.25s;
+}
+.tool-card:hover {
+  background: #161616;
+  border-color: rgba(245, 158, 11, 0.3);
+  transform: translateY(-2px);
+}
+.tool-ico {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #1a1604;
+  color: #fbbf24;
+  font-size: 22px;
+}
+.tool-ico svg { width: 24px; height: 24px; }
+.tool-card h3 { font-size: 15px; font-weight: 700; color: #fff; }
+.tool-card p { font-size: 12px; color: #6b7280; margin-top: 2px; }
+.tool-card .seta {
+  margin-left: auto;
+  color: #4b5563;
+  transition: color 0.2s, transform 0.2s;
+}
+.tool-card:hover .seta { color: #fbbf24; transform: translateX(3px); }
+.secao + .secao { margin-top: 40px; }
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div class="section-title">
+    <span>🧰</span>
+    <div>
+      <h1>Utilitários</h1>
+      <p>Ferramentas e atalhos para facilitar sua jornada</p>
+    </div>
+  </div>
+</header>
+
+<section class="container">
+  <div class="secao">
+    <div class="section-title">
+      <span>⚡</span>
+      <div>
+        <h2>Ferramentas do site</h2>
+        <p>Feitas para o servidor LATAM</p>
+      </div>
+    </div>
+    <div class="tools-grid">
+      <a class="tool-card" href="{{ url_for('timer2_page') }}">
+        <span class="tool-ico">⏱️</span>
+        <div><h3>Calculadora de EXP</h3><p>Timer de 10 minutos e tempo até o nível máximo</p></div>
+        <span class="seta">→</span>
+      </a>
+      <a class="tool-card" href="{{ url_for('melhores_spots2_page') }}">
+        <span class="tool-ico">👣</span>
+        <div><h3>Melhores SPOTS</h3><p>Onde upar em cada nível, com /navi pronto</p></div>
+        <span class="seta">→</span>
+      </a>
+      <a class="tool-card" href="{{ url_for('monstros2_page') }}">
+        <span class="tool-ico">🐺</span>
+        <div><h3>Monstros</h3><p>Drops, mapas, HP e experiência</p></div>
+        <span class="seta">→</span>
+      </a>
+      <a class="tool-card" href="{{ url_for('rotas2_page') }}">
+        <span class="tool-ico">🗺️</span>
+        <div><h3>Rotas de UP</h3><p>Rota por nível para Melee e Ranged</p></div>
+        <span class="seta">→</span>
+      </a>
+    </div>
+  </div>
+
+  {% if links %}
+  <div class="secao">
+    <div class="section-title">
+      <span>🔗</span>
+      <div>
+        <h2>Links úteis</h2>
+        <p>Sites externos recomendados</p>
+      </div>
+    </div>
+    <div class="tools-grid">
+      {% for item in links %}
+      <a class="tool-card" href="{{ item.link }}" target="_blank" rel="noopener">
+        <span class="tool-ico">{{ item.icone | safe }}</span>
+        <div><h3>{{ item.nome }}</h3><p>{{ item.link | replace('https://', '') | replace('http://', '') | truncate(40, True, '…') }}</p></div>
+        <span class="seta">↗</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,356 +1,242 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
-  <title>Streamers | GUIA-ROLATAM</title>
-  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+{% extends 'components/layout-remaster.html' %}
+{% from 'components/anuncio.html' import anuncio with context %}
 
-    gtag('config', 'G-K3HW966K67');
-  </script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+{% block title %}Streamers | GUIA-ROLATAM{% endblock %}
+{% block description %}Streamers de Ragnarok Online LATAM: veja quem está ao vivo agora e conheça os canais da comunidade.{% endblock %}
 
-  body {
-      font-family: 'Inter', sans-serif;
-      background-color: #121212;
-      color: #fff;
-      display: flex;
-  }
- 
-  .container{
-      width: 60vw;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 2rem;
-      width: 100vw;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    .classe-container{
-      width: 13%;
-    }
-    .classe-container-imagens{
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: .3rem;
-    }
-    .classe-container h3{
-      font-size: 1rem;
-    }
-
-    .classe-container a{
-      color: #1e90ff;
-    }
-
-    .classe-container:hover{
-      scale: 1.1;
-    }
-
-    main {
-      padding: 30px;
-      width: 100%;
-    }
-
-    h1 {
-      margin-bottom: 30px;
-      color: #ffc107;
-    }
-
-    .section {
-      margin-bottom: 50px;
-      display: flex;
-      gap: 1rem;
-    }
-    .conteudoImg{
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-top: -100px;
-    }
-
-    .conteudoImg img{
-      margin-left: -120px;
-      margin-top: 50px;
-    }
-    .card {
-      background-color: #1e1e2f;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
-      width: 30%;
-      height: auto;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    li {
-      margin-bottom: 5px;
-    }
-
-
-.loader-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 9999;
-    }
-.spinner {
-        border: 6px solid #ccc;
-        border-top: 6px solid #4b4b7a;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        animation: spin 1s linear infinite;
-}
-.off{
-  filter: drop-shadow(0px 0px 5px white);
+{% block styles %}
+.streamers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
 }
 
-.online-section{
+.streamer-card {
+  position: relative;
   display: flex;
-  height: auto;
-  width: 100%;
-  min-height: 35vh;
-  gap: 1rem;
-  flex-wrap: wrap;
-  padding-top: 3rem;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px 20px 20px;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+  animation: cardIn 0.4s ease backwards;
+}
+.streamer-card:hover { background: #161616; transform: translateY(-4px); }
+.streamer-card.online { border-color: rgba(239, 68, 68, 0.35); }
+.streamer-card.online:hover { border-color: rgba(239, 68, 68, 0.6); }
+.streamer-card.offline:hover { border-color: rgba(245, 158, 11, 0.3); }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.offline-section{
+.sprite-frame {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  margin-bottom: 14px;
   display: flex;
-  height: auto;
-  width: 100%;
-  min-height: 35vh;
-  gap: 2rem;
-  flex-wrap: wrap;
-  padding-top: 3rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
 }
-.pulsando {
-  animation: pulse-glow 1.5s infinite ease-in-out;
-  filter: drop-shadow(0 0 5px rgb(12, 209, 12));
+.online .sprite-frame {
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.18), rgba(0, 0, 0, 0.4) 70%);
+  border-color: rgba(239, 68, 68, 0.4);
+  animation: pulsar 2s ease-in-out infinite;
+}
+@keyframes pulsar {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.35); }
+  50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+}
+.sprite-frame img.sprite {
+  max-width: 110px;
+  max-height: 110px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.offline .sprite-frame img.sprite { filter: grayscale(0.6); opacity: 0.8; }
+.streamer-card.offline:hover .sprite-frame img.sprite { filter: none; opacity: 1; }
+.plataforma {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #0b0b0b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 5px;
+  object-fit: contain;
 }
 
-.live-indicator {
-  color: rgb(12, 209, 12); 
-  font-weight: 500;
-  font-family: sans-serif;
+.streamer-nome {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.03em;
+}
+
+.live-tag {
   display: inline-flex;
   align-items: center;
-  gap: 6px; 
-  width: 4rem;
-  text-align: center;
-  box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-  padding: 10px 0px;
-  border-radius: 1rem;
-  margin-top: 1rem;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
-
-.live-indicator::before {
+.live-tag::before {
   content: "";
-  width: 10px;
-  height: 10px;
-  background-color: rgb(12, 209, 12);
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  display: inline-block;
-  animation: pulse-glow 1s infinite ease-in-out;
+  background: #fff;
+  animation: piscar 1s ease-in-out infinite;
 }
+@keyframes piscar { 50% { opacity: 0.2; } }
 
-@keyframes pulse-glow {
-  0% {
-    filter: drop-shadow(0 0 5px rgb(12, 209, 12));
-  }
-  50% {
-    filter: drop-shadow(0 0 15px rgb(12, 209, 12));
-  }
-  100% {
-    filter: drop-shadow(0 0 5px rgb(12, 209, 12));
-  }
+.stream-info {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #9ca3af;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
+.stream-meta { margin-top: 6px; font-size: 11px; color: #6b7280; }
 
-
-
- @keyframes spin {
-      to { transform: rotate(360deg); }
+.ver-canal {
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  transition: color 0.2s;
 }
+.streamer-card:hover .ver-canal { color: #fbbf24; }
+.online .ver-canal { color: #f87171; }
 
-@media (max-width: 768px) {
-      body {
-        flex-direction: column;
+.secao + .secao { margin-top: 48px; }
+@media (max-width: 640px) {
+  .streamers-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .streamer-card { padding: 16px 10px 14px; }
+  .sprite-frame { width: 96px; height: 96px; }
+  .sprite-frame img.sprite { max-width: 80px; max-height: 80px; }
+  .streamer-nome { font-size: 16px; }
 }
-
-aside {
-        width: 100%;
-        height: auto;
-        position: static;
-        border-right: none;
+.status-dot-live {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
 }
+{% endblock %}
 
+{% block content %}
+{% set online = data | selectattr('status', 'equalto', 'on') | list %}
+{% set offline = data | rejectattr('status', 'equalto', 'on') | list %}
 
-}
-  </style>
-</head>
-<body onload=esconderLoader()>
-  {% include 'components/novoheader.html' %}
-  <div class="global">
-    {% include 'components/header.html' %}
-    <main>
-      <div id="loader" class="loader-container">
-        <div class="spinner"></div>
-        <p>Carregando...</p>
+<header class="page-header">
+  <div class="section-header">
+    <div class="section-title">
+      <span>🎥</span>
+      <div>
+        <h1>Streamers</h1>
+        <p>Acompanhe quem joga Ragnarok Online LATAM ao vivo</p>
       </div>
-      <div  id="conteudo" class="container" style="display: none;">
-          <h1>🎥Streamers</h1>
-          <div class="online-section">
-            {% for item in data %}
-              {% if item.status == "on" %}
-                <div class="classe-container">
-                  <div class="classe-container-imagens">
-                  <img class="pulsando" src="{{ url_for('static', filename=item.imagem_gif) }}" alt="classe" style="width: 250px; height: 250px;">
-                  {% if item.plataforma == "twitch" %}
-                    <img class="off" src="{{ url_for('static', filename='assets/twitch.png') }}" alt="Twitch" style="width: 50px;">
-                  {% elif item.plataforma == "youtube" %}
-                    <img class="off" src="{{ url_for('static', filename='assets/youtube.png') }}" alt="YouTube" style="width: 50px;">
-                  {% endif %}
-                  </div>
-                  <div>
-                    <h3>{{ item.dados }}</h3>
-                    <p><a href="{{ item.links }}" target="_blank"><span class="live-indicator">Live</span></a></p>
-                  </div>
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-          
-          <div class="offline-section">
-            {% for item in data %}
-              {% if item.status != "on" %}
-                <div class="classe-container">
-                  <div class="classe-container-imagens">
-                  <img class="off" src="{{ url_for('static', filename=item.imagem_sentado) }}" alt="classe" style="width: 200px;">
-                  {% if item.plataforma == "twitch" %}
-                    <img class="off" src="{{ url_for('static', filename='assets/twitch.png') }}" alt="Twitch" style="width: 50px;">
-                  {% elif item.plataforma == "youtube" %}
-                    <img class="off" src="{{ url_for('static', filename='assets/youtube.png') }}" alt="YouTube" style="width: 50px;">
-                  {% endif %}
-                  </div>
-                  <div>
-                    <h3>{{ item.dados }}</h3>
-                    <p><a href="{{ item.links }}" target="_blank">Confira o canal</a></p>
-                  </div>
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-    </main>
+    </div>
+    <span class="pill"><span class="status-dot-live"></span><strong>{{ online | length }}</strong> ao vivo agora</span>
   </div>
- 
-  <script>
+</header>
 
-    const dados = {{ data | tojson | safe }};
+<section class="container">
+  <!-- AO VIVO -->
+  <div class="secao">
+    <div class="section-title">
+      <span>🔴</span>
+      <div>
+        <h2>Ao vivo</h2>
+        <p>Clique no card para assistir</p>
+      </div>
+    </div>
 
-     document.addEventListener('DOMContentLoaded', () => {
-        const expand_btn = document.querySelector(".expand-btn");
+    {% if online %}
+    <div class="streamers-grid">
+      {% for item in online %}
+      <a class="streamer-card online" href="{{ item.links }}" target="_blank" rel="noopener" style="animation-delay: {{ loop.index0 * 0.05 }}s">
+        <div class="sprite-frame">
+          <img class="sprite" src="{{ url_for('static', filename=item.imagem_gif) }}" alt="Classe de {{ item.dados }}" loading="lazy">
+          {% if item.plataforma == "twitch" %}
+          <img class="plataforma" src="{{ url_for('static', filename='assets/twitch.png') }}" alt="Twitch">
+          {% elif item.plataforma == "youtube" %}
+          <img class="plataforma" src="{{ url_for('static', filename='assets/youtube.png') }}" alt="YouTube">
+          {% endif %}
+        </div>
+        <h3 class="streamer-nome">{{ item.dados }}</h3>
+        <span class="live-tag">Live</span>
+        {% if item.stream_info %}
+          {% if item.stream_info.title %}<p class="stream-info">{{ item.stream_info.title }}</p>{% endif %}
+          <p class="stream-meta">
+            {% if item.stream_info.game_name %}{{ item.stream_info.game_name }}{% endif %}
+            {% if item.stream_info.viewer_count is not none %} · 👥 {{ item.stream_info.viewer_count }}{% endif %}
+          </p>
+        {% endif %}
+        <span class="ver-canal">Assistir agora →</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="panel empty-state">
+      <span class="icone">😴</span>
+      Ninguém ao vivo agora. Confira os canais abaixo!
+    </div>
+    {% endif %}
+  </div>
 
-        let activeIndex;
+  {{ anuncio('conteudo') }}
 
-        expand_btn.addEventListener("click", () => {
-          console.log("aaa")
-          document.body.classList.toggle("collapsed");
-        });
+  <!-- OFFLINE -->
+  <div class="secao">
+    <div class="section-title">
+      <span>📺</span>
+      <div>
+        <h2>Canais da comunidade</h2>
+        <p>Offline no momento</p>
+      </div>
+    </div>
 
-        const current = window.location.href;
-        const allLinks = document.querySelectorAll(".sidebar-links a");
-
-        allLinks.forEach((elem) => {
-          elem.addEventListener("click", function () {
-            const hrefLinkClick = elem.href;
-
-            allLinks.forEach((link) => {
-              if (link.href == hrefLinkClick) {
-                link.classList.add("active");
-              } else {
-                link.classList.remove("active");
-              }
-            });
-          });
-        });
-      });
-
-
-    function esconderLoader() {
-        setTimeout(() => {
-        document.getElementById("loader").style.display = "none";
-        document.getElementById("conteudo").style.display = "flex";
-        }, 1000); 
-    }
-
-
-    document.querySelectorAll('.classe-container').forEach(container => {
-    container.addEventListener('click', () => {
-      const link = container.querySelector('a');
-      if (link) {
-        window.open(link.href, '_blank');
-      }
-      });
-    });
-    const toggleButton = document.getElementById('toggle-menu');
-    const sidebar = document.getElementById('sidebar');
-
-    const chevronLeftSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-      </svg>
-    `;
-
-    const chevronRightSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-      </svg>
-    `;
-
-    toggleButton.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      toggleButton.classList.toggle('collapsed');
-
-      if (sidebar.classList.contains('collapsed')) {
-        toggleButton.innerHTML = chevronRightSVG;
-        toggleButton.style.left = '1rem'; 
-      } else {
-        toggleButton.innerHTML = chevronLeftSVG;
-        toggleButton.style.left = '10rem';
-      }
-    });
-  </script>
-</body>
-</html>
+    <div class="streamers-grid">
+      {% for item in offline %}
+      <a class="streamer-card offline" href="{{ item.links }}" target="_blank" rel="noopener" style="animation-delay: {{ loop.index0 * 0.04 }}s">
+        <div class="sprite-frame">
+          <img class="sprite" src="{{ url_for('static', filename=item.imagem_sentado) }}" alt="Classe de {{ item.dados }}" loading="lazy">
+          {% if item.plataforma == "twitch" %}
+          <img class="plataforma" src="{{ url_for('static', filename='assets/twitch.png') }}" alt="Twitch">
+          {% elif item.plataforma == "youtube" %}
+          <img class="plataforma" src="{{ url_for('static', filename='assets/youtube.png') }}" alt="YouTube">
+          {% endif %}
+        </div>
+        <h3 class="streamer-nome">{{ item.dados }}</h3>
+        <span class="ver-canal">Confira o canal →</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

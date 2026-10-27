@@ -1,284 +1,143 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
-  <title>Wiki do Servidor</title>
-  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+{% extends 'components/layout-remaster.html' %}
 
-    gtag('config', 'G-K3HW966K67');
-  </script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+{% block title %}Rank de Classes | GUIA-ROLATAM{% endblock %}
+{% block description %}Tier list das classes de Ragnarok Online LATAM: descubra as melhores classes para começar.{% endblock %}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #121212;
-      color: #fff;
-      display: flex;
-    }
-    main {
-      margin-left: 270px;
-      padding: 30px;
-      width: 100%;
-    }
-
-    h1 {
-      margin-bottom: 30px;
-      color: #ffc107;
-    }
-
-    .section {
-      margin-bottom: 50px;
-    }
-
-    .card {
-      background-color: #1e1e2f;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    li {
-      margin-bottom: 5px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #444;
-    }
-
-    th {
-      background-color: #333;
-    }
-
-    tr:nth-child(even) {
-      background-color: #1c1c2c;
-    }
-
-  .build-tag {
-  background-color: #3a3a5a;
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 3px 5px 3px 0;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  color: #f1f1f1;
-  transition: background-color 0.2s ease;
+{% block styles %}
+.tiers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.build-tag:hover {
-  background-color: #4b4b7a;
-}
-
-/* Cores dinâmicas por tipo */
-.build-tag.suporte {
-  background-color: #4a7aa9	; 
-}
-
-.build-tag.dano {
-  background-color: #a94a4a; 
-}
-.dano::before {
-  content: "⚔️ ";
-}
-.suporte::before {
-  content: "💚 ";
-}
-
-.build-tag.controle {
-  background-color: #1e90ff; /* azul */
-}
-.loader-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 9999;
-    }
-    .spinner {
-        border: 6px solid #ccc;
-        border-top: 6px solid #4b4b7a;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        animation: spin 1s linear infinite;
-    }
-  .accordion {
-  background-color: red;
-  color: #444;
-  cursor: pointer;
-  padding: 18px;
-  width: 100%;
-  text-align: left;
-  border: none;
-  outline: none;
-  transition: 0.4s;
-}
-
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active, .accordion:hover {
-  background-color: #ccc;
-}
-
-/* Style the accordion panel. Note: hidden by default */
-.panel {
-  padding: 0 18px;
-  background-color: white;
-  display: none;
+.tier-card {
+  position: relative;
+  display: flex;
+  align-items: stretch;
   overflow: hidden;
+  border-radius: 14px;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.25s ease, border-color 0.25s ease;
+  opacity: 0;
+  animation: fadeIn 0.4s ease forwards;
+  transform: translateY(8px);
+}
+.tier-card:hover { background: #161616; }
+
+.rank-badge {
+  width: 80px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  padding: 12px 0;
 }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+.class-list {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+}
+.class-tag {
+  font-size: 14px;
+  font-weight: 500;
+  color: #d1d5db;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.class-tag:hover { border-color: rgba(245, 158, 11, 0.4); color: #fff; }
 
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
+.tier-link {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.tier-card:hover .tier-link { color: #fbbf24; }
 
-      aside {
-        width: 100%;
-        height: auto;
-        position: static;
-        border-right: none;
-      }
+.tier-s .rank-badge { background: linear-gradient(to bottom, #ca8a04, #854d0e); color: #fef3c7; }
+.tier-a .rank-badge { background: linear-gradient(to bottom, #6b7280, #374151); color: #f3f4f6; }
+.tier-b .rank-badge { background: linear-gradient(to bottom, #c2410c, #7c2d12); color: #ffedd5; }
+.tier-c .rank-badge { background: #1f2933; color: #9ca3af; }
+.tier-d .rank-badge,
+.tier-e .rank-badge,
+.tier-f .rank-badge,
+.tier-x .rank-badge { background: #18181b; color: #71717a; }
 
-      main {
-        margin-left: 0;
-        padding: 20px;
-      }
-    }
-  </style>
-</head>
-<body onload=esconderLoader()>
-  {% include 'components/novoheader.html' %}
-  <div class="global">
-    {% include 'components/header.html' %}
+.tier-s { border-color: rgba(250, 204, 21, 0.15); }
+
+.pro-tip {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 14px;
+}
+.pro-tip h4 { color: #a855f7; font-weight: 700; margin-bottom: 4px; }
+.pro-tip p { font-size: 13px; color: #9ca3af; }
+
+@media (max-width: 640px) {
+  .tier-link { display: none; }
+  .rank-badge { width: 60px; font-size: 22px; }
+}
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div class="section-title">
+    <span>🏆</span>
+    <div>
+      <h1>Rank de Classes</h1>
+      <p>Comece da melhor forma: as classes mais fortes do servidor no momento</p>
+    </div>
   </div>
-    <main>
-        <section id="rank" class="section">
-            <div class="card">
-              <h2>🏆 Rank de Classes</h2>
-              <br>
-              <div id="loader" class="loader-container">
-                <div class="spinner"></div>
-                <p>Carregando...</p>
-              </div>
-              <div id="conteudo" class="container">
+</header>
 
-              <table>
-                <thead>
-                  <tr>
-                    <th>Tier</th>
-                    <th>Classe</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for tier, classe in rank_data %}
-                    <tr>
-                      <td>{{ tier }}</td>
-                      <td>{{ classe }}</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-              </div>
-            </div>
-          </section>
-    </main>
-    <script>
+<section class="container" style="max-width: 1000px;">
+  {% if rank_data %}
+  <div class="tiers-list">
+    {% for tier, classes in rank_data %}
+    {% set letra = tier.split()[-1] if tier.split() else tier %}
+    <a href="{{ url_for('classes_page') }}" class="tier-card tier-{{ letra | lower if letra | length == 1 else 'x' }}" style="animation-delay: {{ loop.index0 * 0.06 }}s">
+      <div class="rank-badge">
+        {% if loop.index0 == 0 %}<span>👑</span>{% elif loop.index0 == 1 %}<span>🏅</span>{% endif %}
+        <span>{{ letra }}</span>
+      </div>
+      <div class="class-list">
+        {% for classe in classes.split(',') if classe.strip() %}
+        <span class="class-tag">{{ classe.strip() }}</span>
+        {% endfor %}
+      </div>
+      <span class="tier-link">Ver builds →</span>
+    </a>
+    {% endfor %}
+  </div>
 
-       document.addEventListener('DOMContentLoaded', () => {
-        const expand_btn = document.querySelector(".expand-btn");
-
-        let activeIndex;
-
-        expand_btn.addEventListener("click", () => {
-          console.log("aaa")
-          document.body.classList.toggle("collapsed");
-        });
-
-        const current = window.location.href;
-        const allLinks = document.querySelectorAll(".sidebar-links a");
-
-        allLinks.forEach((elem) => {
-          elem.addEventListener("click", function () {
-            const hrefLinkClick = elem.href;
-
-            allLinks.forEach((link) => {
-              if (link.href == hrefLinkClick) {
-                link.classList.add("active");
-              } else {
-                link.classList.remove("active");
-              }
-            });
-          });
-        });
-      });
-      function esconderLoader() {
-          setTimeout(() => {
-          document.getElementById("loader").style.display = "none";
-          document.getElementById("conteudo").style.display = "flex";
-          }, 1000); // 1000 milissegundos = 1 segundo
-      }
-      const toggleButton = document.getElementById('toggle-menu');
-      const sidebar = document.getElementById('sidebar');
-
-      const chevronLeftSVG = `
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-            stroke-width="1.5" stroke="currentColor" class="icon">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-        </svg>
-      `;
-
-      const chevronRightSVG = `
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-            stroke-width="1.5" stroke="currentColor" class="icon">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-        </svg>
-      `;
-
-      toggleButton.addEventListener('click', () => {
-        sidebar.classList.toggle('collapsed');
-        toggleButton.classList.toggle('collapsed');
-
-        if (sidebar.classList.contains('collapsed')) {
-          toggleButton.innerHTML = chevronRightSVG;
-          toggleButton.style.left = '1rem'; 
-        } else {
-          toggleButton.innerHTML = chevronLeftSVG;
-          toggleButton.style.left = '10rem';
-        }
-      });
-    </script>
-</body>
-</html>
+  <div class="pro-tip">
+    <h4>Dica do Pro</h4>
+    <p>Classes Rank S possuem maior facilidade de farm solo em instâncias de nível alto. Clique em um tier para ver as builds de cada classe.</p>
+  </div>
+  {% else %}
+  <div class="panel empty-state">
+    <span class="icone">🏆</span>
+    Nenhum rank cadastrado no momento.
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

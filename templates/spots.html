@@ -1,398 +1,233 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
-  <title>Spots | GUIA-ROLATAM</title>
-  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+{% extends 'components/layout-remaster.html' %}
+{% from 'components/anuncio.html' import anuncio with context %}
 
-    gtag('config', 'G-K3HW966K67');
-  </script>
+{% block title %}Melhores SPOTS | GUIA-ROLATAM{% endblock %}
+{% block description %}Melhores spots de UP por nível em Ragnarok Online LATAM: monstro, mapa, experiência e /navi pronto para copiar.{% endblock %}
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+{% block styles %}
+.como-usar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.passo {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.passo-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: #000;
+  background: #f59e0b;
+}
+.passo h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+.passo p { font-size: 12px; color: #9ca3af; line-height: 1.5; }
+kbd {
+  font-family: inherit;
+  font-size: 11px;
+  background: #1f1f1f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0 5px;
+  color: #e5e7eb;
+}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #121212;
-      color: #fff;
-      display: flex;
-    }
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 16px;
+}
+.filtros .field { min-width: 200px; }
+.filtros .field.busca { flex: 1; }
 
+.table-wrap { max-height: 70vh; }
 
-    main {
-      margin-left: 270px;
-      padding: 30px;
-      width: 100%;
-    }
-
-    h1 {
-      margin-bottom: 30px;
-      color: #ffc107;
-    }
-
-    .section {
-      margin-bottom: 50px;
-    }
-
-    .card {
-      background-color: #1e1e2f;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    li {
-      margin-bottom: 5px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #444;
-    }
-
-    th {
-      background-color: #333;
-    }
-
-    tr:nth-child(even) {
-      background-color: #1c1c2c;
-    }
-  strong{
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  strong img{
-    filter: drop-shadow(0px 0px 5px white);
-  }
-  .build-tag {
-  background-color: #3a3a5a;
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 3px 5px 3px 0;
+.monstro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #fff;
+}
+.monstro img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+.mapa-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
   border-radius: 6px;
-  font-size: 0.9rem;
-  color: #f1f1f1;
-  transition: background-color 0.2s ease;
+  padding: 3px 8px;
+  white-space: nowrap;
 }
+.data-table tr.clicavel:hover .mapa-chip { background: rgba(245, 158, 11, 0.18); }
+.data-table tr.copiado td { background: rgba(74, 222, 128, 0.08) !important; }
 
-.build-tag:hover {
-  background-color: #4b4b7a;
+@media (max-width: 900px) {
+  .como-usar { grid-template-columns: 1fr; }
 }
+{% endblock %}
 
-/* Cores dinâmicas por tipo */
-.build-tag.suporte {
-  background-color: #4a7aa9	; 
-}
-
-.build-tag.dano {
-  background-color: #a94a4a; 
-}
-.dano::before {
-  content: "⚔️ ";
-}
-.suporte::before {
-  content: "💚 ";
-}
-
-.build-tag.controle {
-  background-color: #1e90ff; /* azul */
-}
-.loader-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 9999;
-    }
-    .spinner {
-        border: 6px solid #ccc;
-        border-top: 6px solid #4b4b7a;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        animation: spin 1s linear infinite;
-    }
-
-    tr:hover{
-      opacity: .5;
-      cursor: pointer;
-    }
-
-    td a{
-      text-decoration: underline;
-      color:#1e90ff
-    }
-    .container-explicacao{
-      display: flex;
-      flex-direction: column;
-      width: 40vw;
-      padding:  3rem 0px;
-    }
-    .container-tabela{
-      width: 40vw;
-      position: relative;
-    }
-    .linha-copiavel {
-    cursor: pointer;
-  }
-
-  .linha-copiavel:hover {
-    background-color: #f8f8f8;
-  }
-
-  .notificacao-flutuante {
-    margin-bottom: 6px;
-    animation: fadeInOut 2.5s ease forwards;
-  }
-
-  .custom tbody tr:nth-child(odd) {
-    background-color: #1e1e1e; /* cor para linhas ímpares */
-  }
-
-  .custom tbody tr:nth-child(even) {
-    background-color: #2a2a2a; /* cor para linhas pares */
-  }
-
-  .custom tbody tr:hover {
-    background-color: #333 !important; 
-  }
-  @keyframes fadeInOut {
-    0% { opacity: 0; transform: translateY(-10px); }
-    10% { opacity: 1; transform: translateY(0); }
-    90% { opacity: 1; }
-    100% { opacity: 0; transform: translateY(-10px); }
-  }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      aside {
-        width: 100%;
-        height: auto;
-        position: static;
-        border-right: none;
-      }
-
-      main {
-        margin-left: 0;
-        padding: 20px;
-      }
-    }
-    .container{
-      display: flex;
-      flex-direction: column;
-    }
-  </style>
-</head>
-<body onload=esconderLoader()>
-  {% include 'components/novoheader.html' %}
-<div class="global">
-  {% include 'components/header.html' %}
-  <main>
-    <section id="classes-builds" class="section">
-      <div id="loader" class="loader-container">
-        <div class="spinner"></div>
-        <p>Carregando...</p>
+{% block content %}
+<header class="page-header">
+  <div class="section-header">
+    <div class="section-title">
+      <span>👣</span>
+      <div>
+        <h1>Melhores SPOTS</h1>
+        <p>Os melhores lugares para upar em cada nível</p>
       </div>
-      <div class="container" id="conteudo" style="display: none;">
-          <h4 class="title is-3">👣 Melhores SPOTS</h4>
-          <div class="container-explicacao">
-          <div class="content is-small">
-            <h1 class="title is-size-4">Como usar a tabela ?
+    </div>
+    <span class="pill"><strong id="contador">{{ dados | length }}</strong> spots</span>
+  </div>
+</header>
 
-            <h2 class="subtitle is-size-5">1. Clique sobre o lugar desejado.</h2>
-            <p class="has-text-grey-lighter">
-              Para usar a tabela, basta procurar o lugar desejado na tabela. Quando encontrá-lo, clique sobre o nome. Ao fazer isso, o caminho do mapa (também conhecido como /nav) correspondente será copiado automaticamente para o seu clipboard.
-            </p>
-          <p class="has-text-grey-lighter">
-            Basta utilizar o shift + insert dentro do jogo para colar a coordenada.
-          </p>
-          </div>
-         </div>
-         <div class="container-tabela">
-          <table class="table custom">
-            <thead>
-              <tr>
-                <th>Monstro</abbr></th>
-                <th>Nível Monstro</th>
-                <th>base_exp</abbr></th>
-                <th>job_exp	</abbr></th>
-                <th>Quantidade</abbr></th>
-                <th>mapa</abbr></th>
-                <th>xp_ajustada</abbr></th>
-                <th>nivel_jogador</abbr></th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for monstro, exp, job_exp, quantidade, mapa, xp_ajustada, nivel_jogador, nivel_monstro in dados %}
-              <tr class="linha-copiavel" data-mapa="{{ mapa }}">
-              <td>
-                <img src="https://game.ragnaplace.com/ro/job/{{monstro.id}}/0.png" alt="{{monstro.nome}}" style="width: 30px;">`
-                {{ monstro.nome }}
-              </td>
-              <td>{{nivel_monstro}}</td>
-              <td>{{ exp }}</td>
-              <td>{{ job_exp }}</td>
-              <td>{{ quantidade }}</td>
-              <td>{{ mapa }}</td>
-              <td>{{ xp_ajustada }}</td>
-              <td>{{ nivel_jogador }}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        </div>
-    </section>    
-  </main>
-</div>
-  
-  <script>
-     document.addEventListener('DOMContentLoaded', () => {
-        const expand_btn = document.querySelector(".expand-btn");
+<section class="container">
+  <div class="panel como-usar">
+    <div class="passo">
+      <span class="passo-num">1</span>
+      <div>
+        <h4>Encontre o lugar</h4>
+        <p>Filtre pelo seu nível ou busque pelo nome do monstro ou do mapa.</p>
+      </div>
+    </div>
+    <div class="passo">
+      <span class="passo-num">2</span>
+      <div>
+        <h4>Clique na linha</h4>
+        <p>O comando <span class="mapa-chip">/navi mapa</span> é copiado automaticamente.</p>
+      </div>
+    </div>
+    <div class="passo">
+      <span class="passo-num">3</span>
+      <div>
+        <h4>Cole no jogo</h4>
+        <p>Use <kbd>Shift</kbd> + <kbd>Insert</kbd> no chat do jogo para colar a coordenada.</p>
+      </div>
+    </div>
+  </div>
 
-        let activeIndex;
+  {{ anuncio('conteudo') }}
 
-        expand_btn.addEventListener("click", () => {
-          console.log("aaa")
-          document.body.classList.toggle("collapsed");
-        });
+  <div class="filtros">
+    <div class="field busca">
+      <label for="busca">Buscar</label>
+      <input class="input" id="busca" type="search" placeholder="Monstro ou mapa...">
+    </div>
+    <div class="field">
+      <label for="nivel">Seu nível</label>
+      <input class="input" id="nivel" type="number" min="1" max="275" placeholder="Ex.: 85">
+    </div>
+  </div>
 
-        const current = window.location.href;
-        const allLinks = document.querySelectorAll(".sidebar-links a");
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Monstro</th>
+          <th>Nível monstro</th>
+          <th>Base EXP</th>
+          <th>Job EXP</th>
+          <th>Quantidade</th>
+          <th>Mapa</th>
+          <th>XP ajustada</th>
+          <th>Nível jogador</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for monstro, exp, job_exp, quantidade, mapa, xp_ajustada, nivel_jogador, nivel_monstro in dados %}
+        <tr class="clicavel linha-copiavel" data-mapa="{{ mapa }}" data-nivel="{{ nivel_jogador }}" data-busca="{{ (monstro.nome ~ ' ' ~ mapa) | lower }}" title="Clique para copiar /navi {{ mapa }}">
+          <td>
+            <div class="monstro">
+              {% if monstro.id %}
+              <img src="https://static.divine-pride.net/images/mobs/png/{{ monstro.id }}.png" data-id="{{ monstro.id }}" onerror="fallbackMonstro(this)" alt="" loading="lazy">
+              {% endif %}
+              {{ monstro.nome }}
+            </div>
+          </td>
+          <td class="num">{{ nivel_monstro }}</td>
+          <td class="num">{{ exp }}</td>
+          <td class="num">{{ job_exp }}</td>
+          <td class="num">{{ quantidade }}</td>
+          <td><span class="mapa-chip">📋 {{ mapa }}</span></td>
+          <td class="num destaque">{{ xp_ajustada }}</td>
+          <td class="num">{{ nivel_jogador }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="empty-state" id="vazio" style="display: none;">
+      <span class="icone">🔍</span>
+      Nenhum spot encontrado com esse filtro.
+    </div>
+  </div>
+</section>
+{% endblock %}
 
-        allLinks.forEach((elem) => {
-          elem.addEventListener("click", function () {
-            const hrefLinkClick = elem.href;
+{% block scripts %}
+<script>
+  const linhas = document.querySelectorAll(".linha-copiavel");
 
-            allLinks.forEach((link) => {
-              if (link.href == hrefLinkClick) {
-                link.classList.add("active");
-              } else {
-                link.classList.remove("active");
-              }
-            });
-          });
-        });
-      });
-    function esconderLoader() {
-        setTimeout(() => {
-        document.getElementById("loader").style.display = "none";
-        document.getElementById("conteudo").style.display = "flex";
-        }, 1000);
-    }
-    const containerNotificacao = document.querySelector('.notification')
-    const notificacao = document.querySelector('.notificacao_paragrafo')
-    const toggleButton = document.getElementById('toggle-menu');
-    const sidebar = document.getElementById('sidebar');
-
-    const chevronLeftSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-      </svg>
-    `;
-
-    const chevronRightSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-      </svg>
-    `;
-
-    toggleButton.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      toggleButton.classList.toggle('collapsed');
-
-      if (sidebar.classList.contains('collapsed')) {
-        toggleButton.innerHTML = chevronRightSVG;
-        toggleButton.style.left = '1rem'; 
+  // Clique na linha: copia o /navi do mapa
+  linhas.forEach(linha => {
+    linha.addEventListener("click", async () => {
+      const mapa = linha.dataset.mapa;
+      if (!mapa) return;
+      const comando = `/navi ${mapa}`;
+      if (await copiarTexto(comando)) {
+        mostrarToast(`${comando} copiado!`, "sucesso");
+        linha.classList.add("copiado");
+        setTimeout(() => linha.classList.remove("copiado"), 1200);
       } else {
-        toggleButton.innerHTML = chevronLeftSVG;
-        toggleButton.style.left = '10rem';
+        mostrarToast("Não foi possível copiar", "erro");
       }
     });
+  });
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const linhas = document.querySelectorAll('.linha-copiavel');
+  // Filtros: busca por texto + nível do jogador
+  const busca = document.getElementById("busca");
+  const nivel = document.getElementById("nivel");
+  const contador = document.getElementById("contador");
+  const vazio = document.getElementById("vazio");
 
+  function filtrar() {
+    const termo = busca.value.trim().toLowerCase();
+    const lvl = parseInt(nivel.value);
+    let visiveis = 0;
     linhas.forEach(linha => {
-      linha.addEventListener('click', (e) => {
-        const mapa = linha.getAttribute('data-mapa');
-        if (mapa) {
-          navigator.clipboard.writeText(`/navi ${mapa}`).then(() => {
-            mostrarNotificacao(linha, `/navi ${mapa} copiado!`);
-          }).catch(err => {
-            console.error('Erro ao copiar para o clipboard', err);
-          });
-        }
-      });
+      const okTexto = !termo || linha.dataset.busca.includes(termo);
+      const nivelLinha = parseInt(linha.dataset.nivel);
+      // mostra os spots de 5 níveis abaixo até 5 acima do nível informado
+      const okNivel = isNaN(lvl) || isNaN(nivelLinha) || Math.abs(nivelLinha - lvl) <= 5;
+      const mostrar = okTexto && okNivel;
+      linha.style.display = mostrar ? "" : "none";
+      if (mostrar) visiveis++;
     });
-
-    function mostrarNotificacao(linha, texto) {
-      // Cria o elemento da notificação
-      const notificacao = document.createElement('div');
-      notificacao.className = 'notification is-success is-light notificacao-flutuante';
-      notificacao.textContent = texto;
-
-      // Adiciona a notificação logo acima da linha
-      linha.parentNode.insertBefore(notificacao, linha);
-
-      // Remove a notificação após 2,5 segundos
-      setTimeout(() => {
-        notificacao.remove();
-      }, 2500);
-    }
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-  (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
-    const $notification = $delete.parentNode;
-
-    $delete.addEventListener('click', () => {
-      containerNotificacao.style.display = 'none'
-    });
-  });
-});
-  </script>
-  
-</body>
-</html>
+    contador.textContent = visiveis;
+    vazio.style.display = visiveis ? "none" : "block";
+  }
+  busca.addEventListener("input", filtrar);
+  nivel.addEventListener("input", filtrar);
+</script>
+{% endblock %}

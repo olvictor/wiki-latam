@@ -1,0 +1,199 @@
+{% extends 'components/layout-remaster.html' %}
+
+{% block title %}Contato & Apoio | GUIA-ROLATAM{% endblock %}
+{% block description %}Fale com a equipe do RolaGuiada, envie sugestões e apoie o projeto via Pix.{% endblock %}
+
+{% block styles %}
+.contato-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.coluna { display: flex; flex-direction: column; gap: 24px; }
+
+.panel h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.panel > p { font-size: 14px; color: #9ca3af; line-height: 1.7; }
+
+.contatos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.contato-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  font-size: 13px;
+  color: #d1d5db;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  text-align: left;
+}
+.contato-item:hover { border-color: rgba(245, 158, 11, 0.3); }
+.contato-item span.tipo { display: block; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #6b7280; }
+.contato-item strong { color: #fbbf24; font-weight: 600; word-break: break-all; }
+.contato-item .ico { font-size: 18px; }
+
+.form-contato { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+.form-contato .linha { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Pix */
+.pix-card { text-align: center; }
+.pix-card img.qr {
+  width: 220px;
+  max-width: 100%;
+  margin: 8px auto 16px;
+  border-radius: 12px;
+  border: 4px solid #fff;
+  background: #fff;
+}
+.pix-chave {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #0b0b0b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 6px 6px 6px 12px;
+}
+.pix-chave code {
+  flex: 1;
+  font-size: 12px;
+  color: #fbbf24;
+  word-break: break-all;
+  text-align: left;
+}
+.pix-chave .btn { padding: 8px 12px; font-size: 12px; flex-shrink: 0; }
+
+.formas-apoio { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.forma {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  color: #d1d5db;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.forma:last-child { border-bottom: none; }
+
+.assinatura {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+@media (max-width: 1000px) {
+  .contato-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .contatos, .form-contato .linha { grid-template-columns: 1fr; }
+}
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div class="section-title">
+    <span>💛</span>
+    <div>
+      <h1>Contato &amp; Apoio</h1>
+      <p>Fale com a gente e ajude a manter o guia vivo</p>
+    </div>
+  </div>
+</header>
+
+<section class="container">
+  <div class="contato-grid">
+    <div class="coluna">
+      <div class="panel">
+        <h2>📖 Sobre o projeto</h2>
+        <p>
+          O site RolaGuiada nasceu da paixão pela comunidade de Ragnarok e pela vontade de facilitar o acesso às informações mais importantes sobre o jogo.
+          Nossa missão é oferecer um ambiente acessível, organizado e sempre atualizado para jogadores de todos os níveis, do novato ao veterano.
+        </p>
+      </div>
+
+      <div class="panel">
+        <h2>💬 Entre em contato</h2>
+        <p>Se você quiser sugerir melhorias, reportar erros ou apenas trocar uma ideia, estamos disponíveis (clique para copiar):</p>
+        <div class="contatos">
+          <button class="contato-item" data-copiar="Michels#0484"><span class="ico">🎮</span><span><span class="tipo">Discord</span><strong>Michels#0484</strong></span></button>
+          <button class="contato-item" data-copiar="wakabayashigg2"><span class="ico">🎮</span><span><span class="tipo">Discord</span><strong>wakabayashigg2</strong></span></button>
+          <button class="contato-item" data-copiar="Ghostring"><span class="ico">⚔️</span><span><span class="tipo">In-game</span><strong>Ghostring</strong></span></button>
+          <button class="contato-item" data-copiar="wikirolaguiada@gmail.com"><span class="ico">✉️</span><span><span class="tipo">Email</span><strong>wikirolaguiada@gmail.com</strong></span></button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>✉️ Envie uma mensagem</h2>
+        <form class="form-contato" action="https://formsubmit.co/wikirolaguiada@gmail.com" method="POST">
+          <div class="linha">
+            <div class="field">
+              <label for="nome">Nome</label>
+              <input class="input" id="nome" type="text" name="nome" placeholder="Seu nome" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input class="input" id="email" type="email" name="email" placeholder="Seu email" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="mensagem">Mensagem</label>
+            <textarea class="textarea" id="mensagem" name="mensagem" placeholder="Digite sua mensagem." required></textarea>
+          </div>
+          <div><button type="submit" class="btn btn-primary">Enviar mensagem</button></div>
+        </form>
+      </div>
+    </div>
+
+    <div class="coluna">
+      <div class="panel">
+        <h2>🤝 Contribua com o projeto</h2>
+        <p>Se você gostou do conteúdo e quer apoiar o projeto, há várias formas de contribuir:</p>
+        <div class="formas-apoio">
+          <div class="forma"><span>💡</span>Enviando sugestões ou conteúdos úteis (builds, guias, dicas).</div>
+          <div class="forma"><span>📣</span>Compartilhando o site com amigos e clãs.</div>
+          <div class="forma"><span>💸</span><span>Apoiando via <a href="#pix" class="text-accent" style="text-decoration:underline;">Pix</a>.</span></div>
+        </div>
+      </div>
+
+      <div class="panel pix-card" id="pix">
+        <h2 style="justify-content:center;">💠 Apoie via Pix</h2>
+        <img class="qr" src="{{ url_for('static', filename='assets/QRCode.jpg') }}" alt="QR Code Pix">
+        <p class="muted" style="font-size:12px;margin-bottom:8px;">Chave Pix</p>
+        <div class="pix-chave">
+          <code id="chavePix">b6ba72ec-122d-4993-b67d-838b8d73a4de</code>
+          <button class="btn btn-primary" data-copiar="b6ba72ec-122d-4993-b67d-838b8d73a4de">Copiar</button>
+        </div>
+        <p class="assinatura">Juntos podemos manter este guia sempre vivo e atualizado 💛</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll("[data-copiar]").forEach(el => {
+    el.addEventListener("click", async () => {
+      const texto = el.dataset.copiar;
+      if (await copiarTexto(texto)) mostrarToast(`"${texto}" copiado!`, "sucesso");
+      else mostrarToast("Não foi possível copiar", "erro");
+    });
+  });
+</script>
+{% endblock %}

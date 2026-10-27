@@ -1,378 +1,554 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="google-adsense-account" content="ca-pub-6266174717644829">
-  <title>Builds | GUIA-ROLATAM</title>
-  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3HW966K67"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+{% extends 'components/layout-remaster.html' %}
+{% from 'components/anuncio.html' import anuncio with context %}
 
-    gtag('config', 'G-K3HW966K67');
-  </script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="https://kit.fontawesome.com/5b8e01de76.js" crossorigin="anonymous"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+{% block title %}Builds | GUIA-ROLATAM{% endblock %}
+{% block description %}Guia de classes de Ragnarok Online LATAM: builds comuns, guias em vídeo para cada classe e guias gerais para a sua jornada.{% endblock %}
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #121212;
-      color: #fff;
-      display: flex;
-    }
+{% block styles %}
+/* ================= CLASSES ================= */
 
-
-main {
-    width: 100vw;
-    min-height: 100vh;
-    height: auto;
+.classes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  column-gap: 20px;
+  row-gap: 32px;
 }
-.title{
-  color: gold;
+
+/* o slot reserva a altura do card fechado; o card abre por cima dos vizinhos
+   (sem empurrar o grid) */
+.class-slot {
+  position: relative;
+  height: 300px;
 }
-.container-guias-classes{
+
+.class-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: 100%;
+  z-index: 1;
+  /* ao fechar, só volta pra trás depois que a animação de recolher termina */
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, z-index 0s linear 0.45s;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 6rem 4rem;
-
-}
-
-.container-classes{
-  width: 100vw;
-  display: flex;
-  height: auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  padding: 0 4rem;
-  padding-left: 10rem;
-  margin-top: 4rem;
-}
-
-.box-classe {
-    width: 200px;
-    padding: 10px;
-    transition: opacity 0.3s ease;
-    position: relative;
-    text-align: center;
-    cursor: pointer;
-    z-index: 300;
-
-  }
-
-  .box-classe h2{
-    font-weight: bold;
-  }
-
-/* .container-classes:hover .box-classe:hover {
-    opacity: 1; 
-    filter: drop-shadow(0px 0px 5px green);
-} */
-
-
-.box-classe:hover{
-  filter: drop-shadow(0px 0px 5px green);
-  z-index: 999;
-
-}
-
-.box-classe:hover .box-informacoes {
-  opacity: 1;
-  visibility: visible;
-}
-
-.box-classe.ativa{
-  filter: drop-shadow(0px 0px 5px green);
-  z-index: 999;
-}
-
-.box-classe.ativa .box-informacoes {
-  display: block;
-  opacity: 1;
-  visibility: visible;
-}
-
-.box-informacoes {
-  background-color: #ffffff;
-  border-radius: 16px;      
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-  padding: 20px;             
-  max-width: 400px;     
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-  color: #121212;
   text-align: center;
-  position: absolute;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease;
-  z-index: 999;
+  padding: 24px 20px 20px;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  animation: cardIn 0.4s ease backwards;
 }
 
-.box-informacoes::after {
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.class-card:hover,
+.class-card.ativa {
+  background: #161616;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+.class-card:hover,
+.class-card.ativa {
+  z-index: 20;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, z-index 0s;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
+}
+.class-card:hover { transform: translateY(-4px); }
+
+/* barra de destaque no topo (equivalente à accent-bar das notícias) */
+.class-card::before {
   content: "";
   position: absolute;
-  top: -10px; 
-  left: 43.5%;    
-  border-width: 10px;
-  border-style: solid;
-  border-color: #ffffff transparent transparent transparent;
-  z-index: 999;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
 }
-.box-informacoes h3{
-  margin: .5rem 0px;
-  border-bottom: 1px solid rgba(65, 240, 12, 0.25);
+.class-card:hover::before,
+.class-card.ativa::before { transform: scaleX(1); }
+
+.card-star {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 16px;
+  color: #facc15;
+  opacity: 0.1;
+  pointer-events: none;
+  transition: all 0.4s ease;
+  filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.4));
+}
+.class-card:hover .card-star,
+.class-card.ativa .card-star {
+  opacity: 1;
+  transform: scale(1.2) rotate(8deg);
 }
 
-.class-builds-comuns li{
-  font-size: .7rem;
-}
-
-.guia-classes{
+.sprite-frame {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 14px;
   display: flex;
-  flex-direction: column;
-  
-}
-
-.guia-classes a{
-  font-size: .7rem;
-  color: rgb(94, 125, 226);
-}
-
-.guia-classes a:hover{
-  text-decoration: underline;
-}
-
-.container-guias{
-  width: 100vw;
-  height: auto;
-  padding: 1.5rem 15rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  transition: transform 0.4s ease, border-color 0.4s ease;
+}
+.sprite-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.12);
+  filter: blur(30px);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.class-card:hover .sprite-frame,
+.class-card.ativa .sprite-frame {
+  transform: scale(1.08);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+.class-card:hover .sprite-frame::after,
+.class-card.ativa .sprite-frame::after { opacity: 1; }
+
+.sprite-frame img {
+  position: relative;
+  z-index: 1;
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 
-.container-guias-gerais{
+.class-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.1;
+  transition: color 0.3s ease;
+}
+.class-card:hover .class-name,
+.class-card.ativa .class-name { color: #fbbf24; }
+
+.class-meta {
   display: flex;
-  gap: 1rem;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
 }
 
-@keyframes spin {
-      to { transform: rotate(360deg); }
+/* conteúdo expandido */
+.class-details {
+  width: 100%;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  text-align: left;
+  border-top: 1px solid transparent;
+  margin-top: 14px;
+  transition: max-height 0.45s ease, opacity 0.3s ease, padding-top 0.3s ease, border-color 0.3s ease;
+}
+.class-card:hover .class-details,
+.class-card.ativa .class-details {
+  max-height: 700px;
+  opacity: 1;
+  padding-top: 14px;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.details-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.builds-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.build-item {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.build-item .tag { margin-bottom: 6px; }
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.skill {
+  font-size: 11px;
+  color: #d1d5db;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.guides-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.guide-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  font-size: 11px;
+  color: #9ca3af;
+  transition: all 0.25s ease;
+}
+.guide-link:hover {
+  color: #fff;
+  border-color: rgba(168, 85, 247, 0.3);
+  background: rgba(168, 85, 247, 0.08);
+}
+.guide-link small {
+  display: block;
+  font-size: 10px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+.guide-link .arrow { color: #a855f7; flex-shrink: 0; }
+
+.empty {
+  font-size: 11px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.hover-hint {
+  margin-top: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #4b5563;
+}
+.class-card:hover .hover-hint,
+.class-card.ativa .hover-hint { display: none; }
+
+/* ================= GUIAS GERAIS ================= */
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.video-card {
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+.video-card:hover {
+  background: #161616;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.video-player {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  cursor: pointer;
+  background: #000;
+}
+.video-player img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.video-card:hover .video-player img { transform: scale(1.05); }
+.video-player iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.15));
+  transition: background 0.3s ease;
+}
+.video-card:hover .video-overlay { background: linear-gradient(to top, rgba(0,0,0,0.5), transparent); }
+
+.play-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #FF0000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transform: scale(0.85);
+  opacity: 0.85;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
+}
+.video-card:hover .play-button { transform: scale(1); opacity: 1; }
+
+.video-info { padding: 14px 16px 16px; }
+.video-channel {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fbbf24;
+  margin-bottom: 4px;
+}
+.video-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #e5e7eb;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.25s ease;
+}
+.video-card:hover .video-title { color: #a855f7; }
+
+/* ================= RESPONSIVO ================= */
+@media (max-width: 1100px) {
+  .video-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
-     body {
-        flex-direction: column;
-      }
+  .video-grid { grid-template-columns: 1fr; }
+  .classes-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  /* no celular o card abre empurrando o conteúdo (mais fácil de ler) */
+  .class-slot { height: auto; }
+  .class-card { position: relative; }
+}
+{% endblock %}
 
-      aside {
-        width: 100%;
-        height: auto;
-        position: static;
-        border-right: none;
-      }
+{% block content %}
+<!-- ================= GUIA DE CLASSES ================= -->
+<section class="container">
+  <header class="section-header">
+    <div class="section-title">
+      <span>📖</span>
+      <div>
+        <h1>Guia de Classes</h1>
+        <p>Explore as builds e guias para cada especialização</p>
+      </div>
+    </div>
+    <span class="pill"><strong>{{ class_builds | length }}</strong> classes</span>
+  </header>
 
-      main {
-        margin-left: 0;
-        padding: 20px;
-      }
-    }
-  </style>
-</head>
-<body onload=esconderLoader()>
-  {% include 'components/novoheader.html' %}
+  <div class="classes-grid">
+    {% for classe in class_builds %}
+    <div class="class-slot">
+    <article class="class-card" style="animation-delay: {{ loop.index0 * 0.04 }}s" tabindex="0" aria-label="{{ classe.classe }}">
+      <span class="card-star">✦</span>
 
-  <div class="global">
-    {% include 'components/header.html' %}
-    <main>
-      <div class="container-guias-classes">
-        <h3 class="title is-3">Guia de classes</h3>
-        <div class="container-classes">
-        {% for classe in class_builds %}
-          <div class="box-classe">
-            <img  src="{{ url_for('static', filename=classe.imagem_sentado) }}"
-            data-hover="{{ url_for('static', filename=classe.imagem_andando) }}"
-            data-original="{{ url_for('static', filename=classe.imagem_sentado) }}"
-            alt="Imagem de {{ classe.classe }}"
-            class="imagem-classe">
-            <h2>{{ classe.classe }}</h2>
-            <div class="box-informacoes">
-              <ul>
-                <div class="class-builds-comuns">
-                  <h3>Builds comuns</h3>
-                  {% for build in classe.builds %}
-                    <li>💎 {{ build }}</li>
-                  {% endfor %}
-                </div>
-                <div class="guia-classes">
-                  <h3>Guias</h3>
-                  {% for guia in classe.guias %}
-                  <a href={{guia.video_url}} target="_blank"><i class="fa-solid fa-chevron-right"></i> {{guia.title}} 🧙‍♂️</a>
-                  {% endfor %}
-                </div>
-              </ul>
-            </div>
-          </div>
+      <div class="sprite-frame">
+        <img src="{{ url_for('static', filename=classe.imagem_sentado) }}"
+             data-hover="{{ url_for('static', filename=classe.imagem_andando) }}"
+             data-original="{{ url_for('static', filename=classe.imagem_sentado) }}"
+             alt="Imagem de {{ classe.classe }}"
+             class="imagem-classe"
+             loading="lazy">
+      </div>
+
+      <h3 class="class-name">{{ classe.classe }}</h3>
+
+      <div class="class-meta">
+        {% for build in classe.builds %}
+          {% set tipo = build.split(':', 1)[0].strip().lower() if ':' in build else 'build' %}
+          <span class="tag {% if 'controle' in tipo %}controle{% elif 'suporte' in tipo %}suporte{% elif 'dano' in tipo %}dano{% else %}amarelo{% endif %}">
+            {{ build.split(':', 1)[0].strip() if ':' in build else 'Build' }}
+          </span>
         {% endfor %}
+      </div>
+
+      <div class="class-details">
+        <p class="details-label">Builds comuns</p>
+        <div class="builds-list">
+          {% for build in classe.builds %}
+            {% if ':' in build %}
+              {% set tipo_txt = build.split(':', 1)[0].strip() %}
+              {% set skills_txt = build.split(':', 1)[1] %}
+            {% else %}
+              {% set tipo_txt = 'Build' %}
+              {% set skills_txt = build %}
+            {% endif %}
+            {% set tipo = tipo_txt.lower() %}
+            <div class="build-item">
+              <span class="tag {% if 'controle' in tipo %}controle{% elif 'suporte' in tipo %}suporte{% elif 'dano' in tipo %}dano{% else %}amarelo{% endif %}">{{ tipo_txt }}</span>
+              <div class="skills">
+                {% for skill in skills_txt.split('/') if skill.strip() %}
+                  <span class="skill">{{ skill.strip() }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <p class="details-label">Guias</p>
+        <div class="guides-list">
+          {% for guia in classe.guias %}
+            <a class="guide-link" href="{{ guia.video_url }}" target="_blank" rel="noopener">
+              <span>
+                {{ guia.title }}
+                <small>{{ guia.channel_name }}</small>
+              </span>
+              <span class="arrow">→</span>
+            </a>
+          {% else %}
+            <p class="empty">Nenhum guia cadastrado ainda.</p>
+          {% endfor %}
         </div>
       </div>
-      <div class="container-guias">
-        <h3 class="title is-3">Guias gerais</h3>
-          <div class="container-guias-gerais">
-          {% for guia in guias_gerais %}
-            <iframe width="450" height="250"
-              src="{{ guia.embed_url }}"
-              title="{{ guia.title }}"
-              frameborder="0"
-              style="border: none"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen>
-            </iframe>
-          {% endfor %}
-          </div>
-      </div>
-    </main>
+
+      <span class="hover-hint">Passe o mouse ou toque para ver mais</span>
+    </article>
+    </div>
+    {% endfor %}
   </div>
- 
-  <script>
-    const dados = {{ class_builds | tojson | safe }};
+</section>
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const expand_btn = document.querySelector(".expand-btn");
+{{ anuncio('conteudo') }}
 
-        let activeIndex;
+<!-- ================= GUIAS GERAIS ================= -->
+<section class="container">
+  <header class="section-header">
+    <div class="section-title">
+      <span>▶</span>
+      <div>
+        <h2>Guias Gerais</h2>
+        <p>Vídeos essenciais para sua jornada</p>
+      </div>
+    </div>
+    <span class="pill"><strong>{{ guias_gerais | length }}</strong> vídeos</span>
+  </header>
 
-        expand_btn.addEventListener("click", () => {
-          document.body.classList.toggle("collapsed");
-        });
+  <div class="video-grid">
+    {% for guia in guias_gerais %}
+    {% set video_id = guia.video_url.split('v=')[-1].split('&')[0] %}
+    <article class="video-card">
+      <div class="video-player youtube-player" data-id="{{ video_id }}" role="button" tabindex="0" aria-label="Assistir: {{ guia.title }}">
+        <img src="https://i.ytimg.com/vi/{{ video_id }}/hqdefault.jpg" alt="{{ guia.title }}" loading="lazy">
+        <div class="video-overlay">
+          <div class="play-button">▶</div>
+        </div>
+      </div>
+      <div class="video-info">
+        <span class="video-channel">{{ guia.channel_name }}</span>
+        <h4 class="video-title">{{ guia.title }}</h4>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
 
-        const current = window.location.href;
-        const allLinks = document.querySelectorAll(".sidebar-links a");
+{% block scripts %}
+<script>
+  // ---------- Cards de classe: sprite andando no hover + clique para fixar aberto ----------
+  const boxes = document.querySelectorAll(".class-card");
 
-        allLinks.forEach((elem) => {
-          elem.addEventListener("click", function () {
-            const hrefLinkClick = elem.href;
+  function fecharTodos(exceto) {
+    boxes.forEach(b => {
+      if (b === exceto) return;
+      b.classList.remove("ativa");
+      const img = b.querySelector(".imagem-classe");
+      img.src = img.dataset.original;
+    });
+  }
 
-            allLinks.forEach((link) => {
-              if (link.href == hrefLinkClick) {
-                link.classList.add("active");
-              } else {
-                link.classList.remove("active");
-              }
-            });
-          });
-        });
-      });
+  boxes.forEach(box => {
+    const img = box.querySelector(".imagem-classe");
 
-
-    function esconderLoader() {
-        setTimeout(() => {
-        document.getElementById("loader").style.display = "none";
-        document.getElementById("conteudo").style.display = "flex";
-        }, 1000); 
-    }
-
-    document.querySelectorAll(".clickable-row").forEach(row => {
-    const link = row.dataset.link;
-    if (link) {
-      row.style.cursor = "pointer";
-      row.addEventListener("click", () => {
-        window.open(link, "_blank");
-      });
-    }
+    box.addEventListener("mouseenter", () => { img.src = img.dataset.hover; });
+    box.addEventListener("mouseleave", () => {
+      if (!box.classList.contains("ativa")) img.src = img.dataset.original;
     });
 
-    const toggleButton = document.getElementById('toggle-menu');
-    const sidebar = document.getElementById('sidebar');
-
-    const chevronLeftSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-      </svg>
-    `;
-
-    const chevronRightSVG = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-          stroke-width="1.5" stroke="currentColor" class="icon">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-      </svg>
-    `;
-
-    toggleButton.addEventListener('click', () => {
-      sidebar.classList.toggle('collapsed');
-      toggleButton.classList.toggle('collapsed');
-
-      if (sidebar.classList.contains('collapsed')) {
-        toggleButton.innerHTML = chevronRightSVG;
-        toggleButton.style.left = '1rem'; 
-      } else {
-        toggleButton.innerHTML = chevronLeftSVG;
-        toggleButton.style.left = '10rem';
-      }
+    box.addEventListener("click", (event) => {
+      if (event.target.closest("a")) return; // deixa os links dos guias funcionarem
+      event.stopPropagation();
+      const jaAtiva = box.classList.contains("ativa");
+      fecharTodos(box);
+      box.classList.toggle("ativa", !jaAtiva);
+      img.src = jaAtiva ? img.dataset.original : img.dataset.hover;
     });
 
-    document.addEventListener("DOMContentLoaded", function () {
-    const boxes = document.querySelectorAll(".box-classe");
-
-    boxes.forEach(box => {
-      const img = box.querySelector(".imagem-classe");
-
-
-      box.addEventListener("mouseenter", () => {
-        img.src = img.dataset.hover;
-      });
-
-      box.addEventListener("mouseleave", () => {
-        if (!box.classList.contains("ativa")) {
-          img.src = img.dataset.original;
-        }
-      });
-
-      box.addEventListener("click", function (event) {
-        event.stopPropagation();
-
-        boxes.forEach(b => {
-          b.classList.remove("ativa");
-
-          const otherImg = b.querySelector(".imagem-classe");
-          otherImg.src = otherImg.dataset.original;
-        });
-
-        box.classList.add("ativa");
-        img.src = img.dataset.hover;
-      });
-    });
-
-    document.addEventListener("click", function (event) {
-      const clickedInsideBox = [...boxes].some(box => box.contains(event.target));
-
-      if (!clickedInsideBox) {
-        boxes.forEach(box => {
-          box.classList.remove("ativa");
-
-          const img = box.querySelector(".imagem-classe");
-          img.src = img.dataset.original;
-        });
+    box.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        box.click();
       }
     });
   });
 
+  // clique fora fecha todos
+  document.addEventListener("click", (event) => {
+    if (![...boxes].some(b => b.contains(event.target))) fecharTodos(null);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") fecharTodos(null);
+  });
 
-  </script>
-</body>
-</html>
+  // ---------- Guias gerais: carrega o vídeo só no clique ----------
+  function tocarVideo(div) {
+    if (!div || div.querySelector("iframe")) return;
+    const iframe = document.createElement("iframe");
+    iframe.src = "https://www.youtube-nocookie.com/embed/" + div.dataset.id + "?autoplay=1";
+    iframe.setAttribute("allowfullscreen", "1");
+    iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+    div.innerHTML = "";
+    div.appendChild(iframe);
+    div.style.cursor = "default";
+  }
+  document.addEventListener("click", (e) => {
+    const player = e.target.closest(".youtube-player");
+    if (player) tocarVideo(player);
+  });
+  document.addEventListener("keydown", (e) => {
+    const player = e.target.closest && e.target.closest(".youtube-player");
+    if (player && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      tocarVideo(player);
+    }
+  });
+</script>
+{% endblock %}

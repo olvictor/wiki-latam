@@ -279,9 +279,28 @@ scheduler.start()
 atualizar_stream_cache() 
 
 
+# ---------------- GOOGLE ADSENSE ----------------
+# ID do editor (o mesmo do ads.txt). Os blocos de anúncio só aparecem quando
+# o slot correspondente for preenchido com o "data-ad-slot" criado no painel do AdSense.
+# Enquanto um slot estiver vazio, nada é exibido (e o Auto Ads ainda pode funcionar).
+ADSENSE_CLIENT = os.environ.get('ADSENSE_CLIENT', 'ca-pub-6266174717644829')
+ADSENSE_ATIVO = os.environ.get('ADSENSE_ATIVO', '1') == '1'
+ADSENSE_SLOTS = {
+    'topo': os.environ.get('ADSENSE_SLOT_TOPO', ''),        # abaixo do título da página
+    'conteudo': os.environ.get('ADSENSE_SLOT_CONTEUDO', ''),# no meio do conteúdo
+    'rodape': os.environ.get('ADSENSE_SLOT_RODAPE', ''),    # antes do rodapé
+}
+
+
 @app.context_processor
 def inject_request():
-    return dict(request=request)
+    return dict(
+        request=request,
+        adsense_client=ADSENSE_CLIENT,
+        adsense_ativo=ADSENSE_ATIVO,
+        ad_slots=ADSENSE_SLOTS,
+    )
+
 
 @app.route('/')
 def info_page():
@@ -418,8 +437,8 @@ def classes_page():
 @app.route('/rank')
 def rank_page():
     df = pd.read_excel('rola.xlsx', header=None)
-    rank_tiers = df.iloc[3:, 8].dropna().tolist()
-    rank_classes = df.iloc[3:, 9].dropna().tolist()
+    rank_tiers = df.iloc[3:, 9].dropna().tolist()
+    rank_classes = df.iloc[3:, 10].dropna().tolist()
 
   
 
@@ -670,7 +689,7 @@ def items_page():
     for item in items:
         item_id = buscar_id_por_nome_em_arquivos(item, arquivo)
         if item_id:
-            imagem_url = f"https://www3.worldrag.com/database/media/item/{item_id}.gif"
+            imagem_url = f"https://static.divine-pride.net/images/items/item/{item_id}.png"
             imagens.append(imagem_url)
         else:
             imagens.append("imagem_nao_encontrada")
@@ -690,7 +709,7 @@ def items_page():
     for item in items_importantes:
         id_str = buscar_id_por_nome_em_arquivos(item, arquivo)
         if id_str:
-            imagem_url = f"https://www3.worldrag.com/database/media/item/{id_str}.gif"
+            imagem_url = f"https://static.divine-pride.net/images/items/item/{id_str}.png"
             imagens_items_importantes.append(imagem_url)
         else:
             imagens_items_importantes.append("imagem_nao_encontrada")
@@ -1208,7 +1227,7 @@ def streamers_page():
 @app.route('/utilitarios')
 def utilitarios_page():
 
-   return render_template('utilitarios.html',links=links_formatados,
+   return render_template('utilitarios.html',links=links_formatados,streamers=stream_cache
 )
 
 @app.route('/contato&apoio')
@@ -1291,7 +1310,7 @@ def clips_page():
                 db.session.add(novo_link)
                 db.session.commit()
                 flash("Obrigado por compartilhar o clipe, em breve ele será aprovado!","sucesso")
-            return redirect('/clips')
+            return redirect(request.path)
     
     links_clipes = Link.query.filter_by(aprovado=True).order_by(Link.data.desc()).all()
 
@@ -1348,7 +1367,7 @@ def admin_page():
         link = Link.query.get(link_id)
         if not link:
             flash("Link não encontrado.", "erro")
-            return redirect('/admin')
+            return redirect(request.path)
 
         if action == 'aprovar':
             aprovado_val = request.form.get('aprovado')
@@ -1359,7 +1378,7 @@ def admin_page():
             db.session.delete(link)
             db.session.commit()
             flash("Link deletado.", "sucesso")
-        return redirect('/admin')
+        return redirect(request.path)
 
     links = Link.query.order_by(Link.data.desc()).all()
     return render_template('admin.html', links=links)
@@ -1368,142 +1387,27 @@ def admin_page():
 @app.route('/login')
 def login_page():
    
-    return render_template('login.html', links=links_formatados)
+    return render_template('login.html', links=links_formatados, streamers=stream_cache)
 
 @app.route('/perfil')
 def perfil_page():
    
-    return render_template('perfil.html', links=links_formatados)
+    return render_template('perfil.html', links=links_formatados, streamers=stream_cache)
 
 
-@app.route('/index2')
-def index2_page():
-    
-    video_mais_recente = (
-    "Ragnarok Online LATAM",
-    "Personalize seu personagem como nunca antes! Estilistas em Ragnarok LATAM",
-    "https://i.ytimg.com/vi/muwNm1AsT8U/sddefault.jpg",
-    "https://www.youtube-nocookie.com/embed/muwNm1AsT8U",
-    "2025-07-14T00:00:52Z"
-    )
-   
-    return render_template('index2.html',         info=info_essenciais,
-        links=links_formatados,
-        rank_data = rank_data,
-        data_videos = data_videos,
-        streamers = stream_cache,
-        video_mais_recente = video_mais_recente,
-        videos_secundarios = videos_recentes_secundarios_zip,
-        sugestao_cash = cash,
-        sugestao_cash_classes = cash_para_classes,
-        last_update=datetime.now().strftime("%d/%m/%Y"))
+# Endereços antigos da versão 2 (ex.: /rotas2) redirecionam para os novos
+ROTAS_ANTIGAS_V2 = {
+    '/index2': '/', '/classes2': '/classes', '/rank2': '/rank', '/rotas2': '/rotas',
+    '/items2': '/items', '/monstros2': '/monstros', '/timer2': '/timer',
+    '/streamers2': '/streamers', '/utilitarios2': '/utilitarios',
+    '/contato&apoio2': '/contato&apoio', '/spots2': '/spots', '/clips2': '/clips',
+    '/admin2': '/admin', '/login2': '/login', '/perfil2': '/perfil',
+    '/privacy-policy2': '/privacy-policy', '/terms2': '/terms',
+}
+for _antiga, _nova in ROTAS_ANTIGAS_V2.items():
+    app.add_url_rule(_antiga, endpoint='redirect' + _antiga.replace('/', '_').replace('&', '_'),
+                     view_func=lambda nova=_nova: redirect(nova, code=301))
 
-@app.route('/classes2')
-def classes2_page():
-    
-    df = pd.read_excel('rola.xlsx', header=None)
-    classes = df.iloc[1:27, 4].dropna().tolist()
-    builds = df.iloc[1:29, 5].dropna().tolist()
-
-    wb = load_workbook('rola.xlsx')
-    ws = wb["INFORMAÇÕES"]
-        
-    links_classes = []
-    for row in ws.iter_rows(min_row=33, min_col=2, max_col=2):
-            cell = row[0]
-            if cell.hyperlink:
-                links_classes.append(cell.hyperlink.target)
-            elif cell.value:
-                links_classes.append(cell.value)
-
-    df_guias = pd.read_excel('guias_classes.xlsx',header=None)
-    df_guias.columns = ['id', 'channel_name', 'title', 'thumbnail', 'video_url', 'classe']
-    
-    classe_map = {
-    "Cavaleiros Rúnicos": "Cavaleiro Rúnico",
-    "Guardião Real": "Guardião Real",
-    "Feiticeiro": "Feiticeiro",
-    "Sentinela": "Sentinela",
-    "Sicário": "Sicário",
-    "Arcanos": "Arcano",
-    "Arcebispos": "Arcebispo",
-    "Renegado": "Renegado",
-    "Shura": "Sura",
-    "Mecânico": "Mecânico",
-    "Bioquímicos": "Bioquímico",
-    "Trovadores": "Trovador",
-    "Musa": "Trovador"
-    }   
-    def normalizar(texto):
-        return str(texto).strip().lower()
-    df_guias["classe_normalizada"] = df_guias["classe"].apply(normalizar)
-    
-
-    class_builds = [
-        {"classe": classes[1], "builds": [builds[1], builds[2]], "link": "","imagem": "assets/classes/feiticeiro.png","imagem_sentado": "assets/classes/sentados/feiticeiro.gif","imagem_andando": "assets/classes/andando/feiticeiro.gif"}, #Feiticeiro
-        {"classe": classes[2], "builds": [builds[3]], "link": links_classes[4],"imagem": "assets/classes/sentinela.png","imagem_sentado": "assets/classes/sentados/sentinela.gif","imagem_andando": "assets/classes/andando/sentinela.gif"},# Sentinela
-        {"classe": classes[3], "builds": [builds[4]], "link": links_classes[5],"imagem": "assets/classes/sicario.png","imagem_sentado": "assets/classes/sentados/sicario.gif","imagem_andando": "assets/classes/andando/sicario.gif"},# Sicario
-        {"classe": classes[4], "builds": [builds[5]], "link": links_classes[6],"imagem": "assets/classes/arcano.png","imagem_sentado": "assets/classes/sentados/arcano.gif","imagem_andando": "assets/classes/andando/arcano.gif"},# Arcano
-        {"classe": classes[5], "builds": [builds[6], builds[7]], "link": "","imagem": "assets/classes/arcebispo.png","imagem_sentado": "assets/classes/sentados/arcebispo.gif","imagem_andando": "assets/classes/andando/arcebispo.gif"},# Arcebispo
-        {"classe": classes[6], "builds": [builds[9], builds[8]], "link": links_classes[3],"imagem": "assets/classes/renegado.png","imagem_sentado": "assets/classes/sentados/renegado.gif","imagem_andando": "assets/classes/andando/renegado.gif"},# Renegado
-        {"classe": classes[7], "builds": [builds[11], builds[10]], "link": "","imagem": "assets/classes/sura.png","imagem_sentado": "assets/classes/sentados/shura.gif","imagem_andando": "assets/classes/andando/shura.gif"},# Shura
-        {"classe": classes[8], "builds": [builds[12]], "link": links_classes[1],"imagem": "assets/classes/cavaleiro_runico.png","imagem_sentado": "assets/classes/sentados/cavaleiro_runico.gif","imagem_andando": "assets/classes/andando/cavaleiro_runico.gif"}, # Cavaleiros Rúnicos
-        {"classe": classes[9], "builds": [builds[14], builds[13]], "link": links_classes[2],"imagem": "assets/classes/guardioes_reais.png","imagem_sentado": "assets/classes/sentados/guardiao_real.gif","imagem_andando": "assets/classes/andando/guardiao_real.gif"},# Guardião Real
-        {"classe": classes[10], "builds": [builds[15]], "link": "","imagem": "assets/classes/mecanico.png","imagem_sentado": "assets/classes/sentados/mecanico.gif","imagem_andando": "assets/classes/andando/mecanico.gif"},# Mecânico
-        {"classe": classes[11], "builds": [builds[16]], "link": "","imagem": "assets/classes/genetico.png","imagem_sentado": "assets/classes/sentados/bioquimico.gif","imagem_andando": "assets/classes/andando/bioquimico.gif"},# Bioquímicos
-        {"classe": classes[12], "builds": [builds[17], builds[18]], "link": links_classes[7],"imagem": "assets/classes/trovador.png","imagem_sentado": "assets/classes/sentados/trovador.gif","imagem_andando": "assets/classes/andando/trovador.gif"},# Trovadores
-        {"classe": classes[13], "builds": [builds[19], builds[20]], "link": links_classes[7],"imagem": "assets/classes/musa.png","imagem_sentado": "assets/classes/sentados/musa.gif","imagem_andando": "assets/classes/andando/musa.gif"}, # Musa
-    ]
-    
-
-    def transformar_para_embed(url):
-        if "youtube.com/watch?v=" in url:
-            return url.replace("watch?v=", "embed/")
-        return url
-
-
-    for item in class_builds:
-        nome_original = item["classe"]
-        nome_para_buscar = classe_map.get(nome_original, nome_original)  
-        classe_normalizada = normalizar(nome_para_buscar)
-
-        guias_filtrados = df_guias[df_guias["classe_normalizada"] == classe_normalizada]
-
-        lista_guias = []
-        for _, row in guias_filtrados.iterrows():
-            guia = {
-                "id": row["id"],
-                "channel_name": row["channel_name"],
-                "title": row["title"],
-                "thumbnail": row["thumbnail"],
-                "video_url": row["video_url"]
-            }
-            lista_guias.append(guia)
-        item["guias"] = lista_guias
-
-    
-    colunas = ['channel_name', 'title', 'thumbnail', 'video_url','classe']
-    df_guias_gerais = pd.read_excel('guias_gerais.xlsx', header=None, names=colunas)
-
-
-    df_guias_gerais['embed_url'] = df_guias_gerais['video_url'].apply(transformar_para_embed)
-    guias_gerais = df_guias_gerais[df_guias_gerais['classe'] == 'Geral'].to_dict(orient='records')
-    df_guias_gerais['link'] = df_guias_gerais['embed_url']
-
-    df_guias_gerais['thumb'] = (
-        df_guias_gerais['link']
-        .str.replace('https://www.youtube.com/embed/', 'https://img.youtube.com/vi/', regex=False)
-        + '/hqdefault.jpg'
-    )
-    print(guias_gerais[0].keys())
-    guias_gerais = df_guias_gerais[df_guias_gerais['classe'] == 'Geral'].to_dict(orient='records')
-
-    return render_template('classes2.html', 
-                           class_builds=class_builds,
-                           links = links_formatados,
-                           streamers = stream_cache,
-                           guias_gerais  = guias_gerais
-                           )
 
 @app.route('/ads.txt')
 def render_ads():

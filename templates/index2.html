@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="pt-br" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -619,12 +619,267 @@
   }
 }
 
+
+/* ====== ADAPTAÇÕES (funcionalidades da index antiga) ====== */
+
+.page-content {
+  padding-left: 88px; /* largura da sidebar fixa */
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* Player do vídeo principal (carrega o iframe só no clique) */
+.main-highlight { cursor: pointer; }
+.main-highlight iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.main-content .channel {
+  display: block;
+  font-size: 12px;
+  color: #fbbf24;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* Páginas de vídeos secundários */
+.side-pages { position: relative; height: 100%; }
+.side-pages .side-grid { height: 100%; display: none; }
+.side-pages .side-grid.ativa { display: grid; }
+.side-card a { position: absolute; inset: 0; z-index: 2; }
+.side-content { z-index: 1; }
+.side-content h4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.page-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+.page-dots button {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #333;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.page-dots button.ativa {
+  background: #f59e0b;
+  width: 20px;
+}
+
+/* Notícias com link */
+a.news-item { display: block; color: inherit; }
+.news-item { opacity: 0; transform: translateY(-8px); animation: fadeIn 0.4s ease forwards; }
+a.see-all { display: block; text-align: center; }
+
+/* Meta / ranking com link */
+a.tier-card { display: block; color: inherit; }
+.tier-card::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #fbbf24;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+.tier-card:hover::after { opacity: 1; }
+
+.tier-d .rank-badge,
+.tier-e .rank-badge,
+.tier-f .rank-badge {
+  background: #18181b;
+  color: #71717a;
+}
+.tier-d .hover-glow,
+.tier-e .hover-glow,
+.tier-f .hover-glow { background: #52525b; }
+
+/* Coluna de informações */
+.info-container {
+  flex: 1;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel {
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.info-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #d1d5db;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.info-list li:last-child { border-bottom: none; padding-bottom: 0; }
+.info-list li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #f59e0b;
+  flex-shrink: 0;
+}
+
+.contact-list {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.contact-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #9ca3af;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.contact-item strong { color: #fbbf24; font-weight: 600; }
+
+.recruit {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 14px;
+  text-align: center;
+}
+.recruit img {
+  max-height: 90px;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.4));
+}
+.recruit a {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fbbf24;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.recruit a:hover { text-decoration: underline; }
+
+/* Sugestões de cash */
+.cash-section {
+  max-width: 1400px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+.cash-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+.cash-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.cash-table th {
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #6b7280;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.cash-table td {
+  padding: 10px 12px;
+  color: #d1d5db;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.cash-table tr:hover td { background: #161616; }
+.cash-table td.valor {
+  white-space: nowrap;
+  color: #fbbf24;
+  font-weight: 600;
+  width: 1%;
+}
+.joy {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+.cash-total {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #9ca3af;
+}
+.cash-total strong { color: #fff; font-size: 16px; }
+
+/* Responsivo */
+@media (max-width: 1100px) {
+  .highlights-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .main-highlight { aspect-ratio: 16 / 9; }
+  .side-pages .side-grid { height: auto; }
+  .side-card { aspect-ratio: 16 / 9; }
+  .second-section-container { flex-wrap: wrap; }
+  .news-container { width: 100%; max-width: 100%; }
+  .meta-container { max-width: 100%; flex: 1; }
+}
+
+@media (max-width: 768px) {
+  .main-content { padding: 16px; }
+  .main-content h3 { font-size: 20px; }
+  .main-content p { display: none; }
+  .play-center { opacity: 1; }
+  .cash-grid { grid-template-columns: 1fr; }
+  .second-section-container { flex-direction: column; }
+  .meta-container, .info-container { width: 100%; }
+}
+
     </style>
 </head>
   <body>
     <div id="root">
       {% include 'components/header-remaster.html' %}
       {% include 'components/sidebar-remaster.html' %}
+
+      <main class="page-content">
       <section class="highlights">
         <header class="highlights-header">
           <div class="section-title">
@@ -636,57 +891,65 @@
               <p>Confira os últimos vídeos e novidades</p>
             </div>
           </div>
-      
+
           <div class="nav-buttons">
-            <button class="nav-btn" id="prevBtn">❮</button>
-            <button class="nav-btn" id="nextBtn">❯</button>
+            <button class="nav-btn" id="prevBtn" aria-label="Página anterior">❮</button>
+            <button class="nav-btn" id="nextBtn" aria-label="Próxima página">❯</button>
           </div>
         </header>
-      
+
         <div class="highlights-grid">
-          
-          <!-- Main Highlight -->
-          <div class="main-highlight">
-            {% if video_mais_recente %}
-            <img src="https://i.ytimg.com/vi/muwNm1AsT8U/maxresdefault.jpg" alt="Transforme seu visual">
-            
+
+          <!-- Main Highlight (o iframe só é carregado no clique) -->
+          {% if video_mais_recente %}
+          {% set video_id = video_mais_recente[3].split('/')[-1].split('?')[0] %}
+          <div class="main-highlight youtube-player" data-id="{{ video_id }}" role="button" tabindex="0" aria-label="Assistir: {{ video_mais_recente[1] }}">
+            <img src="https://i.ytimg.com/vi/{{ video_id }}/maxresdefault.jpg" alt="{{ video_mais_recente[1] }}" loading="lazy">
+
             <div class="overlay-gradient"></div>
-      
+
             <div class="play-center">
               <div class="play-button">▶</div>
             </div>
-      
+
             <div class="main-content">
               <span class="badge">Em Destaque</span>
-              <h3>Guia: CUSTOMIZAÇÃO! Roupas especiais</h3>
-              <p>
-                Descubra as novas funcionalidades do sistema de visual e personalize
-                seu personagem como nunca antes.
-              </p>
+              <span class="channel">{{ video_mais_recente[0] }}</span>
+              <h3>{{ video_mais_recente[1] }}</h3>
+              <p>Clique para assistir ao vídeo mais recente do canal oficial.</p>
             </div>
-            {% endif %}
           </div>
-      
-          <!-- Side Highlights -->
-          <div class="side-grid">
-            {% for video in videos_secundarios[:4] %}
-            <div class="side-card">
-              <img src="{{ video[1] }}" alt="">
-              <div class="overlay"></div>
-              <div class="side-content">
-                <h4>{{ video[0] }}</h4>
-                <span>10:15</span>
+          {% else %}
+          <div class="main-highlight"></div>
+          {% endif %}
+
+          <!-- Side Highlights: páginas de 4 vídeos -->
+          <div>
+            <div class="side-pages" id="videos-container">
+              {% for i in range((videos_secundarios | length) // 4 + ((videos_secundarios | length) % 4 > 0)) %}
+              <div class="side-grid{% if i == 0 %} ativa{% endif %}">
+                {% for video in videos_secundarios[i*4:(i+1)*4] %}
+                <div class="side-card" style="animation-delay: {{ loop.index0 * 0.08 }}s">
+                  <a href="{{ video[3] }}" target="_blank" rel="noopener" aria-label="{{ video[0] }}"></a>
+                  <img src="{{ video[1] }}" alt="Thumb do vídeo: {{ video[0] }}" loading="lazy">
+                  <div class="overlay"></div>
+                  <div class="side-content">
+                    <h4>{{ video[0] }}</h4>
+                    <span>{{ video[4] }}</span>
+                  </div>
+                  <div class="side-play">▶</div>
+                </div>
+                {% endfor %}
               </div>
-              <div class="side-play">▶</div>
+              {% endfor %}
             </div>
-            {% endfor %}
-      
           </div>
-      </div>
-        
+        </div>
+        <div class="page-dots" id="pageDots"></div>
       </section>
-      
+
       <section class="second-section-container">
+        <!-- NOTÍCIAS -->
         <div class="news-container">
           <div class="section-title">
             <span>
@@ -697,71 +960,18 @@
               <p>Fique por dentro do servidor</p>
             </div>
           </div>
-        
+
+          {% include 'components/adsense.html' %}
+
           <div class="news-list">
-        
-            <div class="news-item">
-              <span class="accent-bar"></span>
-        
-              <div class="news-header">
-                <span class="tag manutencao">Manutenção</span>\\
-                <span class="date">📅 02/09/2025</span>
-              </div>
-        
-              <h4>Manutenção Extraordinária - [CONCLUÍDA]</h4>
-            </div>
-        
-            <div class="news-item">
-              <span class="accent-bar"></span>
-        
-              <div class="news-header">
-                <span class="tag update">Update</span>
-                <span class="date">📅 02/09/2025</span>
-              </div>
-        
-              <h4>Novidades da Manutenção - [ATUALIZADA]</h4>
-            </div>
-        
-            <div class="news-item">
-              <span class="accent-bar"></span>
-        
-              <div class="news-header">
-                <span class="tag evento">Evento</span>
-                <span class="date">📅 01/09/2025</span>
-              </div>
-        
-              <h4>Evento de EXP Dobrada neste fim de semana</h4>
-            </div>
-        
-            <div class="news-item">
-              <span class="accent-bar"></span>
-        
-              <div class="news-header">
-                <span class="tag correcao">Correção</span>
-                <span class="date">📅 30/08/2025</span>
-              </div>
-        
-              <h4>Correção de bugs na instância Templo</h4>
-            </div>
-        
-            <div class="news-item">
-              <span class="accent-bar"></span>
-        
-              <div class="news-header">
-                <span class="tag comunidade">Comunidade</span>
-                <span class="date">📅 28/08/2025</span>
-              </div>
-        
-              <h4>Vencedores do Concurso de Fanart</h4>
-            </div>
-        
-            <button class="see-all">
-              Ver todas as notícias
-            </button>
-        
+            <!-- preenchida via JS (array "noticias" lá embaixo) -->
           </div>
+          <a class="see-all" href="https://ro.gnjoylatam.com/pt/news/notice" target="_blank" rel="noopener">
+            Ver todas as notícias
+          </a>
         </div>
 
+        <!-- META / RANKING -->
         <div class="meta-container">
           <div class="section-title">
             <span class="icon">
@@ -772,132 +982,227 @@
               <p>Comece da melhor forma!</p>
             </div>
           </div>
-        
+
           <div class="tiers-list">
-        
-            <!-- TIER S -->
-            <div class="tier-card tier-s">
+            {% for tier, classes in rank_data %}
+            {% set letra = tier.split()[-1] %}
+            <a href="{{ url_for('classes2_page') }}" target="_blank" class="tier-card tier-{{ letra | lower }}" data-tooltip="Confira a build →">
               <div class="tier-content">
                 <div class="rank-badge">
-                  👑
-                  <span>S</span>
+                  {% if loop.index0 == 0 %}👑{% elif loop.index0 == 1 %}🏅{% endif %}
+                  <span>{{ letra }}</span>
                 </div>
-        
                 <div class="class-list">
-                  <span class="class-tag">Sicario</span>
-                  <span class="class-tag">Sentinela</span>
-                  <span class="class-tag">Cavaleiro Runico</span>
+                  {% for classe in classes.split(',') %}
+                  <span class="class-tag">{{ classe.strip() }}</span>
+                  {% endfor %}
                 </div>
               </div>
               <div class="hover-glow"></div>
-            </div>
-        
-            <!-- TIER A -->
-            <div class="tier-card tier-a">
-              <div class="tier-content">
-                <div class="rank-badge">
-                  🏅
-                  <span>A</span>
-                </div>
-        
-                <div class="class-list">
-                  <span class="class-tag">Shura</span>
-                  <span class="class-tag">Arcebispo</span>
-                </div>
-              </div>
-              <div class="hover-glow"></div>
-            </div>
-        
-            <!-- TIER B -->
-            <div class="tier-card tier-b">
-              <div class="tier-content">
-                <div class="rank-badge">
-                  <span>B</span>
-                </div>
-        
-                <div class="class-list">
-                  <span class="class-tag">Trovador</span>
-                  <span class="class-tag">Arcano</span>
-                  <span class="class-tag">Musa</span>
-                </div>
-              </div>
-              <div class="hover-glow"></div>
-            </div>
-        
-            <!-- TIER C -->
-            <div class="tier-card tier-c">
-              <div class="tier-content">
-                <div class="rank-badge">
-                  <span>C</span>
-                </div>
-        
-                <div class="class-list">
-                  <span class="class-tag">Feiticeiro</span>
-                  <span class="class-tag">Renegado</span>
-                  <span class="class-tag">Guardião Real</span>
-                </div>
-              </div>
-              <div class="hover-glow"></div>
-            </div>
-        
-            <!-- DICA -->
+            </a>
+            {% endfor %}
+
             <div class="pro-tip">
               <h4>Dica do Pro</h4>
               <p>
                 Classes Rank S possuem maior facilidade de farm solo em instâncias de nível alto.
               </p>
             </div>
-        
+          </div>
+        </div>
+
+        <!-- INFORMAÇÕES ESSENCIAIS -->
+        <div class="info-container">
+          <div class="section-title">
+            <span>📌</span>
+            <div>
+              <h2>Informações</h2>
+              <p>O essencial do servidor</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <ul class="info-list">
+              {% for item in info %}
+              <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+
+            <div class="contact-list">
+              <div class="contact-item"><span>Sugestões (Discord)</span><strong>Michels #0484</strong></div>
+              <div class="contact-item"><span>PM in game</span><strong>Ghostring</strong></div>
+            </div>
+          </div>
+
+          <div class="recruit">
+            <img src="{{ url_for('static', filename='assets/renfir.png') }}" alt="Logo Fenrir" loading="lazy">
+            <a href="https://discord.com/invite/3MWZrSSXnh" target="_blank" rel="noopener">Recrutamento Aberto</a>
           </div>
         </div>
       </section>
-      
+
+      <!-- SUGESTÕES DE CASH -->
+      <section class="cash-section">
+        <div class="section-title">
+          <span>💎</span>
+          <div class="section-title-container">
+            <h2 class="section-title">Sugestões de Cash</h2>
+            <p>O que vale a pena comprar no começo</p>
+          </div>
+        </div>
+
+        <div class="cash-grid">
+          {% for titulo, lista in [("Itens cash recomendados", sugestao_cash), ("Para classes 2-1", sugestao_cash_classes)] %}
+          <div class="panel">
+            <h4 class="font-display text-lg font-bold text-accent-400 mb-3">{{ titulo }}</h4>
+            <table class="cash-table">
+              <thead>
+                <tr>
+                  <th>Valor</th>
+                  <th>Item</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for valor, item in lista %}
+                <tr>
+                  <td class="valor"><img class="joy" src="{{ url_for('static', filename='assets/joypoints.png') }}" alt="Joy Points">{{ valor }}</td>
+                  <td>{{ item }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% set total = lista | sum(attribute='0') %}
+            <div class="cash-total">
+              Total:
+              <img class="joy" src="{{ url_for('static', filename='assets/joypoints.png') }}" alt="Joy Points">
+              <strong>{{ '{:,.0f}'.format(total | float).replace(',', '.') }}</strong>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% include 'components/footer-remaster.html' %}
+      </main>
     </div>
 
     <script>
-          const videos = {{ videos_secundarios | tojson }};
-          let index = 0;
-          const chunkSize = 4;
-          let page = 0;
-          const container = document.querySelector(".side-grid");
-          const prevBtn = document.getElementById("prevBtn");
-          const nextBtn = document.getElementById("nextBtn");
-    
-          function renderVideos() {
-            container.innerHTML = "";
+      // ---------- Vídeo principal: troca a thumb pelo iframe no clique ----------
+      function tocarVideo(div) {
+        if (!div || div.querySelector("iframe")) return;
+        const iframe = document.createElement("iframe");
+        iframe.src = "https://www.youtube-nocookie.com/embed/" + div.dataset.id + "?autoplay=1";
+        iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute("allowfullscreen", "1");
+        iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+        div.innerHTML = "";
+        div.appendChild(iframe);
+        div.style.cursor = "default";
+      }
+      document.addEventListener("click", (e) => {
+        const player = e.target.closest(".youtube-player");
+        if (player) tocarVideo(player);
+      });
+      document.addEventListener("keydown", (e) => {
+        const player = e.target.closest && e.target.closest(".youtube-player");
+        if (player && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          tocarVideo(player);
+        }
+      });
 
-            const slice = videos.slice(index, index + chunkSize);
-            slice.forEach(video => {
-              container.innerHTML += `
-                <div class="side-card">
-                  <img src="${video[1]}" alt="">
-                  <div class="overlay"></div>
-                  <div class="side-content">
-                    <h4>${video[0]}</h4>
-                    <span>${video[4]}</span>
-                  </div>
-                  <div class="side-play">▶</div>
-                </div>
-              `;
-            });
+      // ---------- Notícias ----------
+      // tipo: manutencao | update | evento | correcao | comunidade
+      const noticias = [
+        { titulo: "Manutenção Extraordinária - 02/09/2025 [CONCLUÍDA]", link: "https://ro.gnjoylatam.com/pt/news/notice/155", data: "02.09.2025", tipo: "manutencao" },
+        { titulo: "Novidades da Manutenção - 02/09/2025 [ATUALIZADA]", link: "https://ro.gnjoylatam.com/pt/news/notice/153", data: "01.09.2025", tipo: "update" },
+        { titulo: "Patch Notes - 19/08/2025", link: "https://ro.gnjoylatam.com/pt/news/notice/152", data: "19.08.2025", tipo: "correcao" },
+        { titulo: "Ilusão do Abismo - Ilha da Tartaruga", link: "https://ro.gnjoylatam.com/pt/news/notice/149", data: "18.08.2025", tipo: "evento" },
+        { titulo: "Novidades da Manutenção - 23/07/2025", link: "https://ro.gnjoylatam.com/pt/news/notice/138", data: "21.07.2025", tipo: "update" },
+      ];
+      const rotulos = { manutencao: "Manutenção", update: "Update", evento: "Evento", correcao: "Patch", comunidade: "Comunidade" };
 
-            index += chunkSize;
-            if (index >= videos.length) index = 0;
-          }
-          renderVideos();
-          setInterval(renderVideos, 5000); // troca a cada 5s
+      const listaNoticias = document.querySelector(".news-list");
+      noticias.forEach((noticia, i) => {
+        const a = document.createElement("a");
+        a.className = "news-item";
+        a.href = noticia.link;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.style.animationDelay = `${i * 0.15}s`;
+        a.innerHTML = `
+          <span class="accent-bar"></span>
+          <div class="news-header">
+            <span class="tag ${noticia.tipo}">${rotulos[noticia.tipo] || "Notícia"}</span>
+            <span class="date">📅 ${noticia.data.replaceAll(".", "/")}</span>
+          </div>
+          <h4></h4>
+        `;
+        a.querySelector("h4").textContent = noticia.titulo;
+        listaNoticias.appendChild(a);
+      });
 
-          nextBtn.addEventListener("click", () => {
-          const maxPage = Math.ceil(videos.length / chunkSize) - 1;
-          page = page >= maxPage ? 0 : page + 1;
-            renderVideos("next");
-          });
+      // ---------- Vídeos secundários: paginação + troca automática ----------
+      const paginas = document.querySelectorAll("#videos-container .side-grid");
+      const containerVideos = document.getElementById("videos-container");
+      const dots = document.getElementById("pageDots");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const totalPaginas = paginas.length;
+      let paginaAtual = 0;
+      let intervalo = null;
+      let timeoutReinicio = null;
 
-          prevBtn.addEventListener("click", () => {
-            const maxPage = Math.ceil(videos.length / chunkSize) - 1;
-            page = page <= 0 ? maxPage : page - 1;
-            renderVideos("prev");
-          });  
+      paginas.forEach((_, i) => {
+        const b = document.createElement("button");
+        b.setAttribute("aria-label", `Página ${i + 1}`);
+        b.addEventListener("click", () => irPara(i));
+        dots.appendChild(b);
+      });
+
+      function mostrarPagina(index) {
+        paginas.forEach((p, i) => p.classList.toggle("ativa", i === index));
+        dots.querySelectorAll("button").forEach((d, i) => d.classList.toggle("ativa", i === index));
+      }
+
+      function irPara(index) {
+        if (!totalPaginas) return;
+        pausarAutoTrocaTemporariamente();
+        paginaAtual = (index + totalPaginas) % totalPaginas;
+        mostrarPagina(paginaAtual);
+      }
+
+      function iniciarAutoTroca() {
+        clearInterval(intervalo);
+        if (totalPaginas < 2) return;
+        intervalo = setInterval(() => {
+          paginaAtual = (paginaAtual + 1) % totalPaginas;
+          mostrarPagina(paginaAtual);
+        }, 10000);
+      }
+
+      function pausarAutoTroca() {
+        clearInterval(intervalo);
+        clearTimeout(timeoutReinicio);
+      }
+
+      function pausarAutoTrocaTemporariamente() {
+        pausarAutoTroca();
+        timeoutReinicio = setTimeout(iniciarAutoTroca, 15000);
+      }
+
+      prevBtn.addEventListener("click", () => irPara(paginaAtual - 1));
+      nextBtn.addEventListener("click", () => irPara(paginaAtual + 1));
+      containerVideos.addEventListener("mouseenter", pausarAutoTroca);
+      containerVideos.addEventListener("mouseleave", iniciarAutoTroca);
+
+      if (totalPaginas < 2) {
+        prevBtn.style.display = "none";
+        nextBtn.style.display = "none";
+        dots.style.display = "none";
+      }
+
+      mostrarPagina(paginaAtual);
+      iniciarAutoTroca();
     </script>
   </body>
 </html>
